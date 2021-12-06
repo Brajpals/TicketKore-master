@@ -1,0 +1,1354 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3F066F8926413350007B60A6 /* SavedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F066F8826413350007B60A6 /* SavedListViewModel.swift */; };
+		3F0A6FD525A6F9170001BFC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A6FD425A6F9170001BFC5 /* AppDelegate.swift */; };
+		3F0A6FD725A6F9170001BFC5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A6FD625A6F9170001BFC5 /* SceneDelegate.swift */; };
+		3F0A6FDE25A6F91A0001BFC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F0A6FDD25A6F91A0001BFC5 /* Assets.xcassets */; };
+		3F0A6FE125A6F91A0001BFC5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F0A6FDF25A6F91A0001BFC5 /* LaunchScreen.storyboard */; };
+		3F0A6FEC25A6F91A0001BFC5 /* ticketPRO_RIPATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A6FEB25A6F91A0001BFC5 /* ticketPRO_RIPATests.swift */; };
+		3F0A6FF725A6F91A0001BFC5 /* ticketPRO_RIPAUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A6FF625A6F91A0001BFC5 /* ticketPRO_RIPAUITests.swift */; };
+		3F0A701025A6FB670001BFC5 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A700F25A6FB670001BFC5 /* Extension.swift */; };
+		3F0A701825A70A780001BFC5 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A701725A70A780001BFC5 /* Validation.swift */; };
+		3F0DBC5E266A3421008EA2FF /* RejectedApplicationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0DBC5C266A341F008EA2FF /* RejectedApplicationCell.swift */; };
+		3F0DBC5F266A3421008EA2FF /* RejectedApplicationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F0DBC5D266A341F008EA2FF /* RejectedApplicationCell.xib */; };
+		3F0DBC61266A4528008EA2FF /* RejectedApplicationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0DBC60266A4527008EA2FF /* RejectedApplicationViewController.swift */; };
+		3F0DBC63266A4F97008EA2FF /* RejectedApplicationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0DBC62266A4F97008EA2FF /* RejectedApplicationModel.swift */; };
+		3F10240425A837B2009AAA35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F10240225A837B2009AAA35 /* Main.storyboard */; };
+		3F10243925A8390C009AAA35 /* EnrollementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F10243825A8390C009AAA35 /* EnrollementViewController.swift */; };
+		3F10248D25A87599009AAA35 /* OTPVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F10248C25A87599009AAA35 /* OTPVerificationViewController.swift */; };
+		3F1024E725AC2C73009AAA35 /* Enrollment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1024E625AC2C73009AAA35 /* Enrollment.swift */; };
+		3F10252B25ADD2C0009AAA35 /* SqliteDbStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F10252A25ADD2C0009AAA35 /* SqliteDbStore.swift */; };
+		3F10253325AED127009AAA35 /* DashBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F10253225AED127009AAA35 /* DashBoardViewController.swift */; };
+		3F128D7E26174F43006441AA /* EnterDescriptionPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F128D7D26174F43006441AA /* EnterDescriptionPopupViewController.swift */; };
+		3F128D832617B4EB006441AA /* PreviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F128D822617B4EB006441AA /* PreviewViewModel.swift */; };
+		3F1A0653266BED7A00BDB710 /* LocationEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1A0652266BED7A00BDB710 /* LocationEditViewController.swift */; };
+		3F1DF8B627549F1300792452 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1DF8B527549F1300792452 /* TableViewCell.swift */; };
+		3F1DF8BA2754AEDC00792452 /* UserSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1DF8B92754AEDC00792452 /* UserSettingViewModel.swift */; };
+		3F1DF8BC2754AF3E00792452 /* UserSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1DF8BB2754AF3E00792452 /* UserSettingModel.swift */; };
+		3F1DF8BE2754CA0C00792452 /* UserSettingOptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1DF8BD2754CA0C00792452 /* UserSettingOptionController.swift */; };
+		3F2154D326947F1800475EF6 /* OfflineSyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2154D226947F1700475EF6 /* OfflineSyncViewController.swift */; };
+		3F22FC082680B0F800F17428 /* FilterPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F22FC072680B0F800F17428 /* FilterPopup.swift */; };
+		3F317F1D25D1501300E986EA /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317F1C25D1501300E986EA /* DataManager.swift */; };
+		3F317F2225D1515C00E986EA /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317F2125D1515C00E986EA /* AppManager.swift */; };
+		3F31807425D6B09000E986EA /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F31807325D6B08F00E986EA /* DashboardViewModel.swift */; };
+		3F3C2E3F2645E96500D3A5D1 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3C2E3E2645E96500D3A5D1 /* SuccessViewController.swift */; };
+		3F3F2CAA2747CE1D001C9BF2 /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3F2CA92747CE1D001C9BF2 /* UITextField.swift */; };
+		3F3F6BB92754DF4700CB075C /* userCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3F6BB72754DF4700CB075C /* userCell.swift */; };
+		3F3F6BBA2754DF4700CB075C /* userCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F3F6BB82754DF4700CB075C /* userCell.xib */; };
+		3F436BC6269C56A200E7FBB0 /* StatusCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F436BC5269C56A200E7FBB0 /* StatusCount.swift */; };
+		3F436BCB269DB51500E7FBB0 /* TouchIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F436BCA269DB51400E7FBB0 /* TouchIDViewController.swift */; };
+		3F5796302755FBE200D6BC32 /* EnterAssignmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F57962F2755FBE200D6BC32 /* EnterAssignmentController.swift */; };
+		3F59E509261C3E3200D5F4A4 /* PersonsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59E507261C3E3200D5F4A4 /* PersonsTableCell.swift */; };
+		3F59E50A261C3E3200D5F4A4 /* PersonsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F59E508261C3E3200D5F4A4 /* PersonsTableCell.xib */; };
+		3F59E50F261C443B00D5F4A4 /* PersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F59E50E261C443B00D5F4A4 /* PersonViewController.swift */; };
+		3F5BF5C925E91C62003E5361 /* EnterTextPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5BF5C825E91C62003E5361 /* EnterTextPopupViewController.swift */; };
+		3F5BF5D525E92976003E5361 /* SingleLineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5BF5D325E92976003E5361 /* SingleLineCell.swift */; };
+		3F5BF5D625E92976003E5361 /* SingleLineCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F5BF5D425E92976003E5361 /* SingleLineCell.xib */; };
+		3F5E2295261F27BE003E816A /* UpdateRipa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5E2294261F27BE003E816A /* UpdateRipa.swift */; };
+		3F5F7C8B2628C1A000E0FB6A /* EducationCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5F7C8A2628C19F00E0FB6A /* EducationCode.swift */; };
+		3F5F7C912629AE5F00E0FB6A /* EducationCodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5F7C8F2629AE5F00E0FB6A /* EducationCodeCell.swift */; };
+		3F5F7C922629AE5F00E0FB6A /* EducationCodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F5F7C902629AE5F00E0FB6A /* EducationCodeCell.xib */; };
+		3F61019225E385C3002812C1 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F61019125E385C3002812C1 /* PreviewViewController.swift */; };
+		3F66803025DCDAEA00ECE239 /* ImageView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802725DCDAE900ECE239 /* ImageView+Extensions.swift */; };
+		3F66803125DCDAEA00ECE239 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802825DCDAE900ECE239 /* Date.swift */; };
+		3F66803225DCDAEA00ECE239 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802925DCDAE900ECE239 /* UIView.swift */; };
+		3F66803325DCDAEA00ECE239 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802A25DCDAE900ECE239 /* Array.swift */; };
+		3F66803425DCDAEA00ECE239 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802B25DCDAE900ECE239 /* UIColor.swift */; };
+		3F66803525DCDAEA00ECE239 /* CALayer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802C25DCDAE900ECE239 /* CALayer+Extensions.swift */; };
+		3F66803625DCDAEA00ECE239 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802D25DCDAE900ECE239 /* String.swift */; };
+		3F66803725DCDAEA00ECE239 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802E25DCDAE900ECE239 /* UIImage.swift */; };
+		3F66803825DCDAEA00ECE239 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66802F25DCDAE900ECE239 /* UIApplication.swift */; };
+		3F66805B25DD241F00ECE239 /* NewRipaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66805A25DD241F00ECE239 /* NewRipaViewModel.swift */; };
+		3F66806625DD245D00ECE239 /* NewRipaQuestionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F66806525DD245D00ECE239 /* NewRipaQuestionsModel.swift */; };
+		3F690D8025E6890D0095FC0D /* ticketpro.db in Resources */ = {isa = PBXBuildFile; fileRef = 3F690D7F25E6890D0095FC0D /* ticketpro.db */; };
+		3F690D9E25E8272D0095FC0D /* NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F690D9D25E8272C0095FC0D /* NetworkReachability.swift */; };
+		3F690DBC25E854C70095FC0D /* ViolationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F690DBA25E854C60095FC0D /* ViolationCell.swift */; };
+		3F690DBD25E854C70095FC0D /* ViolationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F690DBB25E854C60095FC0D /* ViolationCell.xib */; };
+		3F69E0F1260CB64B003CB920 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F69E0F0260CB64B003CB920 /* ListViewController.swift */; };
+		3F69E13126125BC5003CB920 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F69E12F26125BC5003CB920 /* ListCell.swift */; };
+		3F69E13226125BC5003CB920 /* ListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F69E13026125BC5003CB920 /* ListCell.xib */; };
+		3F69E15E26160682003CB920 /* ViolationTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F69E15C26160681003CB920 /* ViolationTextCell.swift */; };
+		3F69E15F26160682003CB920 /* ViolationTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F69E15D26160681003CB920 /* ViolationTextCell.xib */; };
+		3F69E164261616C6003CB920 /* ViolationTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F69E163261616C5003CB920 /* ViolationTypeViewController.swift */; };
+		3F72AC7825EF631E000EFDF5 /* CLCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F72AC7625EF631C000EFDF5 /* CLCell.swift */; };
+		3F72AC7925EF631E000EFDF5 /* CLCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F72AC7725EF631C000EFDF5 /* CLCell.xib */; };
+		3F744F7C26650BCF00390724 /* ViolationPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F744F7B26650BCF00390724 /* ViolationPopup.swift */; };
+		3F7722D825B195B0009C0828 /* roboto in Resources */ = {isa = PBXBuildFile; fileRef = 3F7722D725B195B0009C0828 /* roboto */; };
+		3F7722E025B1978C009C0828 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F7722DF25B1978C009C0828 /* Roboto-Medium.ttf */; };
+		3F85009F264C4D0500DA159C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F85009E264C4D0500DA159C /* GoogleService-Info.plist */; };
+		3F8BCA3E270DA7F900DD178B /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8BCA3D270DA7F900DD178B /* LocationModel.swift */; };
+		3F8CFE3425EA7B720007C156 /* PreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F8CFE3225EA7B720007C156 /* PreviewCell.xib */; };
+		3F8CFE3525EA7B720007C156 /* PreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8CFE3325EA7B720007C156 /* PreviewTableViewCell.swift */; };
+		3F97BCAD25D9ABAD001F86F7 /* OtherRipaDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97BCAC25D9ABAD001F86F7 /* OtherRipaDataModel.swift */; };
+		3FB4501E25DD3C5100E1A30C /* NewRipaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB4501D25DD3C5100E1A30C /* NewRipaViewController.swift */; };
+		3FB4502D25DD49F200E1A30C /* MultilineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB4502B25DD49F100E1A30C /* MultilineCell.swift */; };
+		3FB4502E25DD49F200E1A30C /* MultilineCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FB4502C25DD49F200E1A30C /* MultilineCell.xib */; };
+		3FB4503725DD4A1700E1A30C /* SingleChoiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB4503525DD4A1700E1A30C /* SingleChoiceCell.swift */; };
+		3FB4503825DD4A1700E1A30C /* SingleChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FB4503625DD4A1700E1A30C /* SingleChoiceCell.xib */; };
+		3FB4504625DE38EC00E1A30C /* QuestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB4504425DE38EC00E1A30C /* QuestionCell.swift */; };
+		3FB4504725DE38EC00E1A30C /* QuestionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FB4504525DE38EC00E1A30C /* QuestionCell.xib */; };
+		3FB687502635FB8C007E6F9B /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB6874F2635FB8C007E6F9B /* Location.swift */; };
+		3FB7817D265D27A9005B0B8A /* togglCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB7817B265D27A9005B0B8A /* togglCell.swift */; };
+		3FB7817E265D27A9005B0B8A /* togglCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FB7817C265D27A9005B0B8A /* togglCell.xib */; };
+		3FB78181265D363E005B0B8A /* PerceivedGenderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB7817F265D363E005B0B8A /* PerceivedGenderCell.swift */; };
+		3FB78182265D363E005B0B8A /* PerceivedGenderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FB78180265D363E005B0B8A /* PerceivedGenderCell.xib */; };
+		3FB78185265E2A65005B0B8A /* SelectOptionsPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB78184265E2A64005B0B8A /* SelectOptionsPopup.swift */; };
+		3FB78187265E8FC8005B0B8A /* RipaTempMasterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB78186265E8FC6005B0B8A /* RipaTempMasterModel.swift */; };
+		3FB78189265FE64E005B0B8A /* SavedListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB78188265FE64E005B0B8A /* SavedListViewController.swift */; };
+		3FB7818C265FE682005B0B8A /* SavedListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB7818A265FE682005B0B8A /* SavedListTableViewCell.swift */; };
+		3FB7818D265FE682005B0B8A /* SavedListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FB7818B265FE682005B0B8A /* SavedListTableViewCell.xib */; };
+		3FB90BA52750B6E000F86AE9 /* UserSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB90BA42750B6E000F86AE9 /* UserSettingsViewController.swift */; };
+		3FB90BA82750BBAC00F86AE9 /* UserSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB90BA62750BBAC00F86AE9 /* UserSettingCell.swift */; };
+		3FB90BA92750BBAC00F86AE9 /* UserSettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FB90BA72750BBAC00F86AE9 /* UserSettingCell.xib */; };
+		3FBF17B926BBF8C200F4B18A /* ViolationCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBF17B726BBF8C200F4B18A /* ViolationCell2.swift */; };
+		3FBF17BA26BBF8C200F4B18A /* ViolationCell2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FBF17B826BBF8C200F4B18A /* ViolationCell2.xib */; };
+		3FBF17BD26BBFE2F00F4B18A /* ViolationsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBF17BB26BBFE2F00F4B18A /* ViolationsListCell.swift */; };
+		3FBF17BE26BBFE2F00F4B18A /* ViolationsListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FBF17BC26BBFE2F00F4B18A /* ViolationsListCell.xib */; };
+		64A411ADA8BEC73218C84A86 /* Pods_ticketPRO_RIPA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 860A93C9B4DBDBF5B65BE6A0 /* Pods_ticketPRO_RIPA.framework */; };
+		937C473AFCCC71F1A218346C /* Pods_ticketPRO_RIPATests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF62FD37DE18B4378290E144 /* Pods_ticketPRO_RIPATests.framework */; };
+		94649A5F268093EC00546C05 /* VersionUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94649A5E268093EC00546C05 /* VersionUpdate.swift */; };
+		946977F325D1110500D013BB /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946977F225D1110500D013BB /* LoginViewModel.swift */; };
+		9469780025D1122C00D013BB /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946977FF25D1122C00D013BB /* AppUtility.swift */; };
+		9469784525D1172500D013BB /* AppConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9469784425D1172500D013BB /* AppConstant.swift */; };
+		9469784D25D11B5A00D013BB /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9469784C25D11B5A00D013BB /* ApiManager.swift */; };
+		94F621B5264425890091C0E6 /* PendingQuestionsPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F621B4264425890091C0E6 /* PendingQuestionsPopup.swift */; };
+		94F621BB264425A20091C0E6 /* NoQuestionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F621B9264425A20091C0E6 /* NoQuestionTableViewCell.xib */; };
+		94F621BC264425A20091C0E6 /* NoQuestionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F621BA264425A20091C0E6 /* NoQuestionTableViewCell.swift */; };
+		F4AB3ADAFAA8E3F520C8BB69 /* Pods_ticketPRO_RIPA_ticketPRO_RIPAUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 941A95B9FA8F87655B14C360 /* Pods_ticketPRO_RIPA_ticketPRO_RIPAUITests.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3F0A6FE825A6F91A0001BFC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3F0A6FC925A6F9170001BFC5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3F0A6FD025A6F9170001BFC5;
+			remoteInfo = "ticketPRO RIPA";
+		};
+		3F0A6FF325A6F91A0001BFC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3F0A6FC925A6F9170001BFC5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3F0A6FD025A6F9170001BFC5;
+			remoteInfo = "ticketPRO RIPA";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		33F194A4CF5DA50CCCA56263 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA-ticketPRO RIPAUITests/Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig"; sourceTree = "<group>"; };
+		39ABFE45C4D00AC10E168E46 /* Pods-ticketPRO RIPA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA.release.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA/Pods-ticketPRO RIPA.release.xcconfig"; sourceTree = "<group>"; };
+		3F066F8826413350007B60A6 /* SavedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListViewModel.swift; sourceTree = "<group>"; };
+		3F0A6FD125A6F9170001BFC5 /* ticketPRO RIPA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ticketPRO RIPA.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F0A6FD425A6F9170001BFC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3F0A6FD625A6F9170001BFC5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		3F0A6FDD25A6F91A0001BFC5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3F0A6FE025A6F91A0001BFC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3F0A6FE225A6F91A0001BFC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F0A6FE725A6F91A0001BFC5 /* ticketPRO RIPATests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ticketPRO RIPATests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F0A6FEB25A6F91A0001BFC5 /* ticketPRO_RIPATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ticketPRO_RIPATests.swift; sourceTree = "<group>"; };
+		3F0A6FED25A6F91A0001BFC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F0A6FF225A6F91A0001BFC5 /* ticketPRO RIPAUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ticketPRO RIPAUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F0A6FF625A6F91A0001BFC5 /* ticketPRO_RIPAUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ticketPRO_RIPAUITests.swift; sourceTree = "<group>"; };
+		3F0A6FF825A6F91A0001BFC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F0A700F25A6FB670001BFC5 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		3F0A701725A70A780001BFC5 /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
+		3F0DBC5C266A341F008EA2FF /* RejectedApplicationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejectedApplicationCell.swift; sourceTree = "<group>"; };
+		3F0DBC5D266A341F008EA2FF /* RejectedApplicationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RejectedApplicationCell.xib; sourceTree = "<group>"; };
+		3F0DBC60266A4527008EA2FF /* RejectedApplicationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejectedApplicationViewController.swift; sourceTree = "<group>"; };
+		3F0DBC62266A4F97008EA2FF /* RejectedApplicationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejectedApplicationModel.swift; sourceTree = "<group>"; };
+		3F10240325A837B2009AAA35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3F10243825A8390C009AAA35 /* EnrollementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollementViewController.swift; sourceTree = "<group>"; };
+		3F10248C25A87599009AAA35 /* OTPVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPVerificationViewController.swift; sourceTree = "<group>"; };
+		3F1024E225AC2444009AAA35 /* ticketPRO RIPA.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ticketPRO RIPA.entitlements"; sourceTree = "<group>"; };
+		3F1024E625AC2C73009AAA35 /* Enrollment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enrollment.swift; sourceTree = "<group>"; };
+		3F10252A25ADD2C0009AAA35 /* SqliteDbStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SqliteDbStore.swift; sourceTree = "<group>"; };
+		3F10253225AED127009AAA35 /* DashBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardViewController.swift; sourceTree = "<group>"; };
+		3F128D7D26174F43006441AA /* EnterDescriptionPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterDescriptionPopupViewController.swift; sourceTree = "<group>"; };
+		3F128D822617B4EB006441AA /* PreviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewModel.swift; sourceTree = "<group>"; };
+		3F1A0652266BED7A00BDB710 /* LocationEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEditViewController.swift; sourceTree = "<group>"; };
+		3F1DF8B527549F1300792452 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		3F1DF8B92754AEDC00792452 /* UserSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingViewModel.swift; sourceTree = "<group>"; };
+		3F1DF8BB2754AF3E00792452 /* UserSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingModel.swift; sourceTree = "<group>"; };
+		3F1DF8BD2754CA0C00792452 /* UserSettingOptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingOptionController.swift; sourceTree = "<group>"; };
+		3F2154D226947F1700475EF6 /* OfflineSyncViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSyncViewController.swift; sourceTree = "<group>"; };
+		3F22FC072680B0F800F17428 /* FilterPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPopup.swift; sourceTree = "<group>"; };
+		3F317F1C25D1501300E986EA /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		3F317F2125D1515C00E986EA /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
+		3F31807325D6B08F00E986EA /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		3F3C2E3E2645E96500D3A5D1 /* SuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
+		3F3F2CA92747CE1D001C9BF2 /* UITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextField.swift; sourceTree = "<group>"; };
+		3F3F6BB72754DF4700CB075C /* userCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = userCell.swift; sourceTree = "<group>"; };
+		3F3F6BB82754DF4700CB075C /* userCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = userCell.xib; sourceTree = "<group>"; };
+		3F436BC5269C56A200E7FBB0 /* StatusCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCount.swift; sourceTree = "<group>"; };
+		3F436BCA269DB51400E7FBB0 /* TouchIDViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchIDViewController.swift; sourceTree = "<group>"; };
+		3F57962F2755FBE200D6BC32 /* EnterAssignmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterAssignmentController.swift; sourceTree = "<group>"; };
+		3F59E507261C3E3200D5F4A4 /* PersonsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsTableCell.swift; sourceTree = "<group>"; };
+		3F59E508261C3E3200D5F4A4 /* PersonsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonsTableCell.xib; sourceTree = "<group>"; };
+		3F59E50E261C443B00D5F4A4 /* PersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewController.swift; sourceTree = "<group>"; };
+		3F5BF5C825E91C62003E5361 /* EnterTextPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterTextPopupViewController.swift; sourceTree = "<group>"; };
+		3F5BF5D325E92976003E5361 /* SingleLineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLineCell.swift; sourceTree = "<group>"; };
+		3F5BF5D425E92976003E5361 /* SingleLineCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleLineCell.xib; sourceTree = "<group>"; };
+		3F5E2294261F27BE003E816A /* UpdateRipa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateRipa.swift; sourceTree = "<group>"; };
+		3F5F7C8A2628C19F00E0FB6A /* EducationCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EducationCode.swift; sourceTree = "<group>"; };
+		3F5F7C8F2629AE5F00E0FB6A /* EducationCodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EducationCodeCell.swift; sourceTree = "<group>"; };
+		3F5F7C902629AE5F00E0FB6A /* EducationCodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EducationCodeCell.xib; sourceTree = "<group>"; };
+		3F61019125E385C3002812C1 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		3F66802725DCDAE900ECE239 /* ImageView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ImageView+Extensions.swift"; sourceTree = "<group>"; };
+		3F66802825DCDAE900ECE239 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		3F66802925DCDAE900ECE239 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		3F66802A25DCDAE900ECE239 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		3F66802B25DCDAE900ECE239 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		3F66802C25DCDAE900ECE239 /* CALayer+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Extensions.swift"; sourceTree = "<group>"; };
+		3F66802D25DCDAE900ECE239 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		3F66802E25DCDAE900ECE239 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		3F66802F25DCDAE900ECE239 /* UIApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
+		3F66805A25DD241F00ECE239 /* NewRipaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRipaViewModel.swift; sourceTree = "<group>"; };
+		3F66806525DD245D00ECE239 /* NewRipaQuestionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRipaQuestionsModel.swift; sourceTree = "<group>"; };
+		3F690D7F25E6890D0095FC0D /* ticketpro.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = ticketpro.db; sourceTree = "<group>"; };
+		3F690D9D25E8272C0095FC0D /* NetworkReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReachability.swift; sourceTree = "<group>"; };
+		3F690DBA25E854C60095FC0D /* ViolationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationCell.swift; sourceTree = "<group>"; };
+		3F690DBB25E854C60095FC0D /* ViolationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViolationCell.xib; sourceTree = "<group>"; };
+		3F69E0F0260CB64B003CB920 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		3F69E12F26125BC5003CB920 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
+		3F69E13026125BC5003CB920 /* ListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListCell.xib; sourceTree = "<group>"; };
+		3F69E15C26160681003CB920 /* ViolationTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationTextCell.swift; sourceTree = "<group>"; };
+		3F69E15D26160681003CB920 /* ViolationTextCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViolationTextCell.xib; sourceTree = "<group>"; };
+		3F69E163261616C5003CB920 /* ViolationTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationTypeViewController.swift; sourceTree = "<group>"; };
+		3F72AC7625EF631C000EFDF5 /* CLCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLCell.swift; sourceTree = "<group>"; };
+		3F72AC7725EF631C000EFDF5 /* CLCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CLCell.xib; sourceTree = "<group>"; };
+		3F744F7B26650BCF00390724 /* ViolationPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationPopup.swift; sourceTree = "<group>"; };
+		3F7722D725B195B0009C0828 /* roboto */ = {isa = PBXFileReference; lastKnownFileType = folder; path = roboto; sourceTree = "<group>"; };
+		3F7722DF25B1978C009C0828 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		3F85009E264C4D0500DA159C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3F8BCA3D270DA7F900DD178B /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
+		3F8CFE3225EA7B720007C156 /* PreviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreviewCell.xib; sourceTree = "<group>"; };
+		3F8CFE3325EA7B720007C156 /* PreviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTableViewCell.swift; sourceTree = "<group>"; };
+		3F97BCAC25D9ABAD001F86F7 /* OtherRipaDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherRipaDataModel.swift; sourceTree = "<group>"; };
+		3FB4501D25DD3C5100E1A30C /* NewRipaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRipaViewController.swift; sourceTree = "<group>"; };
+		3FB4502B25DD49F100E1A30C /* MultilineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineCell.swift; sourceTree = "<group>"; };
+		3FB4502C25DD49F200E1A30C /* MultilineCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultilineCell.xib; sourceTree = "<group>"; };
+		3FB4503525DD4A1700E1A30C /* SingleChoiceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleChoiceCell.swift; sourceTree = "<group>"; };
+		3FB4503625DD4A1700E1A30C /* SingleChoiceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleChoiceCell.xib; sourceTree = "<group>"; };
+		3FB4504425DE38EC00E1A30C /* QuestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCell.swift; sourceTree = "<group>"; };
+		3FB4504525DE38EC00E1A30C /* QuestionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QuestionCell.xib; sourceTree = "<group>"; };
+		3FB6874F2635FB8C007E6F9B /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		3FB7817B265D27A9005B0B8A /* togglCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = togglCell.swift; sourceTree = "<group>"; };
+		3FB7817C265D27A9005B0B8A /* togglCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = togglCell.xib; sourceTree = "<group>"; };
+		3FB7817F265D363E005B0B8A /* PerceivedGenderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerceivedGenderCell.swift; sourceTree = "<group>"; };
+		3FB78180265D363E005B0B8A /* PerceivedGenderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerceivedGenderCell.xib; sourceTree = "<group>"; };
+		3FB78184265E2A64005B0B8A /* SelectOptionsPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOptionsPopup.swift; sourceTree = "<group>"; };
+		3FB78186265E8FC6005B0B8A /* RipaTempMasterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RipaTempMasterModel.swift; sourceTree = "<group>"; };
+		3FB78188265FE64E005B0B8A /* SavedListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListViewController.swift; sourceTree = "<group>"; };
+		3FB7818A265FE682005B0B8A /* SavedListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListTableViewCell.swift; sourceTree = "<group>"; };
+		3FB7818B265FE682005B0B8A /* SavedListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SavedListTableViewCell.xib; sourceTree = "<group>"; };
+		3FB90BA42750B6E000F86AE9 /* UserSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsViewController.swift; sourceTree = "<group>"; };
+		3FB90BA62750BBAC00F86AE9 /* UserSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingCell.swift; sourceTree = "<group>"; };
+		3FB90BA72750BBAC00F86AE9 /* UserSettingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserSettingCell.xib; sourceTree = "<group>"; };
+		3FBF17B726BBF8C200F4B18A /* ViolationCell2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationCell2.swift; sourceTree = "<group>"; };
+		3FBF17B826BBF8C200F4B18A /* ViolationCell2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViolationCell2.xib; sourceTree = "<group>"; };
+		3FBF17BB26BBFE2F00F4B18A /* ViolationsListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationsListCell.swift; sourceTree = "<group>"; };
+		3FBF17BC26BBFE2F00F4B18A /* ViolationsListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViolationsListCell.xib; sourceTree = "<group>"; };
+		50ACC26552C72E975F133DF9 /* Pods-ticketPRO RIPATests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPATests.debug.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPATests/Pods-ticketPRO RIPATests.debug.xcconfig"; sourceTree = "<group>"; };
+		860A93C9B4DBDBF5B65BE6A0 /* Pods_ticketPRO_RIPA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ticketPRO_RIPA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C0D3E8D9BE5727E61D4D03E /* Pods-ticketPRO RIPA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA.debug.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA/Pods-ticketPRO RIPA.debug.xcconfig"; sourceTree = "<group>"; };
+		941A95B9FA8F87655B14C360 /* Pods_ticketPRO_RIPA_ticketPRO_RIPAUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ticketPRO_RIPA_ticketPRO_RIPAUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		94649A5E268093EC00546C05 /* VersionUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionUpdate.swift; sourceTree = "<group>"; };
+		946977F225D1110500D013BB /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		946977FF25D1122C00D013BB /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
+		9469784425D1172500D013BB /* AppConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstant.swift; sourceTree = "<group>"; };
+		9469784C25D11B5A00D013BB /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
+		94F621B4264425890091C0E6 /* PendingQuestionsPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PendingQuestionsPopup.swift; sourceTree = "<group>"; };
+		94F621B9264425A20091C0E6 /* NoQuestionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoQuestionTableViewCell.xib; sourceTree = "<group>"; };
+		94F621BA264425A20091C0E6 /* NoQuestionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoQuestionTableViewCell.swift; sourceTree = "<group>"; };
+		9A531C18525ABFE74FE934A5 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA-ticketPRO RIPAUITests.debug.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA-ticketPRO RIPAUITests/Pods-ticketPRO RIPA-ticketPRO RIPAUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		9EBB20115469305EB8421C64 /* Pods-ticketPRO RIPATests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPATests.release.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPATests/Pods-ticketPRO RIPATests.release.xcconfig"; sourceTree = "<group>"; };
+		AF62FD37DE18B4378290E144 /* Pods_ticketPRO_RIPATests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ticketPRO_RIPATests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3F0A6FCE25A6F9170001BFC5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64A411ADA8BEC73218C84A86 /* Pods_ticketPRO_RIPA.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F0A6FE425A6F91A0001BFC5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				937C473AFCCC71F1A218346C /* Pods_ticketPRO_RIPATests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F0A6FEF25A6F91A0001BFC5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4AB3ADAFAA8E3F520C8BB69 /* Pods_ticketPRO_RIPA_ticketPRO_RIPAUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1DB0A51403529B91470EC223 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8C0D3E8D9BE5727E61D4D03E /* Pods-ticketPRO RIPA.debug.xcconfig */,
+				39ABFE45C4D00AC10E168E46 /* Pods-ticketPRO RIPA.release.xcconfig */,
+				9A531C18525ABFE74FE934A5 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.debug.xcconfig */,
+				33F194A4CF5DA50CCCA56263 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig */,
+				50ACC26552C72E975F133DF9 /* Pods-ticketPRO RIPATests.debug.xcconfig */,
+				9EBB20115469305EB8421C64 /* Pods-ticketPRO RIPATests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		3F0A6FC825A6F9170001BFC5 = {
+			isa = PBXGroup;
+			children = (
+				3F0A6FD325A6F9170001BFC5 /* ticketPRO RIPA */,
+				3F0A6FEA25A6F91A0001BFC5 /* ticketPRO RIPATests */,
+				3F0A6FF525A6F91A0001BFC5 /* ticketPRO RIPAUITests */,
+				3F0A6FD225A6F9170001BFC5 /* Products */,
+				1DB0A51403529B91470EC223 /* Pods */,
+				DA4F40CB4028B402C555FA1C /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3F0A6FD225A6F9170001BFC5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3F0A6FD125A6F9170001BFC5 /* ticketPRO RIPA.app */,
+				3F0A6FE725A6F91A0001BFC5 /* ticketPRO RIPATests.xctest */,
+				3F0A6FF225A6F91A0001BFC5 /* ticketPRO RIPAUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3F0A6FD325A6F9170001BFC5 /* ticketPRO RIPA */ = {
+			isa = PBXGroup;
+			children = (
+				3F1024E225AC2444009AAA35 /* ticketPRO RIPA.entitlements */,
+				3F0A700C25A6F9B00001BFC5 /* Api */,
+				3F0A700D25A6FA0A0001BFC5 /* Models */,
+				946977F125D110C800D013BB /* ViewModel */,
+				3F0A700925A6F9700001BFC5 /* Controllers */,
+				3FB78183265E29DD005B0B8A /* Popups */,
+				3FB4502225DD495700E1A30C /* TableView */,
+				3F66802625DCDAE900ECE239 /* Extensions */,
+				3F0A700B25A6F9A00001BFC5 /* Resources */,
+				3F0A700A25A6F9890001BFC5 /* Database */,
+				3F0A700725A6F92D0001BFC5 /* AppGlobal  */,
+				3F0A6FD425A6F9170001BFC5 /* AppDelegate.swift */,
+				3F0A6FDF25A6F91A0001BFC5 /* LaunchScreen.storyboard */,
+				3F10240225A837B2009AAA35 /* Main.storyboard */,
+				3F0A6FD625A6F9170001BFC5 /* SceneDelegate.swift */,
+			);
+			path = "ticketPRO RIPA";
+			sourceTree = "<group>";
+		};
+		3F0A6FEA25A6F91A0001BFC5 /* ticketPRO RIPATests */ = {
+			isa = PBXGroup;
+			children = (
+				3F0A6FEB25A6F91A0001BFC5 /* ticketPRO_RIPATests.swift */,
+				3F0A6FED25A6F91A0001BFC5 /* Info.plist */,
+			);
+			path = "ticketPRO RIPATests";
+			sourceTree = "<group>";
+		};
+		3F0A6FF525A6F91A0001BFC5 /* ticketPRO RIPAUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3F0A6FF625A6F91A0001BFC5 /* ticketPRO_RIPAUITests.swift */,
+				3F0A6FF825A6F91A0001BFC5 /* Info.plist */,
+			);
+			path = "ticketPRO RIPAUITests";
+			sourceTree = "<group>";
+		};
+		3F0A700725A6F92D0001BFC5 /* AppGlobal  */ = {
+			isa = PBXGroup;
+			children = (
+				3F0A700E25A6FA6A0001BFC5 /* Validators */,
+				946977FF25D1122C00D013BB /* AppUtility.swift */,
+				9469784425D1172500D013BB /* AppConstant.swift */,
+				3F317F1C25D1501300E986EA /* DataManager.swift */,
+				3F317F2125D1515C00E986EA /* AppManager.swift */,
+				3F690D9D25E8272C0095FC0D /* NetworkReachability.swift */,
+				3FB6874F2635FB8C007E6F9B /* Location.swift */,
+			);
+			path = "AppGlobal ";
+			sourceTree = "<group>";
+		};
+		3F0A700925A6F9700001BFC5 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3F1A0651266BED4700BDB710 /* RejectedApplication */,
+				3F10243825A8390C009AAA35 /* EnrollementViewController.swift */,
+				3F10248C25A87599009AAA35 /* OTPVerificationViewController.swift */,
+				3F5775CD26787AEC0099A757 /* Dashboard */,
+				3FB78188265FE64E005B0B8A /* SavedListViewController.swift */,
+				3F5BF5C725E91C08003E5361 /* New Ripa */,
+				3F61019125E385C3002812C1 /* PreviewViewController.swift */,
+				3F69E0F0260CB64B003CB920 /* ListViewController.swift */,
+				3F69E163261616C5003CB920 /* ViolationTypeViewController.swift */,
+				3F59E50E261C443B00D5F4A4 /* PersonViewController.swift */,
+				3F3C2E3E2645E96500D3A5D1 /* SuccessViewController.swift */,
+				3F2154D226947F1700475EF6 /* OfflineSyncViewController.swift */,
+				3F436BCA269DB51400E7FBB0 /* TouchIDViewController.swift */,
+				3FB90BA42750B6E000F86AE9 /* UserSettingsViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3F0A700A25A6F9890001BFC5 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				3F690D7F25E6890D0095FC0D /* ticketpro.db */,
+				3F10252A25ADD2C0009AAA35 /* SqliteDbStore.swift */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		3F0A700B25A6F9A00001BFC5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3F85009E264C4D0500DA159C /* GoogleService-Info.plist */,
+				3F0A6FDD25A6F91A0001BFC5 /* Assets.xcassets */,
+				3F7722DF25B1978C009C0828 /* Roboto-Medium.ttf */,
+				3F7722D725B195B0009C0828 /* roboto */,
+				3F0A6FE225A6F91A0001BFC5 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3F0A700C25A6F9B00001BFC5 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				9469784C25D11B5A00D013BB /* ApiManager.swift */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		3F0A700D25A6FA0A0001BFC5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3F1024E625AC2C73009AAA35 /* Enrollment.swift */,
+				3F97BCAC25D9ABAD001F86F7 /* OtherRipaDataModel.swift */,
+				3F66806525DD245D00ECE239 /* NewRipaQuestionsModel.swift */,
+				3F5E2294261F27BE003E816A /* UpdateRipa.swift */,
+				3F5F7C8A2628C19F00E0FB6A /* EducationCode.swift */,
+				3FB78186265E8FC6005B0B8A /* RipaTempMasterModel.swift */,
+				3F0DBC62266A4F97008EA2FF /* RejectedApplicationModel.swift */,
+				3F436BC5269C56A200E7FBB0 /* StatusCount.swift */,
+				94649A5E268093EC00546C05 /* VersionUpdate.swift */,
+				3F8BCA3D270DA7F900DD178B /* LocationModel.swift */,
+				3F1DF8BB2754AF3E00792452 /* UserSettingModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3F0A700E25A6FA6A0001BFC5 /* Validators */ = {
+			isa = PBXGroup;
+			children = (
+				3F0A701725A70A780001BFC5 /* Validation.swift */,
+			);
+			path = Validators;
+			sourceTree = "<group>";
+		};
+		3F1A0651266BED4700BDB710 /* RejectedApplication */ = {
+			isa = PBXGroup;
+			children = (
+				3F0DBC60266A4527008EA2FF /* RejectedApplicationViewController.swift */,
+				3F1A0652266BED7A00BDB710 /* LocationEditViewController.swift */,
+			);
+			path = RejectedApplication;
+			sourceTree = "<group>";
+		};
+		3F5775CD26787AEC0099A757 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				3F10253225AED127009AAA35 /* DashBoardViewController.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		3F5BF5C725E91C08003E5361 /* New Ripa */ = {
+			isa = PBXGroup;
+			children = (
+				3FB4501D25DD3C5100E1A30C /* NewRipaViewController.swift */,
+			);
+			path = "New Ripa";
+			sourceTree = "<group>";
+		};
+		3F66802625DCDAE900ECE239 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3F0A700F25A6FB670001BFC5 /* Extension.swift */,
+				3F66802725DCDAE900ECE239 /* ImageView+Extensions.swift */,
+				3F66802825DCDAE900ECE239 /* Date.swift */,
+				3F66802925DCDAE900ECE239 /* UIView.swift */,
+				3F66802A25DCDAE900ECE239 /* Array.swift */,
+				3F66802B25DCDAE900ECE239 /* UIColor.swift */,
+				3F66802C25DCDAE900ECE239 /* CALayer+Extensions.swift */,
+				3F66802D25DCDAE900ECE239 /* String.swift */,
+				3F66802E25DCDAE900ECE239 /* UIImage.swift */,
+				3F66802F25DCDAE900ECE239 /* UIApplication.swift */,
+				3F3F2CA92747CE1D001C9BF2 /* UITextField.swift */,
+				3F1DF8B527549F1300792452 /* TableViewCell.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3FB4502225DD495700E1A30C /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				3FB4502B25DD49F100E1A30C /* MultilineCell.swift */,
+				3FB4502C25DD49F200E1A30C /* MultilineCell.xib */,
+				3FB4503525DD4A1700E1A30C /* SingleChoiceCell.swift */,
+				3FB4503625DD4A1700E1A30C /* SingleChoiceCell.xib */,
+				3FB4504425DE38EC00E1A30C /* QuestionCell.swift */,
+				3FB4504525DE38EC00E1A30C /* QuestionCell.xib */,
+				3F690DBA25E854C60095FC0D /* ViolationCell.swift */,
+				3F690DBB25E854C60095FC0D /* ViolationCell.xib */,
+				3FBF17B726BBF8C200F4B18A /* ViolationCell2.swift */,
+				3FBF17B826BBF8C200F4B18A /* ViolationCell2.xib */,
+				3FBF17BB26BBFE2F00F4B18A /* ViolationsListCell.swift */,
+				3FBF17BC26BBFE2F00F4B18A /* ViolationsListCell.xib */,
+				94F621BA264425A20091C0E6 /* NoQuestionTableViewCell.swift */,
+				94F621B9264425A20091C0E6 /* NoQuestionTableViewCell.xib */,
+				3F5BF5D325E92976003E5361 /* SingleLineCell.swift */,
+				3F5BF5D425E92976003E5361 /* SingleLineCell.xib */,
+				3F8CFE3325EA7B720007C156 /* PreviewTableViewCell.swift */,
+				3F8CFE3225EA7B720007C156 /* PreviewCell.xib */,
+				3F72AC7625EF631C000EFDF5 /* CLCell.swift */,
+				3F72AC7725EF631C000EFDF5 /* CLCell.xib */,
+				3F69E12F26125BC5003CB920 /* ListCell.swift */,
+				3F69E13026125BC5003CB920 /* ListCell.xib */,
+				3F69E15C26160681003CB920 /* ViolationTextCell.swift */,
+				3F69E15D26160681003CB920 /* ViolationTextCell.xib */,
+				3F59E507261C3E3200D5F4A4 /* PersonsTableCell.swift */,
+				3F59E508261C3E3200D5F4A4 /* PersonsTableCell.xib */,
+				3F5F7C8F2629AE5F00E0FB6A /* EducationCodeCell.swift */,
+				3F5F7C902629AE5F00E0FB6A /* EducationCodeCell.xib */,
+				3FB7817B265D27A9005B0B8A /* togglCell.swift */,
+				3FB7817C265D27A9005B0B8A /* togglCell.xib */,
+				3FB7817F265D363E005B0B8A /* PerceivedGenderCell.swift */,
+				3FB78180265D363E005B0B8A /* PerceivedGenderCell.xib */,
+				3FB7818A265FE682005B0B8A /* SavedListTableViewCell.swift */,
+				3FB7818B265FE682005B0B8A /* SavedListTableViewCell.xib */,
+				3F0DBC5C266A341F008EA2FF /* RejectedApplicationCell.swift */,
+				3F0DBC5D266A341F008EA2FF /* RejectedApplicationCell.xib */,
+				3FB90BA62750BBAC00F86AE9 /* UserSettingCell.swift */,
+				3FB90BA72750BBAC00F86AE9 /* UserSettingCell.xib */,
+				3F3F6BB72754DF4700CB075C /* userCell.swift */,
+				3F3F6BB82754DF4700CB075C /* userCell.xib */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		3FB78183265E29DD005B0B8A /* Popups */ = {
+			isa = PBXGroup;
+			children = (
+				3F128D7D26174F43006441AA /* EnterDescriptionPopupViewController.swift */,
+				3F5BF5C825E91C62003E5361 /* EnterTextPopupViewController.swift */,
+				94F621B4264425890091C0E6 /* PendingQuestionsPopup.swift */,
+				3FB78184265E2A64005B0B8A /* SelectOptionsPopup.swift */,
+				3F744F7B26650BCF00390724 /* ViolationPopup.swift */,
+				3F22FC072680B0F800F17428 /* FilterPopup.swift */,
+				3F1DF8BD2754CA0C00792452 /* UserSettingOptionController.swift */,
+				3F57962F2755FBE200D6BC32 /* EnterAssignmentController.swift */,
+			);
+			path = Popups;
+			sourceTree = "<group>";
+		};
+		946977F125D110C800D013BB /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				946977F225D1110500D013BB /* LoginViewModel.swift */,
+				3F31807325D6B08F00E986EA /* DashboardViewModel.swift */,
+				3F66805A25DD241F00ECE239 /* NewRipaViewModel.swift */,
+				3F128D822617B4EB006441AA /* PreviewViewModel.swift */,
+				3F066F8826413350007B60A6 /* SavedListViewModel.swift */,
+				3F1DF8B92754AEDC00792452 /* UserSettingViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		DA4F40CB4028B402C555FA1C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				860A93C9B4DBDBF5B65BE6A0 /* Pods_ticketPRO_RIPA.framework */,
+				941A95B9FA8F87655B14C360 /* Pods_ticketPRO_RIPA_ticketPRO_RIPAUITests.framework */,
+				AF62FD37DE18B4378290E144 /* Pods_ticketPRO_RIPATests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3F0A6FD025A6F9170001BFC5 /* ticketPRO RIPA */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F0A6FFB25A6F91A0001BFC5 /* Build configuration list for PBXNativeTarget "ticketPRO RIPA" */;
+			buildPhases = (
+				A6D3D1605A687C2EE7F55D9C /* [CP] Check Pods Manifest.lock */,
+				3F0A6FCD25A6F9170001BFC5 /* Sources */,
+				3F0A6FCE25A6F9170001BFC5 /* Frameworks */,
+				3F0A6FCF25A6F9170001BFC5 /* Resources */,
+				3FA4BE80266F9321009AB0F1 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ticketPRO RIPA";
+			productName = "ticketPRO RIPA";
+			productReference = 3F0A6FD125A6F9170001BFC5 /* ticketPRO RIPA.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3F0A6FE625A6F91A0001BFC5 /* ticketPRO RIPATests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F0A6FFE25A6F91A0001BFC5 /* Build configuration list for PBXNativeTarget "ticketPRO RIPATests" */;
+			buildPhases = (
+				8B41D2E92E0487E28E16E439 /* [CP] Check Pods Manifest.lock */,
+				3F0A6FE325A6F91A0001BFC5 /* Sources */,
+				3F0A6FE425A6F91A0001BFC5 /* Frameworks */,
+				3F0A6FE525A6F91A0001BFC5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3F0A6FE925A6F91A0001BFC5 /* PBXTargetDependency */,
+			);
+			name = "ticketPRO RIPATests";
+			productName = "ticketPRO RIPATests";
+			productReference = 3F0A6FE725A6F91A0001BFC5 /* ticketPRO RIPATests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3F0A6FF125A6F91A0001BFC5 /* ticketPRO RIPAUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F0A700125A6F91A0001BFC5 /* Build configuration list for PBXNativeTarget "ticketPRO RIPAUITests" */;
+			buildPhases = (
+				3AF5FF355174AF4575A05B60 /* [CP] Check Pods Manifest.lock */,
+				3F0A6FEE25A6F91A0001BFC5 /* Sources */,
+				3F0A6FEF25A6F91A0001BFC5 /* Frameworks */,
+				3F0A6FF025A6F91A0001BFC5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3F0A6FF425A6F91A0001BFC5 /* PBXTargetDependency */,
+			);
+			name = "ticketPRO RIPAUITests";
+			productName = "ticketPRO RIPAUITests";
+			productReference = 3F0A6FF225A6F91A0001BFC5 /* ticketPRO RIPAUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3F0A6FC925A6F9170001BFC5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1230;
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					3F0A6FD025A6F9170001BFC5 = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					3F0A6FE625A6F91A0001BFC5 = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = 3F0A6FD025A6F9170001BFC5;
+					};
+					3F0A6FF125A6F91A0001BFC5 = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = 3F0A6FD025A6F9170001BFC5;
+					};
+				};
+			};
+			buildConfigurationList = 3F0A6FCC25A6F9170001BFC5 /* Build configuration list for PBXProject "ticketPRO RIPA" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3F0A6FC825A6F9170001BFC5;
+			productRefGroup = 3F0A6FD225A6F9170001BFC5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3F0A6FD025A6F9170001BFC5 /* ticketPRO RIPA */,
+				3F0A6FE625A6F91A0001BFC5 /* ticketPRO RIPATests */,
+				3F0A6FF125A6F91A0001BFC5 /* ticketPRO RIPAUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3F0A6FCF25A6F9170001BFC5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F3F6BBA2754DF4700CB075C /* userCell.xib in Resources */,
+				3F0A6FE125A6F91A0001BFC5 /* LaunchScreen.storyboard in Resources */,
+				3FB4503825DD4A1700E1A30C /* SingleChoiceCell.xib in Resources */,
+				3F69E13226125BC5003CB920 /* ListCell.xib in Resources */,
+				3FB90BA92750BBAC00F86AE9 /* UserSettingCell.xib in Resources */,
+				3FB7818D265FE682005B0B8A /* SavedListTableViewCell.xib in Resources */,
+				3F7722D825B195B0009C0828 /* roboto in Resources */,
+				3FB4502E25DD49F200E1A30C /* MultilineCell.xib in Resources */,
+				3FBF17BA26BBF8C200F4B18A /* ViolationCell2.xib in Resources */,
+				3FBF17BE26BBFE2F00F4B18A /* ViolationsListCell.xib in Resources */,
+				3F59E50A261C3E3200D5F4A4 /* PersonsTableCell.xib in Resources */,
+				3F72AC7925EF631E000EFDF5 /* CLCell.xib in Resources */,
+				94F621BB264425A20091C0E6 /* NoQuestionTableViewCell.xib in Resources */,
+				3F69E15F26160682003CB920 /* ViolationTextCell.xib in Resources */,
+				3F7722E025B1978C009C0828 /* Roboto-Medium.ttf in Resources */,
+				3F690D8025E6890D0095FC0D /* ticketpro.db in Resources */,
+				3F0DBC5F266A3421008EA2FF /* RejectedApplicationCell.xib in Resources */,
+				3F85009F264C4D0500DA159C /* GoogleService-Info.plist in Resources */,
+				3F5F7C922629AE5F00E0FB6A /* EducationCodeCell.xib in Resources */,
+				3FB78182265D363E005B0B8A /* PerceivedGenderCell.xib in Resources */,
+				3F10240425A837B2009AAA35 /* Main.storyboard in Resources */,
+				3F690DBD25E854C70095FC0D /* ViolationCell.xib in Resources */,
+				3FB7817E265D27A9005B0B8A /* togglCell.xib in Resources */,
+				3F5BF5D625E92976003E5361 /* SingleLineCell.xib in Resources */,
+				3FB4504725DE38EC00E1A30C /* QuestionCell.xib in Resources */,
+				3F8CFE3425EA7B720007C156 /* PreviewCell.xib in Resources */,
+				3F0A6FDE25A6F91A0001BFC5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F0A6FE525A6F91A0001BFC5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F0A6FF025A6F91A0001BFC5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3AF5FF355174AF4575A05B60 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ticketPRO RIPA-ticketPRO RIPAUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3FA4BE80266F9321009AB0F1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+		};
+		8B41D2E92E0487E28E16E439 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ticketPRO RIPATests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A6D3D1605A687C2EE7F55D9C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ticketPRO RIPA-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3F0A6FCD25A6F9170001BFC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F0DBC61266A4528008EA2FF /* RejectedApplicationViewController.swift in Sources */,
+				3F66803825DCDAEA00ECE239 /* UIApplication.swift in Sources */,
+				3FB4504625DE38EC00E1A30C /* QuestionCell.swift in Sources */,
+				3F1024E725AC2C73009AAA35 /* Enrollment.swift in Sources */,
+				3F69E13126125BC5003CB920 /* ListCell.swift in Sources */,
+				3F72AC7825EF631E000EFDF5 /* CLCell.swift in Sources */,
+				3F0A701025A6FB670001BFC5 /* Extension.swift in Sources */,
+				3F436BCB269DB51500E7FBB0 /* TouchIDViewController.swift in Sources */,
+				3F0DBC5E266A3421008EA2FF /* RejectedApplicationCell.swift in Sources */,
+				3F0DBC63266A4F97008EA2FF /* RejectedApplicationModel.swift in Sources */,
+				3F66803725DCDAEA00ECE239 /* UIImage.swift in Sources */,
+				3F66803325DCDAEA00ECE239 /* Array.swift in Sources */,
+				3F10253325AED127009AAA35 /* DashBoardViewController.swift in Sources */,
+				3FB7818C265FE682005B0B8A /* SavedListTableViewCell.swift in Sources */,
+				3F66806625DD245D00ECE239 /* NewRipaQuestionsModel.swift in Sources */,
+				3FB7817D265D27A9005B0B8A /* togglCell.swift in Sources */,
+				3F10243925A8390C009AAA35 /* EnrollementViewController.swift in Sources */,
+				3F69E164261616C6003CB920 /* ViolationTypeViewController.swift in Sources */,
+				3FB687502635FB8C007E6F9B /* Location.swift in Sources */,
+				3F59E50F261C443B00D5F4A4 /* PersonViewController.swift in Sources */,
+				3F066F8926413350007B60A6 /* SavedListViewModel.swift in Sources */,
+				3FB78181265D363E005B0B8A /* PerceivedGenderCell.swift in Sources */,
+				3F5BF5C925E91C62003E5361 /* EnterTextPopupViewController.swift in Sources */,
+				3F66805B25DD241F00ECE239 /* NewRipaViewModel.swift in Sources */,
+				3F69E15E26160682003CB920 /* ViolationTextCell.swift in Sources */,
+				94649A5F268093EC00546C05 /* VersionUpdate.swift in Sources */,
+				3F3F2CAA2747CE1D001C9BF2 /* UITextField.swift in Sources */,
+				946977F325D1110500D013BB /* LoginViewModel.swift in Sources */,
+				3FB90BA52750B6E000F86AE9 /* UserSettingsViewController.swift in Sources */,
+				9469784D25D11B5A00D013BB /* ApiManager.swift in Sources */,
+				3F128D7E26174F43006441AA /* EnterDescriptionPopupViewController.swift in Sources */,
+				3F690DBC25E854C70095FC0D /* ViolationCell.swift in Sources */,
+				3F66803125DCDAEA00ECE239 /* Date.swift in Sources */,
+				3F5BF5D525E92976003E5361 /* SingleLineCell.swift in Sources */,
+				3F1A0653266BED7A00BDB710 /* LocationEditViewController.swift in Sources */,
+				3F10248D25A87599009AAA35 /* OTPVerificationViewController.swift in Sources */,
+				3F436BC6269C56A200E7FBB0 /* StatusCount.swift in Sources */,
+				3F0A6FD525A6F9170001BFC5 /* AppDelegate.swift in Sources */,
+				3F22FC082680B0F800F17428 /* FilterPopup.swift in Sources */,
+				3F1DF8B627549F1300792452 /* TableViewCell.swift in Sources */,
+				3FBF17BD26BBFE2F00F4B18A /* ViolationsListCell.swift in Sources */,
+				3F59E509261C3E3200D5F4A4 /* PersonsTableCell.swift in Sources */,
+				9469784525D1172500D013BB /* AppConstant.swift in Sources */,
+				3FB90BA82750BBAC00F86AE9 /* UserSettingCell.swift in Sources */,
+				3F3F6BB92754DF4700CB075C /* userCell.swift in Sources */,
+				3F8BCA3E270DA7F900DD178B /* LocationModel.swift in Sources */,
+				3F66803025DCDAEA00ECE239 /* ImageView+Extensions.swift in Sources */,
+				9469780025D1122C00D013BB /* AppUtility.swift in Sources */,
+				3F61019225E385C3002812C1 /* PreviewViewController.swift in Sources */,
+				3F0A701825A70A780001BFC5 /* Validation.swift in Sources */,
+				3F0A6FD725A6F9170001BFC5 /* SceneDelegate.swift in Sources */,
+				3F31807425D6B09000E986EA /* DashboardViewModel.swift in Sources */,
+				3F5796302755FBE200D6BC32 /* EnterAssignmentController.swift in Sources */,
+				3FB4501E25DD3C5100E1A30C /* NewRipaViewController.swift in Sources */,
+				3F5E2295261F27BE003E816A /* UpdateRipa.swift in Sources */,
+				3FB4502D25DD49F200E1A30C /* MultilineCell.swift in Sources */,
+				3FB78189265FE64E005B0B8A /* SavedListViewController.swift in Sources */,
+				94F621B5264425890091C0E6 /* PendingQuestionsPopup.swift in Sources */,
+				3F1DF8BE2754CA0C00792452 /* UserSettingOptionController.swift in Sources */,
+				3FBF17B926BBF8C200F4B18A /* ViolationCell2.swift in Sources */,
+				3F5F7C912629AE5F00E0FB6A /* EducationCodeCell.swift in Sources */,
+				3F66803225DCDAEA00ECE239 /* UIView.swift in Sources */,
+				3FB4503725DD4A1700E1A30C /* SingleChoiceCell.swift in Sources */,
+				3FB78187265E8FC8005B0B8A /* RipaTempMasterModel.swift in Sources */,
+				3F1DF8BA2754AEDC00792452 /* UserSettingViewModel.swift in Sources */,
+				3F66803425DCDAEA00ECE239 /* UIColor.swift in Sources */,
+				3F317F2225D1515C00E986EA /* AppManager.swift in Sources */,
+				3F66803525DCDAEA00ECE239 /* CALayer+Extensions.swift in Sources */,
+				3F10252B25ADD2C0009AAA35 /* SqliteDbStore.swift in Sources */,
+				3F66803625DCDAEA00ECE239 /* String.swift in Sources */,
+				3F8CFE3525EA7B720007C156 /* PreviewTableViewCell.swift in Sources */,
+				3F690D9E25E8272D0095FC0D /* NetworkReachability.swift in Sources */,
+				94F621BC264425A20091C0E6 /* NoQuestionTableViewCell.swift in Sources */,
+				3F744F7C26650BCF00390724 /* ViolationPopup.swift in Sources */,
+				3FB78185265E2A65005B0B8A /* SelectOptionsPopup.swift in Sources */,
+				3F69E0F1260CB64B003CB920 /* ListViewController.swift in Sources */,
+				3F317F1D25D1501300E986EA /* DataManager.swift in Sources */,
+				3F2154D326947F1800475EF6 /* OfflineSyncViewController.swift in Sources */,
+				3F97BCAD25D9ABAD001F86F7 /* OtherRipaDataModel.swift in Sources */,
+				3F5F7C8B2628C1A000E0FB6A /* EducationCode.swift in Sources */,
+				3F3C2E3F2645E96500D3A5D1 /* SuccessViewController.swift in Sources */,
+				3F128D832617B4EB006441AA /* PreviewViewModel.swift in Sources */,
+				3F1DF8BC2754AF3E00792452 /* UserSettingModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F0A6FE325A6F91A0001BFC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F0A6FEC25A6F91A0001BFC5 /* ticketPRO_RIPATests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F0A6FEE25A6F91A0001BFC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F0A6FF725A6F91A0001BFC5 /* ticketPRO_RIPAUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3F0A6FE925A6F91A0001BFC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3F0A6FD025A6F9170001BFC5 /* ticketPRO RIPA */;
+			targetProxy = 3F0A6FE825A6F91A0001BFC5 /* PBXContainerItemProxy */;
+		};
+		3F0A6FF425A6F91A0001BFC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3F0A6FD025A6F9170001BFC5 /* ticketPRO RIPA */;
+			targetProxy = 3F0A6FF325A6F91A0001BFC5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3F0A6FDF25A6F91A0001BFC5 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3F0A6FE025A6F91A0001BFC5 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		3F10240225A837B2009AAA35 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3F10240325A837B2009AAA35 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3F0A6FF925A6F91A0001BFC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3F0A6FFA25A6F91A0001BFC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3F0A6FFC25A6F91A0001BFC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8C0D3E8D9BE5727E61D4D03E /* Pods-ticketPRO RIPA.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = YY8294K333;
+				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
+				MARKETING_VERSION = 2.9.5;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-l\"z\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"FBLPromises\"",
+					"-framework",
+					"\"FirebaseAuth\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseCoreDiagnostics\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"GTMSessionFetcher\"",
+					"-framework",
+					"\"GoogleDataTransport\"",
+					"-framework",
+					"\"GoogleUtilities\"",
+					"-framework",
+					"\"SafariServices\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"nanopb\"",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Debug;
+		};
+		3F0A6FFD25A6F91A0001BFC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39ABFE45C4D00AC10E168E46 /* Pods-ticketPRO RIPA.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.0;
+				DEVELOPMENT_TEAM = YY8294K333;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
+				MARKETING_VERSION = 2.9.5;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-l\"z\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"FBLPromises\"",
+					"-framework",
+					"\"FirebaseAuth\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseCoreDiagnostics\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"GTMSessionFetcher\"",
+					"-framework",
+					"\"GoogleDataTransport\"",
+					"-framework",
+					"\"GoogleUtilities\"",
+					"-framework",
+					"\"SafariServices\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"nanopb\"",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		3F0A6FFF25A6F91A0001BFC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50ACC26552C72E975F133DF9 /* Pods-ticketPRO RIPATests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S96DP7MBAB;
+				INFOPLIST_FILE = "ticketPRO RIPATests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ticketpro.ripa.ticketPRO-RIPATests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ticketPRO RIPA.app/ticketPRO RIPA";
+			};
+			name = Debug;
+		};
+		3F0A700025A6F91A0001BFC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9EBB20115469305EB8421C64 /* Pods-ticketPRO RIPATests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S96DP7MBAB;
+				INFOPLIST_FILE = "ticketPRO RIPATests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ticketpro.ripa.ticketPRO-RIPATests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ticketPRO RIPA.app/ticketPRO RIPA";
+			};
+			name = Release;
+		};
+		3F0A700225A6F91A0001BFC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A531C18525ABFE74FE934A5 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S96DP7MBAB;
+				INFOPLIST_FILE = "ticketPRO RIPAUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ticketpro.ripa.ticketPRO-RIPAUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "ticketPRO RIPA";
+			};
+			name = Debug;
+		};
+		3F0A700325A6F91A0001BFC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33F194A4CF5DA50CCCA56263 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S96DP7MBAB;
+				INFOPLIST_FILE = "ticketPRO RIPAUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ticketpro.ripa.ticketPRO-RIPAUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "ticketPRO RIPA";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3F0A6FCC25A6F9170001BFC5 /* Build configuration list for PBXProject "ticketPRO RIPA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F0A6FF925A6F91A0001BFC5 /* Debug */,
+				3F0A6FFA25A6F91A0001BFC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3F0A6FFB25A6F91A0001BFC5 /* Build configuration list for PBXNativeTarget "ticketPRO RIPA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F0A6FFC25A6F91A0001BFC5 /* Debug */,
+				3F0A6FFD25A6F91A0001BFC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3F0A6FFE25A6F91A0001BFC5 /* Build configuration list for PBXNativeTarget "ticketPRO RIPATests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F0A6FFF25A6F91A0001BFC5 /* Debug */,
+				3F0A700025A6F91A0001BFC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3F0A700125A6F91A0001BFC5 /* Build configuration list for PBXNativeTarget "ticketPRO RIPAUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F0A700225A6F91A0001BFC5 /* Debug */,
+				3F0A700325A6F91A0001BFC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3F0A6FC925A6F9170001BFC5 /* Project object */;
+}
