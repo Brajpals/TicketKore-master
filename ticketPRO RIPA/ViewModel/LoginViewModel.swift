@@ -148,8 +148,8 @@ extension LoginViewModel {
                 let data =  DataManager.shared.loginDetails
                 let result = data?.result
                 // result?.serviceError != nil
-                if result?.serviceError != "" {
-                    AppUtility.showAlertWithProperty("Alert", messageString: (result?.serviceError)!)
+                if result?.serviceError != "" ,let msgStr = result?.serviceError{
+                    AppUtility.showAlertWithProperty("Alert", messageString: msgStr)
                 }
                 else{
                     ripa_enrollment_id = (result?.ripa_enrollment_id)!
@@ -246,8 +246,8 @@ extension LoginViewModel {
                 let data =  DataManager.shared.versionUpdate
                 let result = data?.result
                 
-                print(result!.ios_verion!)
-                let version = Double(result!.ios_verion!)
+              
+                if let version = Double(result?.ios_verion ?? ""){
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 var versionnew : Double = 1.0
                 if let versin =  (appVersion as NSString?)?.doubleValue{
@@ -264,6 +264,7 @@ extension LoginViewModel {
                         UIApplication.topViewController()?.present(refreshAlert, animated: true, completion: nil)
                     }
                 }
+              }
             }
             else {// AppUtility.showAlertWithProperty("Alert", messageString: "Something Went Wrong")
             }

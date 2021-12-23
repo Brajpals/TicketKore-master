@@ -87,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void)
     {
                 print(response)
-                 let login = UserDefaults.standard.integer(forKey: "isLoggedIn")
+               let login = UserDefaults.standard.integer(forKey: "isLoggedIn")
                let userInfo = response.notification.request.content.userInfo
                 if (login == 1){
                     if let aps = userInfo["result"] as? [String: Any],let actionDict = aps["params"] as? [String: Any],let action = actionDict["action"] as? String {
@@ -107,11 +107,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                         }
                     }
                     else {
-                    let story = UIStoryboard(name: "Main", bundle:nil)
-                    let vc = story.instantiateViewController(withIdentifier: "DashBoardViewController") as! DashBoardViewController
-                     let rootVC = UINavigationController(rootViewController: vc)
-                     UIApplication.shared.windows.first?.rootViewController = rootVC
-                     UIApplication.shared.windows.first?.makeKeyAndVisible()
+                        let story = UIStoryboard(name: "Main", bundle:nil)
+                        let vc = story.instantiateViewController(withIdentifier: "DashBoardViewController") as! DashBoardViewController
+                         let rootVC = UINavigationController(rootViewController: vc)
+                         UIApplication.shared.windows.first?.rootViewController = rootVC
+                         UIApplication.shared.windows.first?.makeKeyAndVisible()
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     vc.demo(tag:2)

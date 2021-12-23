@@ -37,6 +37,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     var viewType:String = ""
     
     var addressString:String!
+    var descriptionString:String!
     
      let db = SqliteDbStore()
     var ripaActivity : Ripaactivity?
@@ -343,9 +344,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
                 cell.answer_lbl.textColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
             }
             
-           
-            
-            if locationArray.count > 0 {
+            if locationArray.count > 0 && indexPath.row < locationArray.count{
                 cell.answer_lbl.text = locationArray[indexPath.row]
             }
             
@@ -353,11 +352,17 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         
         if selectedOptionsArray[indexPath.section].count>0 {
-            if selectedOptionsArray[indexPath.section][indexPath.row].tag == "Description"{
+            if indexPath.section == 5 {
+                
+            }
+            if selectedOptionsArray[indexPath.section][indexPath.row].tag == "Description",selectedOptionsArray[indexPath.section][indexPath.row].option_value.count > 0{
                 cell.answer_lbl.text = "Description - " + selectedOptionsArray[indexPath.section][indexPath.row].option_value
             }
+            else if selectedOptionsArray[indexPath.section][indexPath.row].tag == "Description"{
+                cell.answer_lbl.text = "Description - " + descriptionString
+            }
             else{
-            cell.answer_lbl.text = selectedOptionsArray[indexPath.section][indexPath.row].option_value
+              cell.answer_lbl.text = selectedOptionsArray[indexPath.section][indexPath.row].option_value
             }
             if indexPath.row == 0{
                 cell.check_img.isHidden = false
@@ -419,14 +424,14 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             self.performSegue(withIdentifier: "ShowPersonView", sender: self)
         }
         else{
-            if requiredFilledData.0.count < 1 {
+         //   if requiredFilledData.0.count < 1 {
                 previewViewModel.previewModelDelegate = self
                 previewViewModel.personArray = personArray
                 previewViewModel.createPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1")
                 let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
  
                 previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-             }
+         /*    }
             else{
                 guard let customAlertVC1 = pendingQuestionPopup else { return }
                 customAlertVC1.pendingQuestionDelegate = self
@@ -440,7 +445,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
                 popupVC.delegate = self
                 
                 present(popupVC, animated: true, completion: nil)
-            }
+            } */
         }
         }
         

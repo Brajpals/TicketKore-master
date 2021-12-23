@@ -156,6 +156,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     var intersectionStreet : String = ""
     var blockStr : String = ""
     var completeAddressStr : String = ""
+    var descriptionStr : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -355,7 +356,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     }
     
     
-    
     func checkAndAddViolations(){
         let violationsQuest = newRipaViewModel.getCascadeQuestionUsingQuestionCode(questionCode: "C5")
         if violationsQuest.questionoptions!.count > 0{
@@ -493,10 +493,10 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         // topNextBtn.isUserInteractionEnabled = false
         nextEnabled = false
         
-//        if AppConstants.address.count > 2{
-//            nextEnabled = true
-//            enableNextButton(View: nextView)
-//        }
+        if AppConstants.address.count > 2 && questNumber == 0{
+            nextEnabled = true
+            enableNextButton(View: nextView)
+        }
     }
     
     
@@ -668,16 +668,30 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         }
        
         if questionArray![questNumber!].question_code == "17"{
+            
+            for i in (0..<optionsArray!.count)
+            {
+                let items = optionsArray![i]
+                let check = items.isSelected
+                let attr = items.physical_attribute
+                if check == true && attr == "4" {
+                    self.descriptionBtn.isHidden = true
+                    enterDescription?.textView.text = ""
+                }
+                print(optionsArray![i].isSelected)
+            }
+            
             let object = optionsArray?.filter({
                 $0.isSelected == true
              })
-            if let check = object,check.count == 1 && check[0].physical_attribute == "4" {
-                self.descriptionBtn.isHidden = true
-                enterDescription?.textView.text = ""
-            }
-            else{
-                self.descriptionBtn.isHidden = false
-            }
+//
+//            if let check = object,check.count == 1 && check[0].physical_attribute == "4" {
+//                self.descriptionBtn.isHidden = true
+//                enterDescription?.textView.text = ""
+//            }
+//            else{
+//                self.descriptionBtn.isHidden = false
+//            }
             
             if object?.count == 0{
                 enterDescription?.textView.text = ""
@@ -990,7 +1004,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
   //  print(requiredFilledData)
         // let requiredFilledId = previewViewModel.checkRequiredQuestionID(questArray: questArr, selectedOpt: selectedOptionsArray)
         
-        if requiredFilledData.0.count < 1 {
+   //     if requiredFilledData.0.count < 1 {
             previewViewModel.previewModelDelegate = self
             previewViewModel.viewType = viewType
             previewViewModel.personArray = personArray
@@ -1017,7 +1031,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             print(updateRipa)
             //previewViewModel.saveToDB(updateRipa: updateRipa)
             previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-        }
+    /*    }
         else{
             guard let customAlertVC1 = pendingQuestionPopup else { return }
             customAlertVC1.pendingQuestionDelegate = self
@@ -1032,7 +1046,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             
             present(popupVC, animated: true, completion: nil)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newDataNotif"), object: nil)
-        }
+        } */
     }
     
     func createRipaResponseData(data:UserSettingModel) -> RipaResponse {
@@ -1180,6 +1194,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             vc.selectedIndexDelegate = self
             vc.addressString = completeAddressStr
             vc.questionsArray = questionArray!
+            vc.descriptionString = self.descriptionStr
             vc.cascadeQuestionsArray = cascadeQuestionArray!
             vc.personIndex = personcount
             vc.personArray = personArray
@@ -1449,7 +1464,8 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     func addEnteredDescription(text: String?) {
         if questionArray![questNumber!].question_code == "17"{
-        textAdded = true
+           textAdded = true
+            self.descriptionStr = text!
             self.enterDescription?.enteredText = ""
         }
         let index = questionArray![questNumber!].questionoptions!.count - 1
@@ -3232,11 +3248,21 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                         // optionsArray![indexPath.section].isSelected = true
                         cell.label.text =  cascadeQuest.questionoptions![0].option_value
                         
-                        if inputTypeCode == "L " && street.count > 0{
+                        if inputTypeCode == "L " && street.count > 0 && cell.label.text?.count == 0 {
                            
                             cell.label.text = street
                         }
-
+                        else  if inputTypeCode == "L " && cell.label.text?.count != 0 {
+                            
+                            street = cell.label.text!
+                        }
+                        
+                        if inputTypeCode == "IL" && intersectionStreet.count > 0 && cell.label.text?.count == 0{
+                            cell.label.text = intersectionStreet
+                        }
+                         else  if inputTypeCode == "IL" && cell.label.text?.count != 0{
+                             intersectionStreet = cell.label.text!
+                         }
                         
                     }
                 }
@@ -3586,7 +3612,6 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         optionsArray?.removeAll()
         tableView.reloadData()
     }
-    
     
     
     

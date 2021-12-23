@@ -40,7 +40,6 @@ struct AppConstants {
  
     static var autoNext:Bool?
     
- 
     struct BaseURL {
          static let URL = "https://tpwebservicesdev.ticketproweb.com/public/index.php/service"
      }

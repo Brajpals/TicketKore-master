@@ -16,6 +16,7 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var updateBtn: UIButton!
+    @IBOutlet weak var backBtn: UIButton!
     var userSettingsModel = UserSettingViewModel()
     var userSettingArray = UserSettingModel()
     var supervisorData = Supervisor()
@@ -37,6 +38,9 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
         tableView.dataSource = self
         tableView.register(UINib(nibName: "SingleChoiceCell", bundle: nil), forCellReuseIdentifier: "SingleChoiceCell")
         tableView.register(UINib(nibName: "UserSettingCell", bundle: nil), forCellReuseIdentifier: "UserSettingCell")
+        if flag == 0 {
+            self.backBtn.isHidden = true
+        }
     }
     
     func removeView(){
@@ -192,7 +196,13 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
         if indexPath.row == 0,let is_active = self.userSettingArray.is_active, is_active == "Y" {
             return 65
         }
-        else if indexPath.row == 0 {
+        else if indexPath.row == 0,let question = userSettingArray.supervisor ,question.count == 0 {
+            return 0
+        }
+        else if indexPath.row == 0,userSettingArray.supervisor?.count == 0 {
+            return 0
+        }
+        else if indexPath.row == 0{
             return 0
         }
         else if indexPath.row == 1 {
@@ -241,22 +251,25 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
             self.tableView.reloadData()
         }
         else if indexPath.row == 0{
-            self.blurEffectView.frame = view.bounds
-            self.blurEffectView.backgroundColor = .black
-            self.blurEffectView.alpha = 0.6
-            self.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.view.addSubview(blurEffectView)
-            
-            self.tabBarController?.tabBar.isHidden = true
-            self.definesPresentationContext = true
-            
-            let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "UserSettingOptionController") as! UserSettingOptionController
-            vc.modalPresentationStyle = .overCurrentContext
-            vc.delegate = self
-            if let question = userSettingArray.supervisor {
+            if let question = userSettingArray.supervisor ,question.count > 0{
+                self.blurEffectView.frame = view.bounds
+                self.blurEffectView.backgroundColor = .black
+                self.blurEffectView.alpha = 0.6
+                self.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                self.view.addSubview(blurEffectView)
+                
+                self.tabBarController?.tabBar.isHidden = true
+                self.definesPresentationContext = true
+               
+                let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "UserSettingOptionController") as! UserSettingOptionController
                 vc.supervisorArray = question
+                vc.modalPresentationStyle = .overCurrentContext
+                vc.delegate = self
+                self.present(vc, animated: true)
             }
-            self.present(vc, animated: true)
+            else {
+                
+            }
         }
     }
     

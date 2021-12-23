@@ -27,6 +27,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     var personArray: [[String: Any]] = []
     var saveRipaStatus:String?
     var filterFor = ""
+    var addressStr = ""
     var newRipaViewModel = NewRipaViewModel()
     
     var filterList = [FilterList]()
@@ -182,7 +183,6 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     }
     
     
-    
     func getonlydate(date: String)->String{
         var resultString = ""
         let date = date.components(separatedBy: ("."))[0]
@@ -233,8 +233,28 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         
         if savedRipaList[indexPath.row].location != ""{
            // let date = getonlydate(date: savedRipaList[indexPath.row].stopDate) + " " + savedRipaList[indexPath.row].stopTime
-            let date = savedRipaList[indexPath.row].stopDate
-            cell.dateLbl.text = date + "\n\(savedRipaList[indexPath.row].location)"
+            var date = savedRipaList[indexPath.row].stopDate
+            let timeStr = savedRipaList[indexPath.row].stopTime
+            
+            let dateFormatterGet = DateFormatter()
+            dateFormatterGet.dateFormat = "MM/dd/yyyy HH:mm"
+
+            let dateFormatterPrint = DateFormatter()
+            dateFormatterPrint.dateFormat = "MM/dd/yyyy"
+
+            if let datde = dateFormatterGet.date(from: date) {
+                date = dateFormatterPrint.string(from: datde) + " " + timeStr
+                print(dateFormatterPrint.string(from: datde))
+            } else {
+               print("There was an error decoding the string")
+            }
+            
+            let locString = savedRipaList[indexPath.row].location
+            if let attStr = locString.htmlToAttributedString {
+            cell.dateLbl.text = date + "\n\(attStr.string)"
+            }
+            
+           // print(savedRipaList[indexPath.row].location)
         }
         
         cell.note.text = savedRipaList[indexPath.row].note
@@ -369,6 +389,12 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             let activity_id = savedRipaList[indexPath].activityId
  
             setConstant(indexPath: indexPath)
+            if savedRipaList[indexPath].location != ""{
+                let locString = savedRipaList[indexPath].location
+                if let attStr = locString.htmlToAttributedString {
+                    self.addressStr = "\(attStr.string)"
+                }
+            }
             
              savedListViewModel.savedListModelDelegate = self
             self.savedListViewModel.forTemplate = false
@@ -558,6 +584,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         if(segueID! == "ShowPreview"){
             let vc = segue.destination as! PreviewViewController
             vc.personArray = personArray
+            vc.addressString = self.addressStr
             //   vc.previewPersonArray = self.previewPersonArray
             vc.personIndex = 0
         }

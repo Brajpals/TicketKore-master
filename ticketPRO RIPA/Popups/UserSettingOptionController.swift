@@ -44,7 +44,7 @@ extension UserSettingOptionController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath)
         if let lName = supervisorArray[indexPath.row].LastName,let fName = supervisorArray[indexPath.row].FirstName {
-            cell.textLabel?.text = lName + fName
+            cell.textLabel?.text = lName + " " + fName
         }
         return cell
     }

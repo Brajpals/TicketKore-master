@@ -1546,8 +1546,7 @@
                                         <rect key="frame" x="15.000000000000014" y="77" width="226.33333333333337" height="78"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <connections>
                                             <action selector="actionChangeUserInfo:" destination="60I-1W-xlZ" eventType="touchUpInside" id="94A-O2-RlQ"/>
                                         </connections>
@@ -3549,6 +3548,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backBtn" destination="OHk-Ek-2vR" id="UBD-qJ-oF5"/>
                         <outlet property="tableView" destination="5by-oG-xyI" id="2JR-Sc-zus"/>
                         <outlet property="updateBtn" destination="yd4-Ib-jrz" id="Bfc-9m-NLX"/>
                     </connections>
@@ -4518,7 +4518,7 @@
                                 <rect key="frame" x="0.0" y="41" width="414" height="70"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Supervisor" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAO-7g-q03">
-                                        <rect key="frame" x="45" y="0.0" width="314" height="70"/>
+                                        <rect key="frame" x="60" y="0.0" width="279" height="70"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -4538,16 +4538,34 @@
                                             <action selector="removeOptionView:" destination="WVC-VY-pgf" eventType="touchUpInside" id="yW5-E1-AD4"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w22-SX-mRg">
+                                        <rect key="frame" x="339" y="0.0" width="75" height="70"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="1"/>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="removeOptionView:" destination="WVC-VY-pgf" eventType="touchUpInside" id="WB9-Pq-2aI"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.16470588235294117" green="0.56470588235294117" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstItem="JAO-7g-q03" firstAttribute="leading" secondItem="BEd-sq-1tw" secondAttribute="leading" constant="45" id="0Ap-ES-Kpq"/>
+                                    <constraint firstItem="JAO-7g-q03" firstAttribute="leading" secondItem="BEd-sq-1tw" secondAttribute="leading" constant="60" id="0Ap-ES-Kpq"/>
+                                    <constraint firstItem="w22-SX-mRg" firstAttribute="leading" secondItem="JAO-7g-q03" secondAttribute="trailing" id="4mX-3P-Nhk"/>
                                     <constraint firstAttribute="height" constant="70" id="6gu-ag-54z"/>
                                     <constraint firstItem="JAO-7g-q03" firstAttribute="top" secondItem="BEd-sq-1tw" secondAttribute="top" id="DWk-md-X1p"/>
+                                    <constraint firstAttribute="bottom" secondItem="w22-SX-mRg" secondAttribute="bottom" id="Eur-Jz-zTx"/>
                                     <constraint firstItem="756-cM-erV" firstAttribute="top" secondItem="BEd-sq-1tw" secondAttribute="top" constant="15" id="MOh-Lw-FAv"/>
                                     <constraint firstAttribute="trailing" secondItem="756-cM-erV" secondAttribute="trailing" constant="20" id="NzE-eQ-tLu"/>
+                                    <constraint firstAttribute="trailing" secondItem="w22-SX-mRg" secondAttribute="trailing" id="Pt6-2s-SnU"/>
                                     <constraint firstAttribute="bottom" secondItem="JAO-7g-q03" secondAttribute="bottom" id="QqQ-hg-5fk"/>
-                                    <constraint firstItem="756-cM-erV" firstAttribute="leading" secondItem="JAO-7g-q03" secondAttribute="trailing" id="VZ7-0s-f0O"/>
+                                    <constraint firstItem="756-cM-erV" firstAttribute="leading" secondItem="JAO-7g-q03" secondAttribute="trailing" constant="20" id="VZ7-0s-f0O"/>
+                                    <constraint firstItem="w22-SX-mRg" firstAttribute="top" secondItem="BEd-sq-1tw" secondAttribute="top" id="kwj-MZ-Dve"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7U1-5d-p7a">
@@ -5807,7 +5825,7 @@
         <segue reference="c4n-CW-bJ9"/>
         <segue reference="Egc-09-hKv"/>
         <segue reference="gog-gU-7pv"/>
-        <segue reference="cGo-gK-EU2"/>
+        <segue reference="x93-un-I2D"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="alert_icon" width="113" height="113"/>

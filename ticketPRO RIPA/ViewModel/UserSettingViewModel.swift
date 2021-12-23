@@ -93,7 +93,7 @@ func getSupervisorRipa(params: [String:Any]){
         updateUserInformation(params: params)
  }
     
-    
+ //["jsonrpc": 2.0, "result": ["message": success], "id": 82F85DB43CBF6]
     func updateUserInformation(params: [String:Any]){
         AppUtility.showProgress(nil, title: nil)
         var URL:String?
@@ -103,7 +103,8 @@ func getSupervisorRipa(params: [String:Any]){
         if Reachability.isConnectedToNetwork(){
             ApiManager.getrejectedApplicationWithUID(params: params, methodTyPe: .post, url: URL!, completion: { (success,message) in
                 AppUtility.hideProgress(nil)
-                 if message == "Success"{
+               
+                if message.lowercased() == "success"{
                      if let json = try? JSON(data: success as! Data),let objectDictionary = json.dictionaryObject,let dict = objectDictionary["result"] as? NSDictionary,let msg = dict["message"] as? String{
                         print(objectDictionary)
                         self.userDelegate?.updateUserSettingData(msg: msg)

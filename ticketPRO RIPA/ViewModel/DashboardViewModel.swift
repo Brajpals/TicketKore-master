@@ -566,6 +566,7 @@
         
         if Reachability.isConnectedToNetwork(){
             db.openDatabase()
+            print(params)
             ApiManager.getSkeletonData(params: params, methodTyPe: .post, url: URL!, completion: { [self](jsonObj,message) in
                 AppUtility.hideProgress(nil)
                 db.createTable(insertTableString: db.createRipaTempMasterTable)
