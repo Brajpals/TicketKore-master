@@ -126,7 +126,7 @@ extension LoginViewModel {
         let enrollment_id = AppManager.getLastSavedLoginDetails()?.result?.enrollment_id
         let ripa_enrollment_id = AppManager.getLastSavedLoginDetails()?.result?.ripa_enrollment_id
         let ripa_enrollment_activity_id = AppManager.getLastSavedLoginDetails()?.result?.ripa_enrollment_activity_id
-        print(userId)
+       // print(userId)
         let param:[String : Any] = ["userId": userId ?? "", "appversion": appVersion ?? "" ,"plateform":"ios", "county_id":countyId ?? "" ,"access_token": AppManager.getLastSavedLoginDetails()?.result?.access_token ?? "","ripa_enrollment_id":ripa_enrollment_id ?? "", "enrollment_id":enrollment_id ?? "", "custid":custId ?? "", "ripa_enrollment_activity_id": ripa_enrollment_activity_id ?? "" , "loginvia": AppConstants.loginVia]
         let params:[String : Any] = ["id":id ?? "", "method":"ripaActivityStore", "params":param,"jsonrpc": "2.0"]
         checkActivityStore(params: params)

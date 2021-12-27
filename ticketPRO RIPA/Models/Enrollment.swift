@@ -112,10 +112,10 @@ class Result: Mappable {
     var   is_security_check: String = ""
     var   county_id: String = ""
     var   start_year: String = ""
+    var   other_assignment_value: String = ""
  
   
     
- 
     required init?(map: Map){}
     
       func mapping(map: Map)
@@ -170,7 +170,7 @@ class Result: Mappable {
         start_year <- map["start_year"]
  
         access_token <- map["access_token"]
- 
+        other_assignment_value <- map["other_assignment_value"]
    
  
     }

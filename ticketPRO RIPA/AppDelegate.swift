@@ -2,7 +2,6 @@
 //  AppDelegate.swift
 //  ticketPRO RIPA
 //
-//
 
 import UIKit
 import IQKeyboardManagerSwift

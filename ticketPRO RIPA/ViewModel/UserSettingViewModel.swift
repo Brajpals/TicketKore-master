@@ -77,7 +77,7 @@ func getSupervisorRipa(params: [String:Any]){
   }
     
   
-    func sendRipaUpdateuser (office_assignment_id : String ,supervisorid : String ) {
+    func sendRipaUpdateuser (office_assignment_id : String ,supervisorid : String,other_assignment_value : String ) {
         var userId : String = ""
         if let idUser = AppManager.getLastSavedLoginDetails()?.result?.userid{
             userId = idUser
@@ -87,7 +87,7 @@ func getSupervisorRipa(params: [String:Any]){
             custId = idUser
         }
         let id = AppManager.getLastSavedLoginDetails()?.id
-        let param:[String : Any] = ["userid":userId as Any,"office_assignment_id":office_assignment_id,"supervisorid":supervisorid,"custid":custId]
+        let param:[String : Any] = ["userid":userId as Any,"office_assignment_id":office_assignment_id,"supervisorid":supervisorid,"custid":custId,"other_assignment_value" : other_assignment_value]
         let params:[String : Any] =  ["id":id!, "method":"ripaUpdateuser", "params":param ,"jsonrpc": "2.0"]
          print(params)
         updateUserInformation(params: params)

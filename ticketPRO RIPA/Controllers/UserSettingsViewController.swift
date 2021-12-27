@@ -23,6 +23,7 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
     var supervisorView = UserSettingOptionController()
     let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     
+    var otherAssignmentText : String = ""
     var officeAssignmentId : String = ""
     var supervisorId : String = ""
     var flag : Int!
@@ -41,6 +42,16 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
         if flag == 0 {
             self.backBtn.isHidden = true
         }
+        
+        
+        
+      //  var dict = AppManager.getLastSavedLoginDetails()
+      //  print(dict)
+//        if let object = Mapper<LoginDetails>().map(JSON: json) {
+//            DataManager.shared.loginDetails = object
+//            AppManager.saveLoginDetails()
+//        }
+        
     }
     
     func removeView(){
@@ -49,6 +60,7 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
     
   func getUserSettingData(settingData:UserSettingModel?){
       self.userSettingArray = settingData!
+
       self.tableView.reloadData()
   }
     
@@ -66,6 +78,7 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
      UserDefaults.standard.set(assignmentTxt, forKey: "userOption")
      userSettingArray.option?[selectIndex].subOption = assignmentTxt
      userSettingArray.question?.response = assignmentTxt
+     otherAssignmentText = assignmentTxt
      self.tableView.reloadData()
  }
 
@@ -82,11 +95,12 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             self.showAlertMessage(titleStr: "", messageStr: "Please select an option first.")
         }
         else {
-            self.userSettingsModel.sendRipaUpdateuser(office_assignment_id: officeAssignmentId, supervisorid: supervisorId)
+            self.userSettingsModel.sendRipaUpdateuser(office_assignment_id: officeAssignmentId, supervisorid: supervisorId,other_assignment_value: otherAssignmentText)
         }
      }
     
     func updateUserSettingData(msg:String){
+       
         let  createRipaResponseTable = "create table if not exists ripaResponseTable (question_id TEXT, response TEXT, internal TEXT, userid TEXT,question TEXT,CreatedBy TEXT,physical_attribute TEXT,key TEXT,personId TEXT,description TEXT,question_code TEXT,cascade_ques_id TEXT,order_number TEXT,option_id TEXT,cascade_option_id TEXT,main_question_id TEXT,supervisorId TEXT)"
         
         db.openDatabase()
@@ -126,7 +140,6 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             rep = userOption
         }
         
-       
         var inter : String = ""
         if let respo = data.question?.internall {
             inter = respo
@@ -178,11 +191,8 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
         }
         
         let  supId : String = self.supervisorId
-//        if let respo = data.supervisor?[0].SupervisorId {
-//            supId = respo
-//        }
-        
-        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "", order_number: orderN, option_id: opId, cascade_option_id: "", main_question_id: mId, supervisorId: supId)
+
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "", order_number: orderN, option_id: opId, cascade_option_id: "", main_question_id: mId, supervisorId: supId, other_assignment_value: otherAssignmentText)
         
         return ripaRes
     }
@@ -293,6 +303,7 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
         let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "EnterAssignmentController") as! EnterAssignmentController
         vc.modalPresentationStyle = .overCurrentContext
         vc.delegate = self
+        vc.assignmentText = otherAssignmentText
         self.present(vc, animated: true)
     }
     
@@ -305,6 +316,8 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
         }
     }
     
+    //if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption != "Type of Assignment of Officer" {
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row > 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SingleChoiceCell", for: indexPath as IndexPath) as! SingleChoiceCell
@@ -312,6 +325,16 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
             cell.backgroundColor = UIColor(red:222/255.0, green:222/255.0, blue:224/255.0, alpha: 1.0)
             cell.contentView.backgroundColor = UIColor(red:222/255.0, green:222/255.0, blue:224/255.0, alpha: 1.0)
             if let option = userSettingArray.option {
+                
+                if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String {
+                    let filterA = self.userSettingArray.option?.filter({ item in
+                        item.option_value == userOption
+                    })
+                    if filterA?.count == 0 && userSettingArray.option?[indexPath.row - 2].option_value == "Other (manually specify type of assignment)"{
+                        userSettingArray.option?[indexPath.row - 2].subOption = userOption
+                    }
+                }
+                
                 cell.setUserSettingData(data: option[indexPath.row - 2])
             }
             if let check = userSettingArray.option?[indexPath.row - 2].is_select,check == true {
@@ -343,4 +366,11 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
         }
     }
     
+}
+
+extension Array where Element: Equatable {
+
+    func indexes(of item: Element) -> [Int]  {
+        return enumerated().compactMap { $0.element == item ? $0.offset : nil }
+    }
 }

@@ -374,7 +374,7 @@ class PreviewViewModel {
                         timeTaken = getTimeTaken()
                     }
                     
-                    let obj = RipaResponse(question_id: question.id, response: timeTaken, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                    let obj = RipaResponse(question_id: question.id, response: timeTaken, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                     updateResopnseArray.append(obj)
                     continue
                 }
@@ -385,7 +385,7 @@ class PreviewViewModel {
                 if question.is_required == "0" && question.visible_question == "1"{
                     let selectedOptionalArray =  question.questionoptions!.filter { $0.isSelected }
                     if selectedOptionalArray.count < 1{
-                        let obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                        let obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                         updateResopnseArray.append(obj)
                         continue
                     }
@@ -393,7 +393,7 @@ class PreviewViewModel {
                 
                 if question.question_code == "22"{
                     let exp = calculateYearOfExp()
-                    let obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                    let obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                     updateResopnseArray.append(obj)
                     continue
                 }
@@ -404,7 +404,7 @@ class PreviewViewModel {
                     if AppConstants.isSchoolSelected == "Yes" {
                         let option = question.questionoptions!.first
                        // let orderNo = option!.order_number
-                        let obj = RipaResponse(question_id: option!.ripa_id, response: option?.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "", main_question_id: address.main_question_id, supervisorId: "")
+                        let obj = RipaResponse(question_id: option!.ripa_id, response: option?.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "")
                         updateResopnseArray.append(obj)
                         continue
                     }
@@ -416,7 +416,7 @@ class PreviewViewModel {
                     address.main_question_id = question.id
                     address.ripa_id = question.id
                     
-                    let obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                    let obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                     
                     updateResopnseArray.append(obj)
                     //continue
@@ -428,10 +428,10 @@ class PreviewViewModel {
                             var obj:RipaResponse?
                             
                             if question.question_code == "C6" || question.question_code == "C7" || question.question_code == "C26" || question.question_code == "C25"{
-                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "")
+                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "")
                             }
                             else{
-                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "")
+                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "")
                                 
                                 if opt.main_question_id == ""{
                                     print(opt.mainQuestId)
@@ -529,7 +529,7 @@ class PreviewViewModel {
                         timeTaken = getTimeTaken()
                     }
                     
-                    let obj = RipaResponse(question_id: question.id, response: timeTaken, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                    let obj = RipaResponse(question_id: question.id, response: timeTaken, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                     updateResopnseArray.append(obj)
                     continue
                 }
@@ -540,7 +540,7 @@ class PreviewViewModel {
                 if question.is_required == "0" && question.visible_question == "1"{
                     let selectedOptionalArray =  question.questionoptions!.filter { $0.isSelected }
                     if selectedOptionalArray.count < 1{
-                        let obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                        let obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                         updateResopnseArray.append(obj)
                         continue
                     }
@@ -553,7 +553,7 @@ class PreviewViewModel {
                 
                 if question.question_code == "22"{
                     let exp = calculateYearOfExp()
-                    let obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                    let obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                     updateResopnseArray.append(obj)
                     continue
                 }
@@ -564,7 +564,7 @@ class PreviewViewModel {
                     if AppConstants.isSchoolSelected == "Yes" {
                         let option = question.questionoptions!.first
                        // let orderNo = option!.order_number
-                        let obj = RipaResponse(question_id: option!.ripa_id, response: option?.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "", main_question_id: address.main_question_id, supervisorId: "")
+                        let obj = RipaResponse(question_id: option!.ripa_id, response: option?.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "")
                         updateResopnseArray.append(obj)
                         continue
                     }
@@ -576,7 +576,7 @@ class PreviewViewModel {
                     address.main_question_id = question.id
                     address.ripa_id = question.id
                     
-                    let obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "")
+                    let obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
                     
                     updateResopnseArray.append(obj)
                     //continue
@@ -588,10 +588,10 @@ class PreviewViewModel {
                             var obj:RipaResponse?
                             
                             if question.question_code == "C6" || question.question_code == "C7" || question.question_code == "C26" || question.question_code == "C25"{
-                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "")
+                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "")
                             }
                             else{
-                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "")
+                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "")
                                 
                                 if opt.main_question_id == ""{
                                     print(opt.mainQuestId)

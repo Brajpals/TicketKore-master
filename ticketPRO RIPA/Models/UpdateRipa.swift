@@ -170,9 +170,10 @@ struct RipaResponse:Encodable {
     var cascade_option_id: String
     var main_question_id: String
     var supervisorId: String
+    var other_assignment_value: String
  
 
-    init(question_id: String, response: String?, `internal`: String, userid: String, question: String, CreatedBy: String, physical_attribute: String , key: String, personId: String, description: String, question_code: String, cascade_ques_id: String ,order_number: String, option_id:String, cascade_option_id: String, main_question_id: String, supervisorId: String) {
+    init(question_id: String, response: String?, `internal`: String, userid: String, question: String, CreatedBy: String, physical_attribute: String , key: String, personId: String, description: String, question_code: String, cascade_ques_id: String ,order_number: String, option_id:String, cascade_option_id: String, main_question_id: String, supervisorId: String, other_assignment_value: String) {
         self.question_id = question_id
         self.response = response
         self.internall = `internal`
@@ -192,5 +193,6 @@ struct RipaResponse:Encodable {
         self.main_question_id = main_question_id
         self.main_question_id = main_question_id
         self.supervisorId = supervisorId
+        self.other_assignment_value = other_assignment_value
     }
 }

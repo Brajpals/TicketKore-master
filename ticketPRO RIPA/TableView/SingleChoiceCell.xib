@@ -22,9 +22,9 @@
                         <rect key="frame" x="0.0" y="2" width="445" height="83"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male Male" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="En7-MX-Xk7">
-                                <rect key="frame" x="13" y="2" width="419" height="78"/>
+                                <rect key="frame" x="13" y="2" width="422" height="78"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                 <color key="textColor" name="BlackWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -45,7 +45,7 @@
                             <constraint firstItem="En7-MX-Xk7" firstAttribute="top" secondItem="w2u-5E-APU" secondAttribute="top" constant="2" id="C18-rB-wmJ"/>
                             <constraint firstItem="lQ8-If-IVG" firstAttribute="leading" secondItem="w2u-5E-APU" secondAttribute="leading" constant="13" id="Kc7-mf-HgG"/>
                             <constraint firstItem="En7-MX-Xk7" firstAttribute="leading" secondItem="w2u-5E-APU" secondAttribute="leading" constant="13" id="YhE-FO-3xM"/>
-                            <constraint firstAttribute="trailing" secondItem="En7-MX-Xk7" secondAttribute="trailing" constant="13" id="c0j-P5-zXq"/>
+                            <constraint firstAttribute="trailing" secondItem="En7-MX-Xk7" secondAttribute="trailing" constant="10" id="c0j-P5-zXq"/>
                             <constraint firstAttribute="trailing" secondItem="lQ8-If-IVG" secondAttribute="trailing" constant="13" id="eEF-kr-AoW"/>
                             <constraint firstAttribute="bottom" secondItem="lQ8-If-IVG" secondAttribute="bottom" id="qcR-T2-GqH"/>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="52" id="qrF-GD-Pzm"/>

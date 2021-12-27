@@ -16,11 +16,15 @@ class EnterAssignmentController: UIViewController,UITextFieldDelegate {
 
     var  delegate : assignmntDelegate?
     @IBOutlet weak var assinText: UITextField!
+    var assignmentText : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.assinText?.setLeftPaddingPoints(10)
         self.assinText?.setRightPaddingPoints(10)
+        if assignmentText.count > 0 {
+            self.assinText?.text = assignmentText
+        }
         // Do any additional setup after loading the view.
     }
  

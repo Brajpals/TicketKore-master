@@ -305,8 +305,8 @@
             filePath = "ticketPRO RIPA/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
             landmarkName = "application(_:didReceiveRemoteNotification:fetchCompletionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -515,8 +515,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3613"
             endingLineNumber = "3613"
-            landmarkName = "NewRipaViewController"
-            landmarkType = "21">
+            landmarkName = "clearTextFromTextView(sender:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -531,8 +531,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3625"
             endingLineNumber = "3625"
-            landmarkName = "NewRipaViewController"
-            landmarkType = "21">
+            landmarkName = "clearOption(sender:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -692,22 +692,6 @@
             startingLineNumber = "364"
             endingLineNumber = "364"
             landmarkName = "updateRipaParam()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "112D18B3-4251-4A89-BC66-7CA227F1411B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/ViewModel/LoginViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
-            landmarkName = "setActivityPram()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -883,8 +867,24 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3800"
             endingLineNumber = "3800"
-            landmarkName = "NewRipaViewController"
-            landmarkType = "21">
+            landmarkName = "refreshViolationLists(list:listType:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C38C00E5-A7C1-47EE-B646-A63EF49D4CE0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/ViewModel/SavedListViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "getApprovedOrPendingRipa(params:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

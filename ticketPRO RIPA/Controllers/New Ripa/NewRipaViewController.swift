@@ -1119,7 +1119,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             supId = respo
         }
         
-        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "", order_number: orderN, option_id: opId, cascade_option_id: "", main_question_id: mId, supervisorId: supId)
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "", order_number: orderN, option_id: opId, cascade_option_id: "", main_question_id: mId, supervisorId: supId, other_assignment_value: "")
         
         return ripaRes
     }

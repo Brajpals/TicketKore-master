@@ -290,7 +290,7 @@ class SqliteDbStore {
     func getRipaResponse()-> RipaResponse? {
         let queryString = "SELECT * FROM ripaResponseTable"
         
-        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "", order_number: "", option_id: "", cascade_option_id: "", main_question_id: "", supervisorId: "")
+        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "", order_number: "", option_id: "", cascade_option_id: "", main_question_id: "", supervisorId: "", other_assignment_value: "")
         var stmt:OpaquePointer?
         
         if sqlite3_prepare(db, queryString, -1, &stmt, nil) != SQLITE_OK{
@@ -316,7 +316,7 @@ class SqliteDbStore {
             let cascade_option_id = String(cString: sqlite3_column_text(stmt, 14))
             let main_question_id = String(cString: sqlite3_column_text(stmt,15))
             
-            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "")
+            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "", other_assignment_value: "")
           //  ripaList.append(rips)
         }
         return ripaList
