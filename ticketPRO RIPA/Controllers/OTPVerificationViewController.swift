@@ -238,6 +238,7 @@ class OTPVerificationViewController: UIViewController,ActivityStoreDelegate {
         UIApplication.shared.registerForRemoteNotifications()
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "UserSettingsViewController") as! UserSettingsViewController
+        nextViewController.flag = 0
         let navigationController = UINavigationController(rootViewController: nextViewController)
         UIApplication.shared.windows.first?.rootViewController = navigationController
         UIApplication.shared.windows.first?.makeKeyAndVisible()

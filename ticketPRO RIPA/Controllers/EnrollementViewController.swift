@@ -223,8 +223,6 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     }
     
   
-    
-    
     //  var code = "+91"
     var code = "+1"
     
