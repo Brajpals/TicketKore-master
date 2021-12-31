@@ -158,6 +158,8 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     var completeAddressStr : String = ""
     var descriptionStr : String = ""
     
+    var checkGenderSelection : Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -713,17 +715,62 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             
             ischangeQuestion = true
             let index = questionArray![questNumber!].questionoptions!.count - 1
-            (questionArray![questNumber!].questionoptions![index] ).option_value = ""
+          //  (questionArray![questNumber!].questionoptions![index] ).option_value = ""
             
             if  let check = object,check.count > 2 {
                 self.descriptionBtn.isHidden = false
             }
-            
-            
+        }
+     //(optionsArray![indexPath.section].questionoptions![indexPath.row] ).isSelected
+        if questionArray![questNumber!].question_code == "17"{
+            let personSearch =  getCascadeQuestionUsingQuestionCode(questionCode: "C13")
+            let propertySearch =  getCascadeQuestionUsingQuestionCode(questionCode: "C14")
+            var select = false
+            if personSearch.questionoptions![0].isSelected || propertySearch.questionoptions![0].isSelected{
+                select = true
+              }
+            for i in (0..<optionsArray!.count)
+            {
+                let items = optionsArray![i]
+                let attr = items.physical_attribute
+                print(items.option_value)
+                if attr == "1"{
+                    optionsArray![i].isSelected = select
+                }
+            }
         }
         
         return check.1
     }
+    
+    func getCascadeQuestionUsingQuestionCode(questionCode:String) -> QuestionResult1{
+        var quest:QuestionResult1?
+        for question in cascadeQuestionArray!{
+            if question.question_code == questionCode{
+                quest = question
+            }
+        }
+        return quest!
+    }
+    
+ /*
+    func checkConsent(){
+        let personSearch =  getCascadeQuestionUsingQuestionCode(questionCode: "C13")
+        let propertySearch =  getCascadeQuestionUsingQuestionCode(questionCode: "C14")
+        let quest = getQuestionUsingQuestionCode(question_code: 17).questionoptions!
+        var select = false
+        if personSearch.questionoptions![0].isSelected || propertySearch.questionoptions![0].isSelected{
+            select = true
+          }
+                      for opt in quest{
+                       if opt.physical_attribute == "1"{
+                           opt.isSelected = select
+                             continue
+                       }
+                   }
+    }
+  */
+    
   
     func checkDescription(optionArr : [Questionoptions1]) -> Bool {
         var check : Bool = false
@@ -1132,8 +1179,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         self.navigationController?.present(listView, animated: true, completion: nil)
     }
     
-    
-    
     func setPreviewDelegate() {
         
     }
@@ -1464,7 +1509,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     func addEnteredDescription(text: String?) {
         if questionArray![questNumber!].question_code == "17"{
-           textAdded = true
+            textAdded = true
             self.descriptionStr = text!
             self.enterDescription?.enteredText = ""
         }
@@ -1473,7 +1518,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         (questionArray![questNumber!].questionoptions![index] ).isSelected = true
         tableView.reloadData()
         checkMandatorySelection()
-        
         
     }
     
@@ -2373,6 +2417,11 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                 print("Cannot Change Data")
             }
             else{
+                
+                if questionArray![questNumber!].is_required != "1" && questionArray![questNumber!].question_code != "25" {
+                    optionsArray![section].isSelected = false
+                }
+                
                 if questionArray![questNumber!].question_code == "10" {
                     let allowSelection = checkGender()
                     if allowSelection{
@@ -2383,9 +2432,13 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                 else{
                     sectionButton.tag = section
                     sectionButton.addTarget(self, action: #selector(selectOption(sender:)), for: .touchUpInside)
+
+                    
                 }
             }
         }
+        
+        
         if  optionsArray![section].isSelected && questionArray![questNumber!].question_code != "25"{
             view.backgroundColor = UIColor(named: "SelectionBlue")
         }
@@ -2398,7 +2451,9 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         return headerView
     }
     
-    
+    func showAlertMessage(){
+        
+    }
     
     func checkGender()->Bool{
         var allowSelection = true
@@ -2456,8 +2511,6 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         
         //checkDependentQuestions()
     }
-    
-    
     
     
     func checkForSingleSelectionInCascade(section : Int, row:Int){
@@ -2878,8 +2931,6 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         }
         
         
-        
-        
         tableView.reloadData()
     }
     
@@ -2951,6 +3002,10 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                             if option.option_value.contains("Transgender") && question.question_code == "C30"{
                                 lgbtBtnDisable = true
                             }
+                            checkGenderSelection = false
+                            if option.option_value.contains("Male") || option.option_value.contains("Female") || option.option_value.contains("nonconforming"){
+                                checkGenderSelection = true
+                            }
                             
                             let myAttrString = NSMutableAttributedString(string: "\n\(option.option_value)", attributes: yourAttributes1)
                             questionString.append(myAttrString)
@@ -2991,6 +3046,10 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                 }
                 else if optionsArray![indexPath.row].question_code_for_cascading_id == "C28"{
                     if lgbtBtnDisable == true{
+                        cell.textLbl.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+                        cell.toggleBtn.isUserInteractionEnabled = false
+                    }
+                    if checkGenderSelection == true {
                         cell.textLbl.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
                         cell.toggleBtn.isUserInteractionEnabled = false
                     }
@@ -4104,7 +4163,16 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
     @objc func selectOption(sender: UIButton){
         trackApplicationTime()
         let physicalAttribute = optionsArray![sender.tag].physical_attribute
- 
+        if questionArray![questNumber!].is_required != "1" {
+            if questionArray![questNumber!].question_code == "17" {
+                AppUtility.showAlertWithProperty("Alert", messageString: "Question is not required to provide answer. If required then select Search of person and/or property conducted options(s) of Action Taken by Officer During Stop.")
+                return
+            }
+            else if questionArray![questNumber!].question_code == "19" || questionArray![questNumber!].question_code == "20"{
+                AppUtility.showAlertWithProperty("Alert", messageString: "Question is not required to provide answer. If required then select Property was seized option of Action Taken by Officer During Stop.")
+            }
+        }
+        else {
         if questionArray![questNumber!].question_code == "19" && (physicalAttribute == "2" || physicalAttribute == "3"){
             let question = newRipaViewModel.getQuestionUsingQuestionCode(question_code: 18)
             for option in question.questionoptions!{
@@ -4137,7 +4205,9 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
             }
          }
         
-        
+      //  if questionArray![questNumber!].is_required != "1"{
+       //                        sectionButton.isUserInteractionEnabled = false
+       //                    }
         
         checkForSingleSelection(index: sender.tag)
         addAssignmentOfOfficer(index: sender.tag)
@@ -4174,7 +4244,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                  question.is_required = "0"
             }
         }
-       
+     }
         
     }
     

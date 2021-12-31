@@ -96,8 +96,14 @@ class EnterTextPopupViewController: UIViewController,UITextFieldDelegate, GPSLoc
 //            }
 //            else
             if popupType == "Location" || popupType == "Intersection"{
-                let option = LocationResult(location_id: "", custid: "", location: text, zone_id: "", order_number: "", is_active: "", county_id: countyID!, city_id: cityId, isSelected: false)
-                self.addLocationDelegate?.addEnteredOption(option: option)
+                if let strength = inputField.text, strength.count > 5 && strength.count < 250 {
+                    let option = LocationResult(location_id: "", custid: "", location: text, zone_id: "", order_number: "", is_active: "", county_id: countyID!, city_id: cityId, isSelected: false)
+                    self.addLocationDelegate?.addEnteredOption(option: option)
+                }
+                else {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Street should be between 5 to 250 in length.")
+                    return
+                }
             }
     
             else if popupType == "School"{

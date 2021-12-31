@@ -385,8 +385,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2767"
-            endingLineNumber = "2767"
+            startingLineNumber = "2820"
+            endingLineNumber = "2820"
             landmarkName = "locationSwitch(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -401,8 +401,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2591"
-            endingLineNumber = "2591"
+            startingLineNumber = "2644"
+            endingLineNumber = "2644"
             landmarkName = "textView(_:shouldChangeTextIn:replacementText:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -449,8 +449,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2590"
-            endingLineNumber = "2590"
+            startingLineNumber = "2643"
+            endingLineNumber = "2643"
             landmarkName = "textView(_:shouldChangeTextIn:replacementText:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -465,10 +465,10 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3613"
-            endingLineNumber = "3613"
-            landmarkName = "clearTextFromTextView(sender:)"
-            landmarkType = "7">
+            startingLineNumber = "3672"
+            endingLineNumber = "3672"
+            landmarkName = "NewRipaViewController"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -481,10 +481,10 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3625"
-            endingLineNumber = "3625"
-            landmarkName = "clearOption(sender:)"
-            landmarkType = "7">
+            startingLineNumber = "3684"
+            endingLineNumber = "3684"
+            landmarkName = "NewRipaViewController"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -497,8 +497,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4414"
-            endingLineNumber = "4414"
+            startingLineNumber = "4484"
+            endingLineNumber = "4484"
             landmarkName = "fetchedLocationDetails(location:countryCode:city:street:intersection:county:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -513,8 +513,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2096"
-            endingLineNumber = "2096"
+            startingLineNumber = "2140"
+            endingLineNumber = "2140"
             landmarkName = "addEnteredOption(option:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -529,8 +529,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3193"
-            endingLineNumber = "3193"
+            startingLineNumber = "3252"
+            endingLineNumber = "3252"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -545,8 +545,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3168"
-            endingLineNumber = "3168"
+            startingLineNumber = "3227"
+            endingLineNumber = "3227"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -650,22 +650,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F9CDB543-9EC4-46B3-AA7F-30AFC8259FD7"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1029"
-            endingLineNumber = "1029"
-            landmarkName = "actionSubmit(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C5322F85-841D-4661-941D-D783041CC5A7"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -673,57 +657,9 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2077"
-            endingLineNumber = "2077"
+            startingLineNumber = "2121"
+            endingLineNumber = "2121"
             landmarkName = "savetoServer(showAlertForSave:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "68D16EA3-B3FB-4A8F-B665-EC2C44DC7F58"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/ViewModel/PreviewViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
-            landmarkName = "submitParam(params:toSave:showAlertForSave:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "AA497D98-C8A9-4F6F-8CE0-06B50CE90095"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/ViewModel/PreviewViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "300"
-            endingLineNumber = "300"
-            landmarkName = "submitAnswers(params:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D52F3E8C-C58D-4B58-AAE6-F4392832A3E6"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/ViewModel/PreviewViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "302"
-            endingLineNumber = "302"
-            landmarkName = "submitAnswers(params:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -737,8 +673,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1129"
-            endingLineNumber = "1129"
+            startingLineNumber = "1176"
+            endingLineNumber = "1176"
             landmarkName = "openCountyList(countylist:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -753,8 +689,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3639"
-            endingLineNumber = "3639"
+            startingLineNumber = "3698"
+            endingLineNumber = "3698"
             landmarkName = "openEducationCodeList(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -769,8 +705,8 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3652"
-            endingLineNumber = "3652"
+            startingLineNumber = "3711"
+            endingLineNumber = "3711"
             landmarkName = "openEducationSubCodeList()"
             landmarkType = "7">
          </BreakpointContent>
@@ -817,10 +753,10 @@
             filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3800"
-            endingLineNumber = "3800"
-            landmarkName = "refreshViolationLists(list:listType:)"
-            landmarkType = "7">
+            startingLineNumber = "3859"
+            endingLineNumber = "3859"
+            landmarkName = "NewRipaViewController"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -836,6 +772,86 @@
             startingLineNumber = "73"
             endingLineNumber = "73"
             landmarkName = "getApprovedOrPendingRipa(params:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F77B1A89-53AF-4723-9F17-D7F87CC47D6F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/ViewModel/NewRipaViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "368"
+            endingLineNumber = "368"
+            landmarkName = "NewRipaViewModel"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "800657A1-2A1C-4CA0-929C-565336F4F191"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3116"
+            endingLineNumber = "3116"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "ACEABE94-9998-475E-8577-DA22945158FE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3131"
+            endingLineNumber = "3131"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "46D3D151-B7D8-4CC5-8BE0-6774B68E6CA6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3087"
+            endingLineNumber = "3087"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B18D1C30-0055-43F2-BCAC-04DA2004E22C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3645"
+            endingLineNumber = "3645"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
