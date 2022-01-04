@@ -28,6 +28,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     @IBOutlet weak var templateBtn: UIButton!
     @IBOutlet var optionTypeLbl : UILabel!
     @IBOutlet var userInfoBtn: UIButton!
+    @IBOutlet weak var versionLbl: UILabel!
     
     //    @IBOutlet weak var pinTxt: UITextField!
     //    @IBOutlet weak var mainPinView: UIView!
@@ -113,6 +114,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
             print(token)
         }
     
+        versionLbl.text = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
     }
     

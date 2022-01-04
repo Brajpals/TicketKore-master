@@ -302,7 +302,7 @@
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_banner" translatesAutoresizingMaskIntoConstraints="NO" id="2Hr-5S-4qx">
                                                 <rect key="frame" x="4" y="0.0" width="146" height="29"/>
                                             </imageView>
-                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v1.8" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYq-Y5-YJ6">
+                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYq-Y5-YJ6">
                                                 <rect key="frame" x="158" y="0.0" width="50" height="29"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="29" id="7my-Fb-zhP"/>
@@ -1164,7 +1164,7 @@
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_banner" translatesAutoresizingMaskIntoConstraints="NO" id="kpS-jk-ZwE">
                                                         <rect key="frame" x="4" y="0.0" width="146" height="29"/>
                                                     </imageView>
-                                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v2.9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5wT-I3-amB">
+                                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5wT-I3-amB">
                                                         <rect key="frame" x="158" y="0.0" width="50" height="29"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="50" id="GGH-H6-6Ib"/>
@@ -1619,6 +1619,7 @@
                         <outlet property="saveRipaButton" destination="vkv-X4-zo7" id="1Ma-fI-FY5"/>
                         <outlet property="templateBtn" destination="UfC-OW-ckm" id="cCN-Eh-uU0"/>
                         <outlet property="themeSwitch" destination="MDS-Pz-38a" id="fdC-H6-PaD"/>
+                        <outlet property="versionLbl" destination="5wT-I3-amB" id="mYh-61-WWG"/>
                         <segue destination="ShD-db-39U" kind="show" identifier="ShowRipaView" id="x93-un-I2D"/>
                         <segue destination="LwG-xO-GqE" kind="show" identifier="ShowSavedList" id="2Il-Gl-rlX"/>
                     </connections>
