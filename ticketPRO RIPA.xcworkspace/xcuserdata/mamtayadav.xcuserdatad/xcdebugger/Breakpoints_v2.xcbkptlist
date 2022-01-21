@@ -378,38 +378,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A0C952F2-DD6B-458D-8E1A-65318B8C5902"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2820"
-            endingLineNumber = "2820"
-            landmarkName = "locationSwitch(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E2CF49E3-C383-4DA4-8373-0AD10DFF6F49"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2644"
-            endingLineNumber = "2644"
-            landmarkName = "textView(_:shouldChangeTextIn:replacementText:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "DEB30A96-4109-4D86-A730-56155A93F2B9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -442,22 +410,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "241591EB-2F3D-474C-8775-A20069CF9353"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2643"
-            endingLineNumber = "2643"
-            landmarkName = "textView(_:shouldChangeTextIn:replacementText:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "A28EE946-CEFF-47A1-A214-5296AF12439F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -467,8 +419,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3672"
             endingLineNumber = "3672"
-            landmarkName = "NewRipaViewController"
-            landmarkType = "21">
+            landmarkName = "clearTextFromTextView(sender:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -483,8 +435,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3684"
             endingLineNumber = "3684"
-            landmarkName = "NewRipaViewController"
-            landmarkType = "21">
+            landmarkName = "clearOption(sender:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -755,23 +707,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "3859"
             endingLineNumber = "3859"
-            landmarkName = "NewRipaViewController"
-            landmarkType = "21">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C38C00E5-A7C1-47EE-B646-A63EF49D4CE0"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/ViewModel/SavedListViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "getApprovedOrPendingRipa(params:)"
+            landmarkName = "refreshViolationLists(list:listType:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -852,6 +788,22 @@
             startingLineNumber = "3645"
             endingLineNumber = "3645"
             landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1C05E2A6-5103-4946-897A-F2B97CB2956F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1074"
+            endingLineNumber = "1074"
+            landmarkName = "actionSubmit(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
