@@ -43,8 +43,6 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             self.backBtn.isHidden = true
         }
         
-        
-        
       //  var dict = AppManager.getLastSavedLoginDetails()
       //  print(dict)
 //        if let object = Mapper<LoginDetails>().map(JSON: json) {
@@ -166,9 +164,9 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
         }
         
         var pId : String = ""
-        if let respo = data.supervisor?[0].PersonId {
-            pId = respo
-        }
+//        if let respo = data.supervisor?[0].PersonId {
+//            pId = respo
+//        }
         
         var qCode : String = ""
         if let respo = data.question?.question_code {

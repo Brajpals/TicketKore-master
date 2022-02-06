@@ -245,15 +245,23 @@ extension LoginViewModel {
             if success == true{
                 let data =  DataManager.shared.versionUpdate
                 let result = data?.result
-                
-              
-                if let version = Double(result?.ios_verion ?? ""){
-                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                var versionnew : Double = 1.0
-                if let versin =  (appVersion as NSString?)?.doubleValue{
-                    versionnew = versin
+                var serverVersionStr : String = "1.0"
+                var appVersionStr : String = "1.0"
+               
+                if let servserVersion = result?.ios_verion {
+                    serverVersionStr = servserVersion
                 }
-                if version ?? 1.0 > versionnew{
+                serverVersionStr = self.removeDuplicate(string: serverVersionStr, char: ".")
+                
+                if let appVersion =  Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                    appVersionStr = appVersion
+                }
+                appVersionStr = self.removeDuplicate(string: appVersionStr, char: ".")
+              
+                let version = Double(serverVersionStr)
+                
+                let versionnew = Double(appVersionStr)
+                if version ?? 1.0 > versionnew ?? 1.0{
                     let refreshAlert = UIAlertController.init(title: "Update Available", message: "A new version of ticketPRO RIPA STOP is available. If you have access to the App Store, select the Update Now button below. Otherwise, contact your IT Administrator to get the update.", preferredStyle: .alert)
                     refreshAlert.addAction(UIAlertAction(title: "Update Now", style: .default, handler: { (action: UIAlertAction!) in
                         if let url = NSURL(string:"https://apps.apple.com/in/app/ripa-stop/id1567247543") {
@@ -264,7 +272,6 @@ extension LoginViewModel {
                         UIApplication.topViewController()?.present(refreshAlert, animated: true, completion: nil)
                     }
                 }
-              }
             }
             else {// AppUtility.showAlertWithProperty("Alert", messageString: "Something Went Wrong")
             }
@@ -275,6 +282,17 @@ extension LoginViewModel {
             if let errorMessage = message {
                 //  AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)
             }
+        }
+    }
+    
+    func removeDuplicate(string: String, char: Character) -> String {
+        if var idx = string.firstIndex(of: char) {
+            string.formIndex(after: &idx)
+            var s = string
+            s.replaceSubrange(idx..., with: s[idx...].filter { $0 != char })
+            return s
+        } else {
+            return string
         }
     }
     
