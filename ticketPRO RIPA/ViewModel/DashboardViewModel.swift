@@ -7,14 +7,14 @@
  
  
  
- protocol QuestionsDelegate: class {
+protocol QuestionsDelegate: AnyObject {
     func proceedToNextScreen(questionArray:[QuestionResult1])
     func proceedToSavedListScreen()
     func setStatusCount(countArray:[CountResult])
     // func errorLogout(message:String,status:Int)
  }
  
- protocol GetListDelegate: class {
+protocol GetListDelegate: AnyObject {
     func getList(success:String)
  }
  
@@ -49,7 +49,7 @@
             param = ["custid":"" ,"city_id":"", "countyid":"","access_token": token ?? ""]
         }
         else if method == "ripaCities"{
-            param = ["custid":"", "county_id":"","access_token": token ?? ""]
+            param = ["custid":"", "county_id":"","access_token": token ?? "","is_update":"1"]
         }
         else if  method == "ripaEducation"{
             param = ["access_token": token ?? ""]
@@ -58,7 +58,7 @@
         return params
     }
     
-    
+    //isUpdate = 1
     func setCityParam() {
         db.openDatabase()
         db.UpdateDatabase()
@@ -69,6 +69,7 @@
         let count = Int(db.checkEmptyTable(insertTableString: "cityTable"))
         if count == 0 {
             let params = getParam(cityId:"", method: "ripaCities")
+            print(params)
             getData(params: params, method: "Cities")
             return
         }
@@ -154,7 +155,7 @@
     func getData(params: [String:Any],method:String) {
         //  AppUtility.showProgress(nil, title: "Getting" + method)
         var URL:String?
-        
+        print(params)
         URL = AppConstants.Api.otpRequest
         
         ApiManager.getRipaData(params: params, method: method, methodTyPe: .post, url: URL!, completion: { json,successmsg   in
@@ -179,6 +180,7 @@
         { (error, code, message) in
             // AppUtility.hideProgress(nil)
             if let errorMessage = message {
+              print(errorMessage)
                 //AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)
             }
         }
@@ -293,7 +295,7 @@
                 if let json = try? JSON(data: json as! Data) {
                     let errorMsg = json["result"][0]["serviceError"].stringValue
                     var countArr = [CountResult]()
-                 //   print(json)
+                    print(json)
                     if  errorMsg == ""{
                         for item in json["result"].arrayValue {
                             let countObj = CountResult(total: item["Total"].stringValue, statusID: item["status_id"].stringValue, statusCode: item["status_code"].stringValue, ripaActivityStatusName: item["ripa_activity_status_Name"].stringValue)
@@ -311,7 +313,6 @@
         })
         { (error, code, message) in
             AppUtility.hideProgress(nil)
-            
         }
         
     }
@@ -688,7 +689,6 @@
             AppUtility.showAlertWithProperty("Alert", messageString: "Internet connection not available.")
             
         }
-        
     }
     
     
@@ -883,6 +883,7 @@
                 AppUtility.hideProgress(nil)
              //   self.questiondelegate?.proceedToSavedListScreen()
                 if let errorMessage = message {
+                    print(errorMessage)
            //         AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)
                 }
                 else if code == 200{

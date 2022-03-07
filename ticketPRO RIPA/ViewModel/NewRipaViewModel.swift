@@ -75,6 +75,7 @@ class NewRipaViewModel {
                             opt.isSelected = true
                         }
                         if opt.option_id == ""{
+                            opt.option_id = "0"
                             cascadeQuest.questionoptions! = []
                         }
                     }
@@ -82,12 +83,7 @@ class NewRipaViewModel {
             }
         }
     }
-    
-    
  
-    
-    
-    
     func splitOffenceCode(str:String)->[[String]]?{
         var offCodeStrArray=[[String]]()
          let components = str.components(separatedBy: ":")
@@ -250,7 +246,7 @@ class NewRipaViewModel {
 
     
     func createObj(mainQuestId:String?,ripaID:String?,optionValue:String?,physical_attribute:String?, description:String?,isSelected:Bool,mainQuestOrder:String)->Questionoptions1{
-        let option:Questionoptions1 = Questionoptions1(mainQuestId: mainQuestId!, mainQuestOrder:mainQuestOrder ,option_id: "", ripa_id:ripaID!, custid: "", option_value: optionValue!, cascade_ripa_id: "", isK_12School: "", isHideQuesText: "", order_number: mainQuestOrder, createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: isSelected, isAddtion: "", isDescription_Required : "",inputTypeCode : "", questionTypeCode: "", tag: "", physical_attribute: physical_attribute!, default_value: "", optionDescription: description!, question_code_for_cascading_id: "", isQuestionMandatory: "", isQuestionDescriptionReq: "", main_question_id: mainQuestId!, isExpanded: false, questionoptions: [])
+        let option:Questionoptions1 = Questionoptions1(mainQuestId: mainQuestId!, mainQuestOrder:mainQuestOrder ,option_id: "0", ripa_id:ripaID!, custid: "", option_value: optionValue!, cascade_ripa_id: "", isK_12School: "", isHideQuesText: "", order_number: mainQuestOrder, createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: isSelected, isAddtion: "", isDescription_Required : "",inputTypeCode : "", questionTypeCode: "", tag: "", physical_attribute: physical_attribute!, default_value: "", optionDescription: description!, question_code_for_cascading_id: "", isQuestionMandatory: "", isQuestionDescriptionReq: "", main_question_id: mainQuestId!, isExpanded: false, questionoptions: [])
         return option
     }
     
@@ -381,9 +377,10 @@ class NewRipaViewModel {
     func getCascadeQuestionUsingId(questionID:Int) -> QuestionResult1{
         var quest:QuestionResult1?
         for question in cascadeQuestionArray!{
+           
             if Int(question.id) == questionID{
                 quest = question
-                print(quest?.questionoptions)
+               // print(quest?.questionoptions)
             }
         }
         if questionID == 35{
@@ -436,6 +433,7 @@ class NewRipaViewModel {
         var intesection = ""
         
         for quest in cascadeQuestionArray!{
+            
             if quest.question_code == "C6"{
                 if quest.questionoptions!.count > 0{
                     city = (quest.questionoptions![0]).option_value
@@ -533,6 +531,12 @@ extension NewRipaViewController{
             option.isQuestionDescriptionReq = questionArray![questNumber!].is_required
             option.main_question_id = questionId
  
+             let optionId = option.option_id
+             if optionId.count == 0 {
+                 option.option_id = "0"
+             }
+             
+           
             
             if option.cascade_ripa_id != ""{
                 let cascadeRipaId = option.cascade_ripa_id
@@ -554,6 +558,10 @@ extension NewRipaViewController{
                 
                 for opt in cascadeQuestion.questionoptions!{
                     opt.order_number = orderId!
+                    let opId = opt.option_id
+                    if opId.count == 0 {
+                        opt.option_id = "0"
+                    }
                     opt.mainQuestOrder = orderId!
                     opt.main_question_id = questionId
                 }

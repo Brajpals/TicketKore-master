@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol PendingQuestionDelegate: class {
+protocol PendingQuestionDelegate: AnyObject {
     func gotoselectedQuestion(index:Int,personArray:[[String: Any]])
 }
 

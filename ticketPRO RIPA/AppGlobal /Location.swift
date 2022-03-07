@@ -13,7 +13,7 @@ import SwiftyJSON
 
 
 
-protocol GPSLocationDelegate: class {
+protocol GPSLocationDelegate: AnyObject {
     func fetchedLocationDetails(location: CLLocation, countryCode: String, city: String, street: String , intersection:String , county:String)
     func failedFetchingLocationDetails(error: Error)
  }
@@ -70,7 +70,16 @@ class GPSLocation: UIViewController,CLLocationManagerDelegate {
         var currentLocation: CLLocation!
         locManager.desiredAccuracy = kCLLocationAccuracyBest
         
-        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse || CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways) {
+        let authorizationStatus: CLAuthorizationStatus
+
+        if #available(iOS 14, *) {
+            authorizationStatus = locManager.authorizationStatus
+        } else {
+            authorizationStatus = CLLocationManager.authorizationStatus()
+        }
+
+        
+        if (authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse || authorizationStatus == CLAuthorizationStatus.authorizedAlways) {
             
             currentLocation = locManager.location
             if currentLocation != nil{
@@ -107,7 +116,17 @@ class GPSLocation: UIViewController,CLLocationManagerDelegate {
             // locManager.requestAlwaysAuthorization()
             self.locManager.requestWhenInUseAuthorization()
             
-            if  (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.denied){
+            let authorizationStatus: CLAuthorizationStatus
+
+            if #available(iOS 14, *) {
+                authorizationStatus = self.locManager.authorizationStatus
+            } else {
+                authorizationStatus = CLLocationManager.authorizationStatus()
+            }
+
+
+            
+            if  (authorizationStatus == CLAuthorizationStatus.denied){
                 GPSLocation.showLocationEnableAlert()
              }
             
@@ -180,6 +199,7 @@ class GPSLocation: UIViewController,CLLocationManagerDelegate {
                 }
                 break
              case .failure(let error):
+                print(error)
 //                failure(error,response.response?.statusCode,ApiManager.getErrorMessage(response: response, false))
                  AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get current location")
                  AppUtility.hideProgress()

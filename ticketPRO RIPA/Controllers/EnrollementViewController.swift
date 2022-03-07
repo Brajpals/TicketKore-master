@@ -124,7 +124,7 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         
         let yourAttributes2 = [NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.2343381047, green: 0.5642583966, blue: 0.8001195788, alpha: 1) ,NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)] as [NSAttributedString.Key : Any]
         
-        let attributedString = NSMutableAttributedString(string: "By signing in, I agree to",attributes: yourAttributes)
+        let attributedString = NSMutableAttributedString(string: "By signing in, I agree to",attributes: yourAttributes as [NSAttributedString.Key : Any])
         let attributedString1 = NSMutableAttributedString(string: " Privacy Policy ",attributes: yourAttributes2)
         
         attributedString.append(attributedString1)
@@ -527,8 +527,8 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             userIdDeleteBtn.isHidden = true
         }
         var maxLength = 10
-        var maxLenghtUser = 8
-        var minLength = 4
+       // var maxLenghtUser = 8
+      //  var minLength = 4
         if(textField == enrollmentTxt)
         {
             maxLength = 8
@@ -578,7 +578,7 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         var error: NSError?
         var type = "Face Id"
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            
+            print(type)
             if #available(iOS 11.0, *) {
                 if (context.biometryType == LABiometryType.faceID) {
                     type = "FaceId"

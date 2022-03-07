@@ -9,12 +9,12 @@ import UIKit
 import Speech
 import AVKit
 
-protocol AddDescriptionDelegate: class {
+protocol AddDescriptionDelegate: AnyObject {
     func addEnteredDescription(text:String?)
     
 }
 
-protocol NoteDelegate: class {
+protocol NoteDelegate: AnyObject {
     func addnote(forSave:Bool)
     
 }

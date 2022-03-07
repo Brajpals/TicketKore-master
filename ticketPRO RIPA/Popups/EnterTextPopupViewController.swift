@@ -9,11 +9,11 @@ import UIKit
 import CoreLocation
 import MapKit
 
-protocol AddOptionDelegate: class {
+protocol AddOptionDelegate: AnyObject {
     func addEnteredOption(option:Questionoptions1)
 }
 
-protocol AddLocationDelegate: class {
+protocol AddLocationDelegate: AnyObject {
     func addEnteredOption(option:Any)
 }
 

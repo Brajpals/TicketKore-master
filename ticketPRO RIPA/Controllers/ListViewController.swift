@@ -10,7 +10,7 @@ import EzPopup
 
 
 
-protocol LocationDelegate:class {
+protocol LocationDelegate:AnyObject {
     func refreshLocationLists(list:[Any]?, listType: String)
     func countyChanged(resetLoc:Bool)
 }

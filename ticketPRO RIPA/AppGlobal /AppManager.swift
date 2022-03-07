@@ -68,6 +68,7 @@ class AppManager {
         AppConstants.call_type = ""
         AppConstants.unitId = ""
         AppConstants.zone = ""
+        AppConstants.activityStatusId = "1"
          
     }
     

@@ -116,6 +116,9 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     
         versionLbl.text = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         
+//        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+//        print(paths[0])
+        
     }
     
     
@@ -221,7 +224,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         let userId =  "AND userid is " + (AppManager.getLastSavedLoginDetails()?.result?.userid)!
         let statusEditReq = "\"Edit Required\""
         let pendingReview = "\"Pending Review\""
-        let approved = "\"Approved\""
+      //  let approved = "\"Approved\""
         var created = "\"Created\""
         var saved = "\"Saved\""
         
@@ -530,10 +533,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    
-    
-    
-    
+
     func authenticateUser(onSwitch:Bool){
         UserDefaults.standard.set(true , forKey: "Launched")
         let context = LAContext()

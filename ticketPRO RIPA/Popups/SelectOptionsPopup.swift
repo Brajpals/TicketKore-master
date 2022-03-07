@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol SelectOptionsPopupDelegate: class {
+protocol SelectOptionsPopupDelegate: AnyObject {
     func selectedOptionFromPopup(optionArray:[Questionoptions1])
 }
 

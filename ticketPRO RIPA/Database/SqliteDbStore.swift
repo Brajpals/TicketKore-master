@@ -260,7 +260,7 @@ class SqliteDbStore {
         
         if sqlite3_prepare_v2(db, insertQuestionString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (ripaRes.question_id as NSString).utf8String , -1, nil)
-            sqlite3_bind_text(insertStatement, 2, (ripaRes.response! as NSString).utf8String , -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (ripaRes.response as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 3, (ripaRes.internall as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 4, (ripaRes.userid as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 5, (ripaRes.question as NSString).utf8String , -1, nil)
@@ -290,7 +290,7 @@ class SqliteDbStore {
     func getRipaResponse()-> RipaResponse? {
         let queryString = "SELECT * FROM ripaResponseTable"
         
-        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "", order_number: "", option_id: "", cascade_option_id: "", main_question_id: "", supervisorId: "", other_assignment_value: "")
+        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "0", order_number: "", option_id: "", cascade_option_id: "0", main_question_id: "", supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
         var stmt:OpaquePointer?
         
         if sqlite3_prepare(db, queryString, -1, &stmt, nil) != SQLITE_OK{
@@ -312,11 +312,13 @@ class SqliteDbStore {
             let question_code = String(cString: sqlite3_column_text(stmt, 10))
             let cascade_ques_id = String(cString: sqlite3_column_text(stmt, 11))
             let order_number = String(cString: sqlite3_column_text(stmt,12))
-            let option_id = String(cString: sqlite3_column_text(stmt, 13))
+            var option_id = String(cString: sqlite3_column_text(stmt, 13))
             let cascade_option_id = String(cString: sqlite3_column_text(stmt, 14))
             let main_question_id = String(cString: sqlite3_column_text(stmt,15))
-            
-            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "", other_assignment_value: "")
+            if option_id.count == 0 {
+                option_id = "0"
+            }
+            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
           //  ripaList.append(rips)
         }
         return ripaList

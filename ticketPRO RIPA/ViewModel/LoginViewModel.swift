@@ -4,11 +4,11 @@ import SwiftyJSON
 
 
 
-protocol LoginOTPViewModelDelegate: class {
+protocol LoginOTPViewModelDelegate: AnyObject {
     func proceedToOTP(isValidLogin: Int, message:String)
 }
 
-protocol ActivityStoreDelegate: class {
+protocol ActivityStoreDelegate: AnyObject {
     func proceedToDashboard()
 }
 
@@ -280,6 +280,7 @@ extension LoginViewModel {
         { (error, code, message) in
             AppUtility.hideProgress(nil)
             if let errorMessage = message {
+                print(errorMessage)
                 //  AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)
             }
         }

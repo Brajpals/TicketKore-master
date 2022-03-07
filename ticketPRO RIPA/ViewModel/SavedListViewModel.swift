@@ -9,7 +9,7 @@ import Foundation
 import SwiftyJSON
  
 
- protocol SavedListModelDelegate: class {
+protocol SavedListModelDelegate: AnyObject {
     func  proceedToRejectedView(applicationData:RejectedApplication?)
      func  proceedToPreviewScreen(previewPram:[RipaPerson], forTemplate:Bool?)
 }
@@ -38,7 +38,6 @@ class SavedListViewModel {
     }
     
     
-    
     func getApprovedOrPendingRipa(params: [String:Any]) {
         AppUtility.showProgress(nil, title: nil)
         var URL:String?
@@ -56,7 +55,7 @@ class SavedListViewModel {
                     
                     if let json = try? JSON(data: success as! Data) {
                      let error = json["result"][0]["serviceError"].stringValue
-                     
+                      print(json)
                         if  error == ""{
                              var i = 0
                             for person in json["result"][0]["ripaPersons"].arrayValue{
@@ -69,9 +68,16 @@ class SavedListViewModel {
                                 
                             for response in json["result"][0]["ripaPersons"][i]["ripa_response"].arrayValue{
                              
-                                let ripaResponse = RipaResponse(question_id: response["question_id"].stringValue, response: response["response"].stringValue, internal: response["internal"].stringValue, userid:"", question: response["question"].stringValue, CreatedBy: "", physical_attribute: response["physical_attribute"].stringValue, key: "", personId: "", description: response["Description"].stringValue, question_code: response["question_code"].stringValue, cascade_ques_id: response["cascade_ques_id"].stringValue, order_number: response["order_number"].stringValue , option_id: response["option_id"].stringValue, cascade_option_id: response["cascade_option_id"].stringValue, main_question_id: response["main_question_id"].stringValue, supervisorId: "", other_assignment_value: "")
+                                var option_id : String = "0"
+                                let opId = response["option_id"].string
+                                if let checkId = opId {
+                                    option_id = checkId
+                                }
                                 
-                                 ripaResponseArr.append(ripaResponse)
+                                
+                                let ripaResponse = RipaResponse(question_id: response["question_id"].stringValue, response: response["response"].stringValue, internal: response["internal"].stringValue, userid:"", question: response["question"].stringValue, CreatedBy: "", physical_attribute: response["physical_attribute"].stringValue, key: "", personId: "", description: response["Description"].stringValue, question_code: response["question_code"].stringValue, cascade_ques_id: response["cascade_ques_id"].stringValue, order_number: response["order_number"].stringValue , option_id: option_id, cascade_option_id: response["cascade_option_id"].stringValue, main_question_id: response["main_question_id"].stringValue, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
+                                
+                                   ripaResponseArr.append(ripaResponse)
                                 
 //                                if ripaResponse.question.contains("Name of school") && ripaResponse.question_code == "C9"{
 //                                    AppConstants.schoolName = ripaResponse.response!
@@ -145,6 +151,9 @@ class SavedListViewModel {
  
             let groupQuest = getQuestionUsingQuestionCode(questionCode: "25", question_Id: "", questArray: questionsArray)
             for options in groupQuest.questionoptions!{
+                if options.option_id.count == 0 {
+                    options.option_id = "0"
+                }
                 options.isSelected = true
             }
             
@@ -175,7 +184,7 @@ class SavedListViewModel {
 //                    }
                      
                      if response.question_code == "C9"{
-                         AppConstants.schoolName = response.response!
+                         AppConstants.schoolName = response.response
                      }
                     
                     if response.description == "StReas_N" || response.description == "BasSearch_N"{
@@ -199,6 +208,10 @@ class SavedListViewModel {
                      if option.option_id == response.cascade_option_id{
                         option.isSelected = true
                      }
+                    if option.option_id.count == 0 {
+                        option.option_id = "0"
+                    }
+                    
                     if option.isSelected == true{
                         i += 1
                     }
@@ -210,10 +223,13 @@ class SavedListViewModel {
                 
             }
                 
-                if response.question_code == "C24" && (response.response)?.lowercased() == "yes"{
+                if response.question_code == "C24" && (response.response).lowercased() == "yes"{
                     AppConstants.isSchoolSelected = "Yes"
                     question = getQuestionUsingQuestionCode(questionCode: "5", question_Id: response.question_id, questArray: questionsArray)
                     for option in question!.questionoptions!{
+                        if option.option_id.count == 0 {
+                            option.option_id = "0"
+                        }
                         if option.physical_attribute == "K12"{
                             option.isSelected = true
                         }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ViolationPopupDelegate: class {
+protocol ViolationPopupDelegate: AnyObject {
     func selectedOptionFromViolationPopup(optionArray:[Questionoptions1])
     func selectedOptionFromConsentPopup(consentQuestion: QuestionResult1 )
 }
@@ -126,7 +126,7 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
         consentArray.insert(personConsentObj, at: 2)
         consentArray.insert(propertyConsentObj, at: 5)
  
-        var ewrw = consentArray
+       // var ewrw = consentArray
         
         tableView.reloadData()
         
@@ -270,7 +270,7 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
         consentArray[sender.tag-1].isSelected = true
        consentArray[sender.tag-1].isExpanded = true
          print(sender.tag-1)
-        var qww = consentArray
+       // var qww = consentArray
         if sender.isOn{
              consentArray[sender.tag-1].questionoptions![0].isSelected = true
             consentArray[sender.tag-1].questionoptions![1].isSelected = false

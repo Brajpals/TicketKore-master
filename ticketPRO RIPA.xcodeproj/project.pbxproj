@@ -86,6 +86,7 @@
 		3F8BCA3E270DA7F900DD178B /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8BCA3D270DA7F900DD178B /* LocationModel.swift */; };
 		3F8CFE3425EA7B720007C156 /* PreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F8CFE3225EA7B720007C156 /* PreviewCell.xib */; };
 		3F8CFE3525EA7B720007C156 /* PreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8CFE3325EA7B720007C156 /* PreviewTableViewCell.swift */; };
+		3F95490E27C66C1300549C93 /* EditRipaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F95490D27C66C1200549C93 /* EditRipaViewModel.swift */; };
 		3F97BCAD25D9ABAD001F86F7 /* OtherRipaDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F97BCAC25D9ABAD001F86F7 /* OtherRipaDataModel.swift */; };
 		3FB4501E25DD3C5100E1A30C /* NewRipaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB4501D25DD3C5100E1A30C /* NewRipaViewController.swift */; };
 		3FB4502D25DD49F200E1A30C /* MultilineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB4502B25DD49F100E1A30C /* MultilineCell.swift */; };
@@ -230,6 +231,7 @@
 		3F8BCA3D270DA7F900DD178B /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		3F8CFE3225EA7B720007C156 /* PreviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreviewCell.xib; sourceTree = "<group>"; };
 		3F8CFE3325EA7B720007C156 /* PreviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTableViewCell.swift; sourceTree = "<group>"; };
+		3F95490D27C66C1200549C93 /* EditRipaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRipaViewModel.swift; sourceTree = "<group>"; };
 		3F97BCAC25D9ABAD001F86F7 /* OtherRipaDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherRipaDataModel.swift; sourceTree = "<group>"; };
 		3FB4501D25DD3C5100E1A30C /* NewRipaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRipaViewController.swift; sourceTree = "<group>"; };
 		3FB4502B25DD49F100E1A30C /* MultilineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineCell.swift; sourceTree = "<group>"; };
@@ -580,6 +582,7 @@
 				3F128D822617B4EB006441AA /* PreviewViewModel.swift */,
 				3F066F8826413350007B60A6 /* SavedListViewModel.swift */,
 				3F1DF8B92754AEDC00792452 /* UserSettingViewModel.swift */,
+				3F95490D27C66C1200549C93 /* EditRipaViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -869,6 +872,7 @@
 				94649A5F268093EC00546C05 /* VersionUpdate.swift in Sources */,
 				3F3F2CAA2747CE1D001C9BF2 /* UITextField.swift in Sources */,
 				946977F325D1110500D013BB /* LoginViewModel.swift in Sources */,
+				3F95490E27C66C1300549C93 /* EditRipaViewModel.swift in Sources */,
 				3FB90BA52750B6E000F86AE9 /* UserSettingsViewController.swift in Sources */,
 				9469784D25D11B5A00D013BB /* ApiManager.swift in Sources */,
 				3F128D7E26174F43006441AA /* EnterDescriptionPopupViewController.swift in Sources */,
@@ -1103,15 +1107,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YY8294K333;
 				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 3.0.3;
+				MARKETING_VERSION = 3.0.4;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1150,7 +1154,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Dev2;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1167,15 +1171,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = YY8294K333;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 3.0.3;
+				MARKETING_VERSION = 3.0.4;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1214,7 +1218,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Dev2;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

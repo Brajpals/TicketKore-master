@@ -10,7 +10,7 @@ import EzPopup
 
 
 
-protocol PersonTypeDelegate: class {
+protocol PersonTypeDelegate: AnyObject {
     func addPerson(personIndex:Int , personArray:[[String: Any]])
     func editPerson(personIndex:Int, personArray:[[String: Any]])
     func previewPerson(personIndex:Int , personArray:[[String: Any]])

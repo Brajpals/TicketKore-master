@@ -4,7 +4,6 @@ import Firebase
 import FirebaseMessaging
 
 
-
 class MyGlobalTimer: NSObject {
     var time = 0
     
@@ -22,15 +21,12 @@ class MyGlobalTimer: NSObject {
         self.internalTimer?.invalidate()
     }
 
-    
     @objc func fireTimerAction(sender: AnyObject?){
          time += 1
         if time == 60{
             stopTimer()
         }
     }
-    
-    
     
  }
 
@@ -41,7 +37,7 @@ struct AppConstants {
     static var autoNext:Bool?
     
     struct BaseURL {
-         static let URL = "https://tpwebservices.ticketproweb.com/public/index.php/service"
+         static let URL = "https://tpwebservicesdev.ticketproweb.com/public/index.php/service"
      }
  
  //Prod//'https://tpwebservices.ticketproweb.com/public/index.php/service'
@@ -92,6 +88,7 @@ struct AppConstants {
     static var call_type = ""
     static var unitId = ""
     static var zone = ""
+    static var activity_id = ""
     
     static func getDeviceToken() {
         Messaging.messaging().token { token, error in

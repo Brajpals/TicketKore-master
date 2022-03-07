@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ViolationTypeDelegate:class {
+protocol ViolationTypeDelegate:AnyObject {
     func refreshViolationLists(list:[Questionoptions1]?, listType: String)
  }
 

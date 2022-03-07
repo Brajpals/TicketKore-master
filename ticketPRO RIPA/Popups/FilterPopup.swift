@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol FilterPopupDelegate: class {
+protocol FilterPopupDelegate: AnyObject {
     func selectedOptionFromPopup(filteredList:[FilterList], fromDate:String,toDate:String)
 }
 
@@ -218,6 +218,7 @@ class FilterPopup: UIViewController,UITableViewDelegate,UITableViewDataSource {
     func selectDeselect(toSelect:Bool){
         var i = 0
          for opt in filterList!{
+             print(opt)
              filterList![i].isSelected = toSelect
             i += 1
         }

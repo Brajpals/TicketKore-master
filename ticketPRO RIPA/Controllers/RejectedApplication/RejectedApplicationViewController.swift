@@ -8,8 +8,7 @@
 import UIKit
 import SwiftyJSON
 
-class RejectedApplicationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate,LocationEditViewDelegate,UIGestureRecognizerDelegate {
-  
+class RejectedApplicationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate,LocationEditViewDelegate,UIGestureRecognizerDelegate,SavedListModelDelegate {
  
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var backBtn: UIButton!
@@ -30,7 +29,13 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     var activity:Ativity?
     var response=[Response]()
     var newRipaViewModel = NewRipaViewModel()
+    var savedListViewModel = SavedListViewModel()
+    
     var cityId = ""
+    var viewType=""
+    var saveRipaStatus:String?
+    var  personArray: [[String: Any]] = []
+    var savedRipaList:RipaTempMaster?
 
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -74,9 +79,10 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         response = rejectedApplication?.response ?? []
         setData()
         getCityId()
+        
+        savedListViewModel.savedListModelDelegate = self
+        
     }
-    
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -139,8 +145,6 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     }
     
     
-    
-    
     @objc func clearTxt(sender: UIButton){
         print(sender.tag)
         response[sender.tag].response = ""
@@ -148,6 +152,82 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     }
     
     
+    @IBAction func actionEditRipaButton(_ sender: Any) {
+        if let activityId = self.savedRipaList?.activityId {
+            savedListViewModel.getApprovedOrPendingPram(activityId:activityId)
+        }
+        
+    }
+    
+    func proceedToPreviewScreen(previewPram: [RipaPerson], forTemplate: Bool?) {
+        personArray = savedListViewModel.createPersonDict(personarray:previewPram)
+        self.setConstants ()
+           let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "NewRipaViewController") as! NewRipaViewController
+           vc.viewType = "UseSaveRipa"
+           vc.saveRipaStatus = "Saved"
+           vc.ripaTypeStr = "Edit"
+           vc.personArray = personArray
+           vc.savedRipaList = savedRipaList
+           self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func setConstants () {
+        AppConstants.activityStatusId = "4"
+        if let city = savedRipaList?.city {
+            AppConstants.city =  city
+        }
+        if let key = savedRipaList?.key {
+            AppConstants.key = key
+        }
+        if let activityId = savedRipaList?.activityId {
+            AppConstants.activityID = activityId
+        }
+        if let trafficid = savedRipaList?.skeletonID {
+            AppConstants.trafficId = trafficid
+        }
+        if let notes = savedRipaList?.note {
+            AppConstants.notes = notes
+        }
+        if let duration = savedRipaList?.stopDuration {
+            AppConstants.duration = duration
+        }
+        if let stopDate = savedRipaList?.stopDate {
+            AppConstants.date = stopDate
+            if stopDate != ""{
+                let inputFormatter = DateFormatter()
+                inputFormatter.dateFormat = "MM/dd/yyyy HH:mm"
+                let showDate = inputFormatter.date(from: stopDate)
+                inputFormatter.dateFormat = "MM/dd/yyyy"
+                var resultString = inputFormatter.string(from: showDate!)
+                AppConstants.date = resultString
+                
+                inputFormatter.dateFormat = "HH:mm"
+                resultString = inputFormatter.string(from: showDate!)
+                AppConstants.time = resultString
+            }
+        }
+        
+        if let stopTime = savedRipaList?.stopTime {
+            AppConstants.time = stopTime
+        }
+        
+        if let location = savedRipaList?.location {
+            AppConstants.address = location
+        }
+        
+        if let deviceid = savedRipaList?.deviceid {
+            AppConstants.deviceid = deviceid
+        }
+        if let citationNumber = savedRipaList?.citationNumber {
+            AppConstants.citation = citationNumber
+        }
+        
+    }
+    
+    
+    func proceedToRejectedView(applicationData: RejectedApplication?) {
+        
+    }
     
     
     @IBAction func actionBack(_ sender: Any) {
@@ -161,7 +241,6 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     }
     
     @IBAction func actionOpenLocationEditPage(_ sender: Any) {
-        
         self.performSegue(withIdentifier: "EditLocationPage", sender: self)
         trackApplicationTime()
        // openLocationPage()
@@ -179,8 +258,6 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
             locationEditView.city = self.rejectedApplication!.ativity.city
         }
     }
-    
-    
     
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool{
@@ -206,9 +283,6 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         trackApplicationTime()
         response[index!].response = responsetext
     }
-    
-    
-    
   
     
     func setLocationEdit(locationObject: RejectedApplicationLocation, address: String , city:String) {
@@ -310,20 +384,11 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         }
     }
     
-    
- 
-    
-    
-    
-    
     func getCityId(){
         let cityList = newRipaViewModel.getCities()
           let city = cityList.first{$0.city_name == activity!.city}
          cityId = city?.city_id ?? ""
     }
-    
-    
-    
     
     func showAlertWithProperty(_ title: String, messageString: String) -> Void {
         let alertController = UIAlertController.init(title: title, message: messageString, preferredStyle: .alert)

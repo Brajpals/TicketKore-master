@@ -361,6 +361,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         AppConstants.applicationtime = "0"
         AppConstants.deviceid = "0"
         AppConstants.citation = ""
+        AppConstants.activityID = savedRipaList[indexPath].activityId
         
         setDispatchConstant(indexPath:indexPath)
         
@@ -379,10 +380,10 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
              }
             else{
                 AppManager.getLastSavedLoginDetails()?.result?.county_id = UserDefaults.standard.string(forKey: "defaultCountyId") ?? "1"
-                print(AppManager.getLastSavedLoginDetails()?.result?.county_id)
+               // print(AppManager.getLastSavedLoginDetails()?.result?.county_id as Any)
              }
             AppManager.saveLoginDetails()
-            print( AppManager.getLastSavedLoginDetails()?.result?.county_id)
+           // print( AppManager.getLastSavedLoginDetails()?.result?.county_id)
          }
         
         if saveRipaStatus == "Approved" || saveRipaStatus == "Pending Review" || saveRipaStatus == "Saved" {
@@ -471,6 +472,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     
     func setConstant(indexPath:Int){
+        AppConstants.activityID = savedRipaList[indexPath].activityId
          AppConstants.address = savedRipaList[indexPath].location
         AppConstants.city =  savedRipaList[indexPath].city
         AppConstants.key = savedRipaList[indexPath].key
@@ -486,6 +488,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     
     func setDispatchConstant(indexPath:Int){
+        AppConstants.activityID = savedRipaList[indexPath].activityId
         AppConstants.call_number = savedRipaList[indexPath].callNumber
         AppConstants.onscene_time =  savedRipaList[indexPath].onsceneTime
         AppConstants.clear_time_of_the_Offrcer = savedRipaList[indexPath].clearTimeOfOfficer
@@ -579,6 +582,10 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         if(segueID! == "RejectedApplicationView"){
             let vc = segue.destination as! RejectedApplicationViewController
             vc.rejectedApplication = rejectedApplication
+            vc.viewType = "UseSaveRipa"
+            vc.saveRipaStatus = "Created"
+            vc.personArray = personArray
+            vc.savedRipaList = savedRipaList[ripaIndex!]
         }
         
         if(segueID! == "ShowPreview"){

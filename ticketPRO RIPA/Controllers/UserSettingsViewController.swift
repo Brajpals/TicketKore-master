@@ -43,12 +43,7 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             self.backBtn.isHidden = true
         }
         
-      //  var dict = AppManager.getLastSavedLoginDetails()
-      //  print(dict)
-//        if let object = Mapper<LoginDetails>().map(JSON: json) {
-//            DataManager.shared.loginDetails = object
-//            AppManager.saveLoginDetails()
-//        }
+        self.navigationController?.navigationBar.isHidden = true
         
     }
     
@@ -133,9 +128,9 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             questionId = qId
         }
         
-        var rep : String = ""
+        var responseStr : String = ""
         if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String{
-            rep = userOption
+            responseStr = userOption
         }
         
         var inter : String = ""
@@ -148,9 +143,9 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             questn = respo
         }
         
-        var cDate : String = ""
+        var createBy : String = ""
         if let respo = data.question?.CreatedBy {
-            cDate = respo
+            createBy = respo
         }
         
         var attri : String = ""
@@ -163,7 +158,7 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             keyS = respo
         }
         
-        var pId : String = ""
+        let personId : String = ""
 //        if let respo = data.supervisor?[0].PersonId {
 //            pId = respo
 //        }
@@ -183,14 +178,14 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             opId = respo
         }
         
-        var mId : String = ""
+        var mainQuestionId : String = ""
         if let respo = data.question?.id {
-            mId = respo
+            mainQuestionId = respo
         }
         
         let  supId : String = self.supervisorId
 
-        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "", order_number: orderN, option_id: opId, cascade_option_id: "", main_question_id: mId, supervisorId: supId, other_assignment_value: otherAssignmentText)
+        let ripaRes = RipaResponse(question_id: questionId, response: responseStr, internal: inter, userid: idUser, question: questn, CreatedBy: createBy, physical_attribute: attri, key: keyS, personId: personId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mainQuestionId, supervisorId: supId, other_assignment_value: otherAssignmentText, activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
         
         return ripaRes
     }
@@ -216,9 +211,6 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
         else if indexPath.row == 1 {
             return 85
         }
-//        else if let pAttribute = userSettingArray.option?[indexPath.row - 1].physical_attribute,pAttribute == "10",let subOption = userSettingArray.option?[indexPath.row - 1].subOption,subOption.count > 0 {
-//            return 80
-//        }
         else{
             return 60
         }
@@ -229,9 +221,6 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
         if let option = userSettingArray.option{
             count = count + option.count
         }
-//        if let question = userSettingArray.supervisor {
-//            count = count + question.count
-//        }
         return count
     }
     

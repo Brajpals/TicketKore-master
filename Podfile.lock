@@ -104,6 +104,8 @@ PODS:
   - ObjectMapper (3.5.3)
   - OTPFieldView (1.0.1)
   - PromisesObjC (1.2.12)
+  - SwiftCSVExport (2.6.0)
+  - SwiftLoggly (1.1.0)
   - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
@@ -118,6 +120,8 @@ DEPENDENCIES:
   - IQKeyboardManagerSwift
   - MBProgressHUD (~> 1.2.0)
   - OTPFieldView
+  - SwiftCSVExport (from `https://github.com/vigneshuvi/SwiftCSVExport.git`, tag `2.6.0`)
+  - SwiftLoggly
   - SwiftyJSON
 
 SPEC REPOS:
@@ -144,7 +148,18 @@ SPEC REPOS:
     - ObjectMapper
     - OTPFieldView
     - PromisesObjC
+    - SwiftLoggly
     - SwiftyJSON
+
+EXTERNAL SOURCES:
+  SwiftCSVExport:
+    :git: https://github.com/vigneshuvi/SwiftCSVExport.git
+    :tag: 2.6.0
+
+CHECKOUT OPTIONS:
+  SwiftCSVExport:
+    :git: https://github.com/vigneshuvi/SwiftCSVExport.git
+    :tag: 2.6.0
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
@@ -169,8 +184,10 @@ SPEC CHECKSUMS:
   ObjectMapper: 97111c97e054a6ee25917662106689f0b4127b37
   OTPFieldView: 700a752fe62c41d1c4914c78aa500fb30d97c255
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  SwiftCSVExport: d9db3fb80484115028792f8d539445e3fb2c0ecb
+  SwiftLoggly: 2e57a2e4fe35ce406574d0479a3654753f480254
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 61bce3256be988324f6aa77b086e89ad4645b9cf
+PODFILE CHECKSUM: be6f92f41fd7ce041ad20b29821f0614ab41cd80
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

@@ -9,7 +9,7 @@ import EzPopup
 
 
 
-protocol GoToQuestion: class {
+protocol GoToQuestion: AnyObject {
     func goToSelectedQuestion(personIndex: Int,  personArray: [[String : Any]], index:Int)
     func addPerson(personIndex:Int , personArray:[[String: Any]])
     func editForPerson(personIndex:Int , personArray:[[String: Any]])
@@ -41,6 +41,8 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     
      let db = SqliteDbStore()
     var ripaActivity : Ripaactivity?
+    
+    var userSettingArray = UserSettingModel()
     
     @IBOutlet weak var preview_tbl: UITableView!
     @IBOutlet weak var submitBtn: UIButton!
@@ -139,7 +141,9 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     }
     
     
-    
+    func sendSettingInfo(data : UserSettingModel){
+        self.userSettingArray = data
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -418,20 +422,37 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             self.performSegue(withIdentifier: "ShowPersonView", sender: self)
          }
         else{
-         let requiredFilledData = previewViewModel.checkRequiredQuestion(questArray: questionsArray, cascadeQuestArray: cascadeQuestionsArray, selectedOpt: selectedOptionsArray)
+         let requiredFilledData = previewViewModel.checkPreviewRequiredQuestion(questArray: questionsArray, cascadeQuestArray: cascadeQuestionsArray, selectedOpt: selectedOptionsArray)
+            
         
         if personArray.count > 1{
             self.performSegue(withIdentifier: "ShowPersonView", sender: self)
         }
         else{
-         //   if requiredFilledData.0.count < 1 {
+            if requiredFilledData.0.count < 1 {
                 previewViewModel.previewModelDelegate = self
                 previewViewModel.personArray = personArray
-                previewViewModel.createPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1")
+              //  previewViewModel.createPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1")
+            db.openDatabase()
+            var userRipaResponse : RipaResponse = db.getRipaResponse()!
+            if userRipaResponse.question_id.isEmpty {
+                 userRipaResponse  = self.createRipaResponseData(data: self.userSettingArray)
+            }
+            var temp1 : String!
+            if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String{
+                temp1 = "\(userOption)"
+                userRipaResponse.response = temp1
+            }
+            if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
+                ripaActivity?.supervisorId = userOption
+            }
+           
+            previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
+            
                 let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
  
                 previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-         /*    }
+             }
             else{
                 guard let customAlertVC1 = pendingQuestionPopup else { return }
                 customAlertVC1.pendingQuestionDelegate = self
@@ -445,12 +466,86 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
                 popupVC.delegate = self
                 
                 present(popupVC, animated: true, completion: nil)
-            } */
+            }
         }
         }
         
     }
-    
+ 
+    func createRipaResponseData(data:UserSettingModel) -> RipaResponse {
+        let optionArray = data.option?.filter({ item in
+            item.is_select == true
+        })
+        let idUser = (AppManager.getLastSavedLoginDetails()?.result?.userid)!
+        var questionId : String = ""
+        if let qId = data.question?.id {
+            questionId = qId
+        }
+        
+        var rep : String = ""
+        if let respo = data.question?.response {
+            rep = respo
+        }
+        
+        var inter : String = ""
+        if let respo = data.question?.internall {
+            inter = respo
+        }
+        
+        var questn : String = ""
+        if let respo = data.question?.question {
+            questn = respo
+        }
+        
+        var cDate : String = ""
+        if let respo = data.question?.CreatedBy {
+            cDate = respo
+        }
+        
+        var attri : String = ""
+        if let respo = optionArray?[0].physical_attribute {
+            attri = respo
+        }
+        
+        var keyS : String = ""
+        if let respo = data.question?.question_key {
+            keyS = respo
+        }
+        
+        var pId : String = ""
+        if let respo = data.supervisor?[0].PersonId {
+            pId = respo
+        }
+        
+        var qCode : String = ""
+        if let respo = data.question?.question_code {
+            qCode = respo
+        }
+        
+        var orderN : String = ""
+        if let respo = optionArray?[0].order_number {
+            orderN = respo
+        }
+        
+        var opId : String = ""
+        if let respo = optionArray?[0].option_id {
+            opId = respo
+        }
+        
+        var mId : String = ""
+        if let respo = data.question?.id {
+            mId = respo
+        }
+        
+        var supId : String = ""
+        if let arr = data.supervisor,let respo = arr[0].SupervisorId {
+            supId = respo
+        }
+        
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
+        
+        return ripaRes
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
         let segueID = segue.identifier

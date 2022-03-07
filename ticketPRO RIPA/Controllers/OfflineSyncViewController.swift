@@ -58,7 +58,7 @@ class OfflineSyncViewController: PreviewModelDelegate {
         
         // let timeTaken =  Date().calculateTime(from_date: ripamaster!.startDate, to_date:ripamaster!.endDate )
         
-        ripaActivity = Ripaactivity(key: ripamaster!.key , custid: ripamaster!.custid , City:ripamaster!.city, date_time: ripamaster!.stopTime , userid:ripamaster!.userid , username:ripamaster!.username, Notes:ripamaster!.note, latitude:ripamaster!.lat, longitude:ripamaster!.long, start_date:ripamaster!.startDate, end_date:ripamaster!.endDate, deviceid:Int(ripamaster!.deviceid) ?? 0, Location:ripamaster!.location, officer_experience: previewModel.calculateYearOfExp(), is_K_12_Student:ripamaster!.is_K_12_Student, CreatedBy:ripamaster!.CreatedBy, ip_address:previewModel.strIPAddress, stop_date:ripamaster!.stopDate , stop_time:ripamaster!.stopTime, stop_duration:ripamaster!.stopDuration, app_version:previewModel.appVersion!, platform:"ios", traffic_id:ripamaster!.skeletonID, activity_status_id: "1", access_token: AppManager.getLastSavedLoginDetails()?.result?.access_token ?? "", timetaken:ripamaster!.timeTaken, citation_number: ripamaster!.citationNumber, county_id: ripamaster!.countyId, time_duration_enable: AppConstants.ripaTimeDuration, call_number: ripamaster!.callNumber, onscene_time: ripamaster!.onsceneTime , clear_time_of_the_Offrcer: ripamaster!.clearTimeOfOfficer, overall_call_clear_time: ripamaster!.overallCallClearTime, call_type: ripamaster!.callType, unitId: ripamaster!.unitId, zone: ripamaster!.zone, ripaPersons:[], supervisorId: "")
+        ripaActivity = Ripaactivity(key: ripamaster!.key , custid: ripamaster!.custid , City:ripamaster!.city, date_time: ripamaster!.stopTime , userid:ripamaster!.userid , username:ripamaster!.username, Notes:ripamaster!.note, latitude:ripamaster!.lat, longitude:ripamaster!.long, start_date:ripamaster!.startDate, end_date:ripamaster!.endDate, deviceid:Int(ripamaster!.deviceid) ?? 0, Location:ripamaster!.location, officer_experience: previewModel.calculateYearOfExp(), is_K_12_Student:ripamaster!.is_K_12_Student, CreatedBy:ripamaster!.CreatedBy, ip_address:previewModel.strIPAddress, stop_date:ripamaster!.stopDate , stop_time:ripamaster!.stopTime, stop_duration:ripamaster!.stopDuration, app_version:previewModel.appVersion!, platform:"ios", traffic_id:ripamaster!.skeletonID, activity_status_id: "1", access_token: AppManager.getLastSavedLoginDetails()?.result?.access_token ?? "", timetaken:ripamaster!.timeTaken, citation_number: ripamaster!.citationNumber, county_id: ripamaster!.countyId, activity_id: ripamaster?.activityId ?? "", time_duration_enable: AppConstants.ripaTimeDuration, call_number: ripamaster!.callNumber, onscene_time: ripamaster!.onsceneTime , clear_time_of_the_Offrcer: ripamaster!.clearTimeOfOfficer, overall_call_clear_time: ripamaster!.overallCallClearTime, call_type: ripamaster!.callType, unitId: ripamaster!.unitId, zone: ripamaster!.zone, ripaPersons:[], supervisorId: "", ripa_activity: AppConstants.activityID)
         
         if ripamaster!.status == "Created"{
             ripaActivity?.activity_status_id = "7"
@@ -113,7 +113,7 @@ class OfflineSyncViewController: PreviewModelDelegate {
                 if question.question_code == "2"{
                     
                     // let timeTaken = Date().calculateTime(from_date: ripaActivity.start_date , to_date: ripaActivity.end_date )
-                    let obj = RipaResponse(question_id: question.id, response: ripaActivity.timetaken, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: "", key: ripaActivity.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
+                    let obj = RipaResponse(question_id: question.id, response: ripaActivity.timetaken, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: "", key: ripaActivity.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
                     updateResopnseArray.append(obj)
                     continue
                 }
@@ -124,7 +124,7 @@ class OfflineSyncViewController: PreviewModelDelegate {
                 if question.is_required == "0" && question.visible_question == "1"{
                     let selectedOptionalArray =  question.questionoptions!.filter { $0.isSelected }
                     if selectedOptionalArray.count < 1{
-                        let obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: "", key: ripaActivity.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
+                        let obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: "", key: ripaActivity.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
                         updateResopnseArray.append(obj)
                         continue
                     }
@@ -133,7 +133,7 @@ class OfflineSyncViewController: PreviewModelDelegate {
                 
                 if question.question_code == "22"{
                     let exp = previewModel.calculateYearOfExp()
-                    let obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: "", key: ripaActivity.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
+                    let obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: "", key: ripaActivity.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
                     updateResopnseArray.append(obj)
                     continue
                 }
@@ -144,8 +144,8 @@ class OfflineSyncViewController: PreviewModelDelegate {
                    // if isSchoolSelected == "Yes" || ripaActivity.is_K_12_Student == "1" {
                     if isSchoolSelected == "Yes" {
                         let option = question.questionoptions!.first
-                        let orderNo = option!.order_number
-                        let obj = RipaResponse(question_id: option!.ripa_id, response: option?.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: address.physical_attribute, key: ripaActivity.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "")
+                       // let orderNo = option!.order_number
+                        let obj = RipaResponse(question_id: option!.ripa_id, response: option!.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: address.physical_attribute, key: ripaActivity.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "0", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
                         updateResopnseArray.append(obj)
                         continue
                     }
@@ -158,7 +158,7 @@ class OfflineSyncViewController: PreviewModelDelegate {
                     address.main_question_id = question.id
                     address.ripa_id = question.id
                     
-                    let obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: address.physical_attribute, key: ripaActivity.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "", order_number: question.order_number, option_id: "", cascade_option_id: "", main_question_id: question.id, supervisorId: "", other_assignment_value: "")
+                    let obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: address.physical_attribute, key: ripaActivity.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
                     
                     updateResopnseArray.append(obj)
                     //continue
@@ -174,10 +174,10 @@ class OfflineSyncViewController: PreviewModelDelegate {
                             }
                             
                             if question.question_code == "C6" || question.question_code == "C7" || question.question_code == "C26" || question.question_code == "C25"{
-                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: opt.physical_attribute, key: ripaActivity.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "")
+                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: opt.physical_attribute, key: ripaActivity.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
                             }
                             else{
-                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: opt.physical_attribute, key: ripaActivity.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "")
+                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(ripaActivity.userid), question: question.question, CreatedBy: String(ripaActivity.userid), physical_attribute: opt.physical_attribute, key: ripaActivity.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
                                 
                                 if opt.main_question_id == ""{
                                     print(opt.mainQuestId)
@@ -299,7 +299,7 @@ class OfflineSyncViewController: PreviewModelDelegate {
         db.openDatabase()
         //db.deleteAllfrom(table: "saveRipaPersonTable")
         // db.deleteAllfrom(table: "useSaveRipaOptionsTable")
-        var wer:String = ripaActivity!.key
+        let wer:String = ripaActivity!.key
         let key = "\"\(wer)\""
         let activityArray = updateRipa.params.ripaactivity
         

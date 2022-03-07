@@ -8,7 +8,7 @@
 import UIKit
 
 
-protocol LocationEditViewDelegate: class {
+protocol LocationEditViewDelegate: AnyObject {
     func setLocationEdit(locationObject:RejectedApplicationLocation,address:String, city:String)
 }
 

@@ -9,8 +9,8 @@ class AppUtility {
     func setRootView(view:String) {
          let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let viewController = mainStoryboard.instantiateViewController(withIdentifier: view) as! EnrollementViewController
-        UIApplication.shared.windows.first?.rootViewController = viewController
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
+         UIApplication.shared.windows.first?.rootViewController = viewController
+         UIApplication.shared.windows.first?.makeKeyAndVisible()
      }
     
     class func showProgress(_ view:  UIView? = nil, title: String?){
@@ -42,7 +42,7 @@ class AppUtility {
         if view != nil {
             MBProgressHUD.hide(for: view!, animated: true)
         }else {
-            if let window = UIApplication.shared.keyWindow {
+            if let window = UIWindow.key {
                 MBProgressHUD.hide(for: window, animated: true)
             } else if let window = UIApplication.shared.windows.last {
                 MBProgressHUD.hide(for: window, animated: true)
@@ -218,4 +218,12 @@ extension UIViewController {
 }
 
 
-
+extension UIWindow {
+    static var key: UIWindow? {
+        if #available(iOS 13, *) {
+            return UIApplication.shared.windows.first { $0.isKeyWindow }
+        } else {
+            return UIApplication.shared.keyWindow
+        }
+    }
+}

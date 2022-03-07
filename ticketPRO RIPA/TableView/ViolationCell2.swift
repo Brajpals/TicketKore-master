@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol violDelegate: class {
+protocol violDelegate: AnyObject {
     func reload(section:Int,index:Int)
  }
 

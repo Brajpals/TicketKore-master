@@ -152,7 +152,7 @@ public struct ApiManager{
                 
                 if let responseValue = response.result.value {
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
-                     let json = JSON(responseValue)
+                    _ = JSON(responseValue)
                     completion(response.data!, "Success")
                    
                 } else {
@@ -220,7 +220,7 @@ public struct ApiManager{
                 if let responseValue = response.result.value {
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
                     
-                    let json = JSON(responseValue)
+                    _ = JSON(responseValue)
                     completion(response.data!, "Success")
                     //                     if let serviceError = json["result"][0]["serviceError"].string {
                     //                        completion(serviceError, "Fail")
@@ -257,7 +257,7 @@ public struct ApiManager{
                 
                 if let responseValue = response.result.value {
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
-                     let json = JSON(responseValue)
+                    _ = JSON(responseValue)
                     completion(response.data!, "Success")
                    
                 } else {
@@ -289,7 +289,7 @@ public struct ApiManager{
                 
                 if let responseValue = response.result.value {
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
-                     let json = JSON(responseValue)
+                    _ = JSON(responseValue)
                     completion(response.data!, "Success")
                    
                 } else {
@@ -318,7 +318,7 @@ public struct ApiManager{
                 
                 if let responseValue = response.result.value {
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
-                     let json = JSON(responseValue)
+                    _ = JSON(responseValue)
                     completion(response.data!, "Success")
                    
                 } else {
@@ -386,6 +386,7 @@ public struct ApiManager{
                 let jsonString = String(data: response.data!, encoding: .utf8)!
                 
                 if method == "Cities"{
+                    print(jsonString)
                     db.insertData(jsonString: jsonString, tableName: "cityTable")
                 }
                 
@@ -426,12 +427,13 @@ public struct ApiManager{
     static func updateRipa(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
+        print(params)
         Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
                 if let responseValue = response.result.value {
+                    print(responseValue)
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
                     
                     //                    let json = JSON(responseValue)
@@ -450,6 +452,7 @@ public struct ApiManager{
                 AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
                 AppUtility.hideProgress()
                 completion("", "Fail")
+                AppUtility.hideProgress(nil)
             }
         }
     }
@@ -475,6 +478,7 @@ public struct ApiManager{
                     }
                     else{
                         let result = json["result"]["result"].stringValue
+                        print(result)
                         completion("", "Success")
                     }
                 } else {
@@ -537,6 +541,7 @@ public struct ApiManager{
                 if let responseValue = response.result.value {
                     
                     let json = JSON(responseValue)
+                    print(json)
                     if let serviceError = json["result"][0]["serviceError"].string {
                         completion(serviceError, "Fail")
                     }
@@ -600,9 +605,9 @@ public struct ApiManager{
             case .success:
                 
                 if let responseValue = response.result.value {
-                    let jsonString = String(data: response.data!, encoding: .utf8)!
+                    _ = String(data: response.data!, encoding: .utf8)!
                     
-                    let json = JSON(responseValue)
+                    _ = JSON(responseValue)
                     //                   // let custid = json["result"]["custid"].string
                     //                    if let serviceError = json["result"][0]["serviceError"].string {
                     //                        completion(serviceError, "Fail")
