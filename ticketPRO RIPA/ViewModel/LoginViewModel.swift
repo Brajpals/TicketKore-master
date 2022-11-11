@@ -133,10 +133,7 @@ extension LoginViewModel {
         checkActivityStore(params: params)
     }
     
-    
-    
-    
-    
+ 
     func getOtpWith(params: [String:Any],loginType:String) {
         AppUtility.showProgress(nil, title: "Checking...")
         var URL:String?
