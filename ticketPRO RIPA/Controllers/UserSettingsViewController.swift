@@ -44,7 +44,6 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
         }
         
         self.navigationController?.navigationBar.isHidden = true
-        
     }
     
     func removeView(){
@@ -94,7 +93,7 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
     
     func updateUserSettingData(msg:String){
        
-        let  createRipaResponseTable = "create table if not exists ripaResponseTable (question_id TEXT, response TEXT, internal TEXT, userid TEXT,question TEXT,CreatedBy TEXT,physical_attribute TEXT,key TEXT,personId TEXT,description TEXT,question_code TEXT,cascade_ques_id TEXT,order_number TEXT,option_id TEXT,cascade_option_id TEXT,main_question_id TEXT,supervisorId TEXT)"
+        let  createRipaResponseTable = "create table if not exists ripaResponseTable (question_id TEXT, response TEXT, internal TEXT, userid TEXT,question TEXT,CreatedBy TEXT,physical_attribute TEXT,key TEXT,personId TEXT,description TEXT,question_code TEXT,cascade_ques_id TEXT,order_number TEXT,option_id TEXT,cascade_option_id TEXT,main_question_id TEXT,supervisorId TEXT,os_version TEXT,is_trainee TEXT)"
         
         db.openDatabase()
         db.createTable(insertTableString: createRipaResponseTable)
@@ -183,9 +182,15 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
             mainQuestionId = respo
         }
         
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
         let  supId : String = self.supervisorId
 
-        let ripaRes = RipaResponse(question_id: questionId, response: responseStr, internal: inter, userid: idUser, question: questn, CreatedBy: createBy, physical_attribute: attri, key: keyS, personId: personId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mainQuestionId, supervisorId: supId, other_assignment_value: otherAssignmentText, activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+        let ripaRes = RipaResponse(question_id: questionId, response: responseStr, internal: inter, userid: idUser, question: questn, CreatedBy: createBy, physical_attribute: attri, key: keyS, personId: personId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mainQuestionId, supervisorId: supId, other_assignment_value: otherAssignmentText, activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(),is_trainee : traini)
         
         return ripaRes
     }
@@ -193,13 +198,16 @@ class UserSettingsViewController: UIViewController,UserSettingModelDelegate,supe
     
 }
 
-
+//&& userSettingArray.default_supervisor != "0"
 extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 0,let is_active = self.userSettingArray.is_active, is_active == "Y" {
+        if indexPath.row == 0,let is_active = self.userSettingArray.is_active, is_active == "Y"{
             return 65
         }
         else if indexPath.row == 0,let question = userSettingArray.supervisor ,question.count == 0 {
+            return 0
+        }
+        else if indexPath.row == 0 && userSettingArray.default_supervisor != "0" {
             return 0
         }
         else if indexPath.row == 0,userSettingArray.supervisor?.count == 0 {
@@ -219,7 +227,7 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count = 1
         if let option = userSettingArray.option{
-            count = count + option.count
+            count = count + option.count + 1
         }
         return count
     }
@@ -242,13 +250,20 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
             }
             else if let text =  userSettingArray.option?[indexPath.row - 2].option_value{
                 UserDefaults.standard.set(text, forKey: "userOption")
+                UserDefaults.standard.set(false, forKey: "isTraini")
+                if let pAttribute = userSettingArray.option?[indexPath.row - 2].physical_attribute {
+                    UserDefaults.standard.set(pAttribute, forKey: "physical_attribute")
+                    if pAttribute == "9999" {
+                        UserDefaults.standard.set(true, forKey: "isTraini")
+                    }
+                }
                 userSettingArray.option?[selectIndex].subOption = ""
                 userSettingArray.option?[indexPath.row - 2].is_select = true
             }
             self.tableView.reloadData()
         }
         else if indexPath.row == 0{
-            if let question = userSettingArray.supervisor ,question.count > 0{
+            if let supervisorArr = userSettingArray.supervisor ,supervisorArr.count > 0 && userSettingArray.is_active == "Y"{
                 self.blurEffectView.frame = view.bounds
                 self.blurEffectView.backgroundColor = .black
                 self.blurEffectView.alpha = 0.6
@@ -259,7 +274,7 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
                 self.definesPresentationContext = true
                
                 let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "UserSettingOptionController") as! UserSettingOptionController
-                vc.supervisorArray = question
+                vc.supervisorArray = supervisorArr
                 vc.modalPresentationStyle = .overCurrentContext
                 vc.delegate = self
                 self.present(vc, animated: true)
@@ -303,8 +318,7 @@ extension UserSettingsViewController: UITableViewDelegate,UITableViewDataSource{
         }
     }
     
-    //if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption != "Type of Assignment of Officer" {
-    
+   
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row > 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SingleChoiceCell", for: indexPath as IndexPath) as! SingleChoiceCell
@@ -361,3 +375,19 @@ extension Array where Element: Equatable {
         return enumerated().compactMap { $0.element == item ? $0.offset : nil }
     }
 }
+
+extension OperatingSystemVersion {
+    func getFullVersion(separator: String = ".") -> String {
+        return "\(majorVersion)\(separator)\(minorVersion)\(separator)\(patchVersion)"
+    }
+}
+
+extension NSMutableAttributedString {
+
+    func setColor(color: UIColor, forText stringValue: String) {
+       let range: NSRange = self.mutableString.range(of: stringValue, options: .caseInsensitive)
+        self.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+    }
+
+}
+

@@ -30,6 +30,10 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     @IBOutlet var userInfoBtn: UIButton!
     @IBOutlet weak var versionLbl: UILabel!
     
+    @IBOutlet weak var updateHeightConstrait : NSLayoutConstraint!
+    @IBOutlet weak var updateLbl: UILabel!
+    @IBOutlet weak var updateView: UIView!
+    
     //    @IBOutlet weak var pinTxt: UITextField!
     //    @IBOutlet weak var mainPinView: UIView!
     
@@ -62,7 +66,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     
     
     @objc func appMovedToForeground() {
-        loginModel.updateVesionApp()
+      //  loginModel.updateVesionApp()
     }
     
     
@@ -75,15 +79,12 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         newRipaBtn.isExclusiveTouch = true
         saveRipaButton.isExclusiveTouch = true
         lastRipaBtn.isExclusiveTouch = true
-        loginModel.updateVesionApp()
+        DispatchQueue.main.async {
+            self.loginModel.updateVesionApp()
+        }
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector:#selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         
-        DispatchQueue.background(background: {
-            self.offlinesync.updateActvityOffline()
-        }, completion:{
-            print("background job finished")
-        })
         
         biometricView.isHidden = true
         if ((UserDefaults.standard.bool(forKey: "BiometricSet") == true) || (UserDefaults.standard.bool(forKey: "Launched") == false)) && AppConstants.bioLogin == "0"{
@@ -104,10 +105,15 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         
         dashboardViewModel.questiondelegate = self
         
-        firstname.text = AppManager.getLastSavedLoginDetails()!.result!.first_name
+        let lastName =  AppManager.getLastSavedLoginDetails()!.result!.last_name
+        let firstName =  AppManager.getLastSavedLoginDetails()!.result!.first_name
+        firstname.text = "\(lastName) \(firstName)"
         
         gpsLocation.delegate = self
-        gpsLocation.getGPSLocation()
+        DispatchQueue.main.async {
+            self.gpsLocation.getGPSLocation()
+        }
+        
         
         if let userId = AppManager.getLastSavedLoginDetails()?.result?.userid,let token = AppManager.getLastSavedLoginDetails()?.result?.access_token{
             print(userId)
@@ -125,7 +131,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     override func viewDidAppear(_ animated: Bool) {
         setGradientBackground()
         
-        AppManager.removeData()
+       // AppManager.removeData()
         
         print("accesstoken " + (AppManager.getLastSavedLoginDetails()?.result?.access_token ?? ""))
         
@@ -134,17 +140,33 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     }
     
     
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if  let attribute = UserDefaults.standard.object(forKey: "physical_attribute") as? String,attribute == "9999" {
+           UserDefaults.standard.set(true, forKey: "isTraini")
+        }
+        
+        DispatchQueue.main.async {
+            if Reachability.isConnectedToNetwork(){
+                self.offlinesync.updateActvityOffline()
+            }
+        }
+        
+//        DispatchQueue.background(background: {
+//            self.offlinesync.updateActvityOffline()
+//        }, completion:{
+//            print("background job finished")
+//        })
+        
         if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String {
             self.optionTypeLbl.text = userOption
         }
         
-        dashboardViewModel.getCount()
+        if Reachability.isConnectedToNetwork(){
+           dashboardViewModel.getCount()
+        }
         
-        AppManager.removeData()
         print("view will appear")
         self.view.snapshotView(afterScreenUpdates: true)
         let dateFormatter = DateFormatter()
@@ -152,7 +174,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         let dateInFormat = dateFormatter.string(from: NSDate() as Date)
         dateLbl.text = dateInFormat
         AppConstants.autoNext = true
-        //loginModel.updateVesionApp()
         
         db.openDatabase()
  
@@ -182,7 +203,17 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         if UserDefaults.standard.bool(forKey: "BiometricSet") != true{
             biometricSwitch.isOn = false
         }
-        setCount()
+       // setCount()
+    }
+    
+    @IBAction func action_RefreshDataButton(_ sender: Any) {
+        self.viewWillAppear(true)
+//        AppUtility.showProgress(nil, title: nil)
+//        self.dashboardViewModel.forListRefresh = true
+//        self.dashboardViewModel.setCityParam()
+//        self.dashboardViewModel.getCountyList()
+//        self.dashboardViewModel.getCount()
+//        self.setCount()
     }
     
     func sendSettingInfo(data : UserSettingModel){
@@ -190,7 +221,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     }
     
     func changeDefaultButtonBackground (Button: UIButton) {
-        
         if let layer = Button.layer.sublayers? .first {
             if Button.layer.sublayers!.count>1{
                 layer.removeFromSuperlayer ()
@@ -210,7 +240,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
             isLastRipaAvailable = false
         }
         
-        
         let countForTemplate = Int(db.checkEmptyTable(insertTableString: "ripaTempMasterTable WHERE key is 0 \(userId)"))
         if countForTemplate! > 0 {
             isTemplateAvailable = true
@@ -218,6 +247,8 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         else{
             isTemplateAvailable = false
         }
+        
+        setGradientBackground()
     }
     
     func setCount(){
@@ -278,6 +309,8 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     @IBAction func editRequiredApplication(_ sender: Any) {
         if editCount.text != "0"{
             filterFor = "Edit Required"
+            AppManager.removeData()
+            AppUtility.writeToDocumentsFile(fileName: "EditRequired", value: "Edit Required From Dashboard.")
             openSaveRipa()
         }
     }
@@ -285,6 +318,8 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     @IBAction func pendingReviewApplication(_ sender: Any) {
         if pendingCount.text != "0"{
             filterFor = "Pending Review"
+            AppManager.removeData()
+            AppUtility.writeToDocumentsFile(fileName: "PendingReview", value: "Pending Review From Dashboard.")
             openSaveRipa()
         }
     }
@@ -292,17 +327,23 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     @IBAction func approvedApplication(_ sender: Any) {
         if approvedCount.text != "0"{
             filterFor = "Approved"
+            AppManager.removeData()
+            AppUtility.writeToDocumentsFile(fileName: "CreatedSaved", value: "Created Saved From Dashboard.")
             openSaveRipa()
         }
     }
     
     func openSaveRipa(){
+        let fileCheck = AppUtility.readFromDocumentsFile(fileName: "PendingReview")
+        print(fileCheck)
         nextViewType = "UseSaveRipa"
+       
         checkAndGetQuest()
         dashboardViewModel.getTrafficPram()
     }
     
     @IBAction func btnPressed(_ sender: UIButton) {
+        AppManager.removeData()
          demo(tag:sender.tag)
      }
     
@@ -311,6 +352,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
          dashboardViewModel.questiondelegate = self
         if  tag == 1{
             print(tag)
+            AppUtility.writeToDocumentsFile(fileName: "StartNewRipa", value: "Start New Ripa From Dashboard.")
             nextViewType = "StartNewRipa"
             dashboardViewModel.getNewRipa()
             dashboardViewModel.setKey()
@@ -320,14 +362,17 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         else if tag == 2{
             print(tag)
             filterFor = ""
+            AppUtility.writeToDocumentsFile(fileName: "MyRipa", value: "My Ripa From Dashboard.")
             openSaveRipa()
         }
         else if tag == 3{
             if isLastRipaAvailable! {
                 print(tag)
                // isTemplateAvailable = false
+                
                 nextViewType = "UseLastRipa"
                 AppConstants.status = "LastRipa"
+                AppUtility.writeToDocumentsFile(fileName: "UseLastRipa", value: "User Last Ripa From Dashboard.")
                 self.performSegue(withIdentifier: "ShowRipaView", sender: self)
                 checkData()
             }
@@ -338,14 +383,12 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
                 print(tag)
                 nextViewType = "Template"
                 AppConstants.status = "Template"
+                AppUtility.writeToDocumentsFile(fileName: "UseTemplate", value: "Use Template From Dashboard.")
                 self.performSegue(withIdentifier: "ShowRipaView", sender: self)
                 checkData()
             }
         }
     }
-    
-    
-    
     
     func  checkAndGetQuest(){
         dashboardViewModel.questiondelegate = self
@@ -375,7 +418,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     func proceedToSavedListScreen(){
         self.performSegue(withIdentifier: "ShowSavedList", sender: self)
     }
-    
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
@@ -506,8 +548,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
      }
     
     
-    
-    
     @IBAction func logout(_ sender: Any) {
         logout()
     }
@@ -515,14 +555,14 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     
     
     func logout(){
-        UserDefaults.standard.set("", forKey: "userOption")
-        UserDefaults.standard.set("", forKey: "supervisorId")
         let alert = UIAlertController(title: nil, message: "Are you sure want to logout?", preferredStyle: UIAlertController.Style.alert)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.default, handler: { action in
             AppManager.logout()
-            
+            UserDefaults.standard.set("", forKey: "userOption")
+            UserDefaults.standard.set("", forKey: "supervisorId")
+            UserDefaults.standard.set("", forKey: "physical_attribute")
            
             let story = UIStoryboard(name: "Main", bundle:nil)
             let vc = story.instantiateViewController(withIdentifier: "EnrollementViewController") as! EnrollementViewController

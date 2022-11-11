@@ -10,12 +10,21 @@ import UIKit
 class SuccessViewController: UIViewController {
 
     @IBOutlet weak var backHomeBtn: UIButton!
+    @IBOutlet weak var successLbl: UILabel!
     
+    var viewType : String = ""
+    var isPendingEdit:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if viewType == "Saved" || isPendingEdit{
+            successLbl.text = "Your Ripa Report has been successfully Updated."
+        }
 
         // Do any additional setup after loading the view.
+        
+        
+        //Your Ripa Report has been successfully submitted.
     }
     
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F00191A280FE0EA0073F540 /* LoginPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F001919280FE0EA0073F540 /* LoginPopupViewController.swift */; };
 		3F066F8926413350007B60A6 /* SavedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F066F8826413350007B60A6 /* SavedListViewModel.swift */; };
 		3F0A6FD525A6F9170001BFC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A6FD425A6F9170001BFC5 /* AppDelegate.swift */; };
 		3F0A6FD725A6F9170001BFC5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A6FD625A6F9170001BFC5 /* SceneDelegate.swift */; };
@@ -145,6 +146,7 @@
 /* Begin PBXFileReference section */
 		33F194A4CF5DA50CCCA56263 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA-ticketPRO RIPAUITests/Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig"; sourceTree = "<group>"; };
 		39ABFE45C4D00AC10E168E46 /* Pods-ticketPRO RIPA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA.release.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA/Pods-ticketPRO RIPA.release.xcconfig"; sourceTree = "<group>"; };
+		3F001919280FE0EA0073F540 /* LoginPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPopupViewController.swift; sourceTree = "<group>"; };
 		3F066F8826413350007B60A6 /* SavedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedListViewModel.swift; sourceTree = "<group>"; };
 		3F0A6FD125A6F9170001BFC5 /* ticketPRO RIPA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ticketPRO RIPA.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F0A6FD425A6F9170001BFC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -569,6 +571,7 @@
 				3F22FC072680B0F800F17428 /* FilterPopup.swift */,
 				3F1DF8BD2754CA0C00792452 /* UserSettingOptionController.swift */,
 				3F57962F2755FBE200D6BC32 /* EnterAssignmentController.swift */,
+				3F001919280FE0EA0073F540 /* LoginPopupViewController.swift */,
 			);
 			path = Popups;
 			sourceTree = "<group>";
@@ -926,6 +929,7 @@
 				3F97BCAD25D9ABAD001F86F7 /* OtherRipaDataModel.swift in Sources */,
 				3F5F7C8B2628C1A000E0FB6A /* EducationCode.swift in Sources */,
 				3F3C2E3F2645E96500D3A5D1 /* SuccessViewController.swift in Sources */,
+				3F00191A280FE0EA0073F540 /* LoginPopupViewController.swift in Sources */,
 				3F128D832617B4EB006441AA /* PreviewViewModel.swift in Sources */,
 				3F1DF8BC2754AF3E00792452 /* UserSettingModel.swift in Sources */,
 			);
@@ -1107,15 +1111,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YY8294K333;
 				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 3.0.4;
+				MARKETING_VERSION = 3.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1154,7 +1158,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Dev2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1171,15 +1175,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = YY8294K333;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 3.0.4;
+				MARKETING_VERSION = 3.2.5;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1218,7 +1222,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Dev2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

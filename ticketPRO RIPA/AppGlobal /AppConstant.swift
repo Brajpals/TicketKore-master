@@ -31,7 +31,6 @@ class MyGlobalTimer: NSObject {
  }
 
 
-
 struct AppConstants {
  
     static var autoNext:Bool?
@@ -45,13 +44,13 @@ struct AppConstants {
  //Stage//http://tpwebservicestage.ticketproweb.com/public/index.php/service
     
     struct Api {
-            static let otpRequest = BaseURL.URL + "/ripa"
-            static let loginRequest = BaseURL.URL + "/user/verifyotp"
-            static let activity_store = BaseURL.URL + "/ripa"
-            static let violations = BaseURL.URL + "/ripa"
-            static let questions = BaseURL.URL + "/ripa"
-            static let updateRipa = BaseURL.URL + "/ripa"
-            static let updateVersion = BaseURL.URL + "/ripa"
+            static let otpRequest = BaseURL.URL + "/ripav1"
+            static let loginRequest = BaseURL.URL + "/user/verifyotpv1"
+            static let activity_store = BaseURL.URL + "/ripav1"
+            static let violations = BaseURL.URL + "/ripav1"
+            static let questions = BaseURL.URL + "/ripav1"
+            static let updateRipa = BaseURL.URL + "/ripav1"
+            static let updateVersion = BaseURL.URL + "/ripav1"
      }
     
     static var theme:String=""
@@ -65,7 +64,7 @@ struct AppConstants {
     static var city:String=""
     static var isSchoolSelected:String=""
     static var schoolName:String=""
-    static var isStudent:String=""
+    static var isStudent:String="0"
     static var loginVia:String=""
     static var key:String=""
     static var trafficId:String=""

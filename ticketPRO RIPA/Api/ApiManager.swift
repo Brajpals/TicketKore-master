@@ -69,6 +69,7 @@ public struct ApiManager{
                     let json = JSON(responseValue)
                     if let objectDictionary = json.dictionaryObject,
                        let object = Mapper<LoginDetailsOTP>().map(JSON: objectDictionary) {
+                        print(objectDictionary)
                         DataManager.shared.loginDetails = object
                         AppManager.saveLoginDetails()
                         completion(true)
@@ -106,7 +107,7 @@ public struct ApiManager{
                 
                 if let responseValue = response.result.value {
                     let jsonString = String(data: response.data!, encoding: .utf8)!
-                    
+                    print(responseValue)
                     let json = JSON(responseValue)
                     // let custid = json["result"]["custid"].string
                     if let serviceError = json["result"]["serviceError"].string {
@@ -354,7 +355,7 @@ public struct ApiManager{
                     if let objectDictionary = json.dictionaryObject,
                        let object = Mapper<NewRipaQuestionsModel>().map(JSON: objectDictionary) {
                         DataManager.shared.newRipaQuestion = object
-                        
+                        print(objectDictionary)
                         completion(jsonString, "Success")
                     }
                     
@@ -449,7 +450,7 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+              //  AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
                 AppUtility.hideProgress()
                 completion("", "Fail")
                 AppUtility.hideProgress(nil)

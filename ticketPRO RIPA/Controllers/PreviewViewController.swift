@@ -6,7 +6,7 @@
 
 import UIKit
 import EzPopup
-
+import SwiftCSVExport
 
 
 protocol GoToQuestion: AnyObject {
@@ -35,6 +35,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
 //    var previewPersonIndex = 0
     var personIndex:Int?
     var viewType:String = ""
+    var saveRipaStatus:String?
     
     var addressString:String!
     var descriptionString:String!
@@ -50,6 +51,9 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     @IBOutlet weak var notesBtn: UIButton!
     @IBOutlet weak var personLbl: UILabel!
     
+    var descriptionFirst:String = ""
+    var descriptionSecond:String = ""
+    var isPendingEdit:Bool = false
     
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -58,8 +62,10 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     }
     
      func trackApplicationTime(){
-      
-        AppConstants.applicationtime = String(Int(AppConstants.applicationtime)! + MyGlobalTimer.sharedTimer.time)
+         if AppConstants.applicationtime.count > 0{
+             AppConstants.applicationtime = String(Int(AppConstants.applicationtime)! + MyGlobalTimer.sharedTimer.time)
+         }
+        
         MyGlobalTimer.sharedTimer.stopTimer()
         MyGlobalTimer.sharedTimer.startTimer()
      }
@@ -82,13 +88,14 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         let personDict = personArray[personIndex!]
         
-       if AppConstants.status == "Pending Review" || AppConstants.status == "Approved" || AppConstants.status == "Template"{
+       if AppConstants.status == "Pending Review" || AppConstants.status == "Approved" || AppConstants.status == "Template" || AppConstants.status == "Edit Required"{
            // addBtn.isHidden = true
              notesBtn.isHidden = true
             questionsArray = personDict["QuestionArray"] as? [QuestionResult1]
             cascadeQuestionsArray = personDict["CascadeQuestionArray"] as? [QuestionResult1]
             
         }
+       
         
         if #available(iOS 15.0, *) {
            self.preview_tbl.sectionHeaderTopPadding = 0.0
@@ -121,7 +128,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
                 addBtn.isHidden = true
             }
         }
-         else{
+        else{
         if personArray.count > 1{
             submitBtn.setTitle("REVIEW FOR ALL", for: .normal)
         }
@@ -129,6 +136,18 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             submitBtn.setTitle("SUBMIT", for: .normal)
         }
      }
+        
+        if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+            self.submitBtn.setTitle("UPDATE RIPA", for: .normal)
+        }
+        
+        if isPendingEdit {
+            addBtn.isHidden = false
+            submitBtn.isHidden = false
+            if personArray.count > 1{
+                submitBtn.setTitle("REVIEW FOR ALL", for: .normal)
+            }
+        }
         
         if AppConstants.theme == "1"{
             overrideUserInterfaceStyle = .dark
@@ -270,18 +289,24 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         if section == 0 {
             return locationCellCount()
         }
-        if selectedOptionsArray[section].count>0{
-            if section == 0{
-                return locationCellCount()
+        let count = selectedOptionsArray.count
+        if section < count {
+            if selectedOptionsArray[section].count>0{
+                if section == 0{
+                    return locationCellCount()
+                }
+                else if section == 3{
+                    return 1
+                }
+                return selectedOptionsArray[section].count
             }
-            return selectedOptionsArray[section].count
+            return 1
         }
         else {
             return 1
         }
     //    }
     }
-    
     
     
     func gotoselectedQuestion(index: Int, personArray: [[String : Any]]) {
@@ -361,9 +386,11 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             }
             if selectedOptionsArray[indexPath.section][indexPath.row].tag == "Description",selectedOptionsArray[indexPath.section][indexPath.row].option_value.count > 0{
                 cell.answer_lbl.text = "Description - " + selectedOptionsArray[indexPath.section][indexPath.row].option_value
+                descriptionFirst = selectedOptionsArray[indexPath.section][indexPath.row].option_value
             }
             else if selectedOptionsArray[indexPath.section][indexPath.row].tag == "Description"{
                 cell.answer_lbl.text = "Description - " + descriptionString
+                descriptionSecond = descriptionString
             }
             else{
               cell.answer_lbl.text = selectedOptionsArray[indexPath.section][indexPath.row].option_value
@@ -376,10 +403,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
 //        }
     }
     
-    
-    
-    
-    
+ 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         trackApplicationTime()
         if AppConstants.status == "Pending Review" || AppConstants.status == "Approved"{
@@ -390,6 +414,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
     }
     
+    //1,1
     @objc func goToSelectedQuest(sender:UIButton){
         trackApplicationTime()
         self.selectedIndexDelegate?.goToSelectedQuestion(personIndex: personIndex!, personArray: personArray, index: sender.tag)
@@ -413,7 +438,6 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     func goToSuccess(){
         
     }
-    
     
     
     @IBAction func actionSubmit(_ sender: Any) {
@@ -446,12 +470,49 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
                 ripaActivity?.supervisorId = userOption
             }
-           
-            previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
-            
-                let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
- 
-                previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                    ripaActivity?.activity_status_id = "4"
+                }
+                
+                if isPendingEdit {
+                    AppConstants.activityStatusId = "1"
+                    ripaActivity?.activity_status_id = "1"
+                }
+                
+                var traini : String = "0"
+                if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+                    traini = "1"
+                }
+                
+                if AppConstants.trafficId != ""{
+                    print(AppConstants.trafficId)
+                    ripaActivity?.traffic_id = AppConstants.trafficId
+                }
+//                ripaActivity?.is_K_12_Student = "0"
+//                if let check = is_k12,check == true {
+//                    ripaActivity?.is_K_12_Student = "1"
+//                }
+                let os = ProcessInfo().operatingSystemVersion
+                ripaActivity?.os_version = os.getFullVersion()
+                ripaActivity?.is_trainee = traini
+                
+              userRipaResponse.ripa_activity = AppConstants.activityID
+              ripaActivity?.ripa_activity = AppConstants.activityID
+              previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
+                
+                self.saveRipaDataToCSV()
+                
+                if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                    let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
+                   // print(updateRipa)
+                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                }
+                else {
+                    let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
+                   // print(updateRipa)
+                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                }
+                
              }
             else{
                 guard let customAlertVC1 = pendingQuestionPopup else { return }
@@ -470,6 +531,36 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         }
         
+    }
+    
+    func saveRipaDataToCSV() {
+        let ripa1 = ["latitude":AppConstants.lati,"longitude" :AppConstants.longi,"City":AppConstants.city,"activity_id":AppConstants.activityID,"ripa_activity":AppConstants.activityID,"Location":AppConstants.address,"description1":self.descriptionFirst,"description2":self.descriptionSecond] as [String : Any]
+       print(ripa1)
+        let data:NSMutableArray  = NSMutableArray()
+        data.add(ripa1)
+        
+        let header = ["latitude", "longitude", "City", "activity_id","ripa_activity","Location","description1","description2"]
+        // Create a object for write CSV
+        let writeCSVObj = CSV()
+        writeCSVObj.rows = data
+        writeCSVObj.delimiter = DividerType.comma.rawValue
+        writeCSVObj.fields = header as NSArray
+        writeCSVObj.name = "ripalist"
+        
+        // Write File using CSV class object
+        let output = CSVExport.export(writeCSVObj)
+     
+        if output.result.isSuccess {
+            guard let filePath =  output.filePath else {
+                print("Export Error: \(String(describing: output.message))")
+                return
+            }
+            
+            print("File Path: \(filePath)")
+          //  self.readCSVPath(filePath)
+        } else {
+            print("Export Error: \(String(describing: output.message))")
+        }
     }
  
     func createRipaResponseData(data:UserSettingModel) -> RipaResponse {
@@ -542,7 +633,14 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             supId = respo
         }
         
-        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
         
         return ripaRes
     }
@@ -558,6 +656,9 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
 //                vc.previewPersonIndex =  self.previewPersonIndex
 //             }
 //            else{
+            vc.userSettingArray = self.userSettingArray
+            vc.viewType = viewType
+            vc.isPendingEdit = isPendingEdit
             vc.prsonIndex = personIndex
             vc.questionsArray = questionsArray!
             vc.cascadeQuestionsArray = cascadeQuestionsArray
@@ -565,6 +666,16 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             vc.ripaActivity = ripaActivity
        
       //      }
+        }
+        else if(segueID! == "ShowSuccess"){
+            let vc = segue.destination as! SuccessViewController
+            vc.isPendingEdit = isPendingEdit
+            if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                vc.viewType = "Saved"
+            }
+            else{
+                vc.viewType = "New"
+            }
         }
         
     }
@@ -574,7 +685,17 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     @IBAction func actionBack(_ sender: Any) {
         trackApplicationTime()
         self.selectedIndexDelegate?.editForPerson(personIndex:personIndex!, personArray: personArray)
-        navigationController?.popViewController(animated: true)
+        if isPendingEdit {
+            for controller in self.navigationController!.viewControllers as Array {
+                    if controller.isKind(of: RejectedApplicationViewController.self) {
+                        _ =  self.navigationController!.popToViewController(controller, animated: true)
+                        break
+                    }
+                }
+        }
+        else {
+         navigationController?.popViewController(animated: true)
+        }
     }
     
     

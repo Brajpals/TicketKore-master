@@ -47,9 +47,6 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         // makeToggleList()
-        
-        
-        
         //  NotificationCenter.default.addObserver(self, selector: #selector(self.refresh), name: NSNotification.Name(rawValue: "optionViolNotif"), object: nil)
     }
     

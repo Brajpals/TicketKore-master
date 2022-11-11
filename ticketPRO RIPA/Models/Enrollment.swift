@@ -113,6 +113,8 @@ class Result: Mappable {
     var   county_id: String = ""
     var   start_year: String = ""
     var   other_assignment_value: String = ""
+    var   status: String = ""
+    var   statuss: Int = 0
  
   
     
@@ -171,6 +173,8 @@ class Result: Mappable {
  
         access_token <- map["access_token"]
         other_assignment_value <- map["other_assignment_value"]
+        status <- map["status"]
+        statuss <- map["status"]
    
  
     }

@@ -32,7 +32,9 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     var filterList = [FilterList]()
     var indexForTemplate:Int?
-    
+    var isListRipaEditable:Bool = false
+    var selectedIndex:Int = 0
+    var isEnable : Bool = false
      let generator = UIImpactFeedbackGenerator(style: .heavy)
   
     
@@ -80,9 +82,17 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         db.createTable(insertTableString: db.createUseSaveRipaOptionTable)
         reloadData()
         AppConstants.trafficId = ""
+        
+      //  if filterFor == ""{
+            dashboardViewModel.getTrafficPram()
+            let seconds = 3.0
+            DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+                self.reloadData()
+            }
+       // }
     }
     
-    
+     
     func respondToLPGesture(gesture: UIGestureRecognizer) {
 
         if(gesture.state == UIGestureRecognizer.State.began) {
@@ -92,7 +102,6 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
 
         }
     }
-    
     
     // Handle Long Press
     @objc func longPressed(sender: UILongPressGestureRecognizer) {
@@ -140,7 +149,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             self.selectedOptionFromPopup(filteredList: filterList, fromDate: "", toDate: "")
         }
         else{
-            savedRipaList = db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE mainStatus is NOT 1 \(userId) order by stopDate DESC") ?? []
+                self.savedRipaList = self.db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE mainStatus is NOT 1 \(userId) order by stopDate DESC") ?? []
         }
         
  
@@ -150,8 +159,13 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         AppUtility.hideProgress()
     }
     
+    
     @IBAction func actionSubmit(_ sender: Any) {
-        reloadData()
+        dashboardViewModel.getTrafficPram()
+        let seconds = 3.0
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+            self.reloadData()
+        }
     }
     
     @IBAction func actionBack(_ sender: Any) {
@@ -209,7 +223,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         }
         return resultString
     }
-    
+
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -225,11 +239,13 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             
         }
         
-         cell.dateLbl.text = savedRipaList[indexPath.row].stopDate
+        cell.dateLbl.text = savedRipaList[indexPath.row].stopDate
         
         if savedRipaList[indexPath.row].location == "HARBOR DR" {
             
         }
+        
+        // Handle this with stop date ,remove stop time.
         
         if savedRipaList[indexPath.row].location != ""{
            // let date = getonlydate(date: savedRipaList[indexPath.row].stopDate) + " " + savedRipaList[indexPath.row].stopTime
@@ -244,6 +260,14 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
 
             if let datde = dateFormatterGet.date(from: date) {
                 date = dateFormatterPrint.string(from: datde) + " " + timeStr
+                let arr = self.checkEditTimeForRipa(eventtDate: date)
+                let dayStr = arr[0] as? String
+                let hourStr = arr[1] as? String
+                let dayInt = Int(dayStr!)
+                let hourInt = Int(hourStr!)
+                if !(dayInt! < 1 && hourInt! < 24) {
+                    
+                }
                 print(dateFormatterPrint.string(from: datde))
             } else {
                print("There was an error decoding the string")
@@ -260,7 +284,8 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         cell.note.text = savedRipaList[indexPath.row].note
         cell.statusLbl.text = status
         
-        if status == "Saved"{
+        if status == "Saved" || status == "Resume"{
+            cell.statusLbl.text = "Saved"
             cell.view.backgroundColor = #colorLiteral(red: 0.8024624586, green: 0.9411919713, blue: 0.9451370835, alpha: 1)
             cell.textView.backgroundColor = #colorLiteral(red: 0.1427696049, green: 0.7019013762, blue: 0.7181896567, alpha: 1)
             cell.leftstyleview.backgroundColor = #colorLiteral(red: 0.1427696049, green: 0.7019013762, blue: 0.7181896567, alpha: 1)
@@ -269,30 +294,64 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             cell.view.addGestureRecognizer(longPressRecognizer)
             cell.callTypeTxt.attributedText = setAttributedTextForCallType(index: indexPath.row)
         }
-        else if status == "Created" {
+        else if status == "Created" || status == "Resume"{
+            cell.statusLbl.text = "Created"
             cell.view.backgroundColor = #colorLiteral(red: 0.9724934697, green: 0.8666279912, blue: 0.9441578984, alpha: 1)
             cell.textView.backgroundColor = #colorLiteral(red: 0.7705615163, green: 0.4350548387, blue: 0.6462814808, alpha: 1)
             cell.leftstyleview.backgroundColor = #colorLiteral(red: 0.7705615163, green: 0.4350548387, blue: 0.6462814808, alpha: 1)
             cell.note.textColor = #colorLiteral(red: 0.7705615163, green: 0.4350548387, blue: 0.6462814808, alpha: 1)
             cell.callTypeTxt.attributedText = setAttributedTextForCallType(index: indexPath.row)
         }
-        else if status == "Resume" {
-            cell.view.backgroundColor = #colorLiteral(red: 0.9064636827, green: 0.9215990305, blue: 0.9337291121, alpha: 1)
-            cell.textView.backgroundColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
-            cell.leftstyleview.backgroundColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
-            cell.note.textColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
-            cell.callTypeTxt.attributedText = setAttributedTextForCallType(index: indexPath.row)
-        }
-        else if status == "Pending Review"{
+//        else if status == "Resume" {
+//
+//            cell.view.backgroundColor = #colorLiteral(red: 0.9064636827, green: 0.9215990305, blue: 0.9337291121, alpha: 1)
+//            cell.textView.backgroundColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
+//            cell.leftstyleview.backgroundColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
+//            cell.note.textColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
+//            cell.callTypeTxt.attributedText = setAttributedTextForCallType(index: indexPath.row)
+//        }
+        else if (status == "Pending Review") || (status == "Pending Review" || status == "Resume"){
+            cell.statusLbl.text = "Pending Review"
             cell.view.backgroundColor = #colorLiteral(red: 0.9806935191, green: 0.8983079195, blue: 0.7415288091, alpha: 1)
             cell.textView.backgroundColor = #colorLiteral(red: 0.9385960698, green: 0.6358305812, blue: 0.07396490127, alpha: 1)
             cell.leftstyleview.backgroundColor = #colorLiteral(red: 0.9385960698, green: 0.6358305812, blue: 0.07396490127, alpha: 1)
             cell.note.textColor = #colorLiteral(red: 0.9385960698, green: 0.6358305812, blue: 0.07396490127, alpha: 1)
+            let dateFormatterGet = DateFormatter()
+            dateFormatterGet.dateFormat = "MM/dd/yyyy HH:mm"
+
+            let dateFormatterPrint = DateFormatter()
+            dateFormatterPrint.dateFormat = "MM/dd/yyyy"
+           var pendingEnable = false
+            var date = savedRipaList[indexPath.row].stopDate
+            let timeStr = savedRipaList[indexPath.row].stopTime
+            if let datde = dateFormatterGet.date(from: date) {
+                date = dateFormatterPrint.string(from: datde) + " " + timeStr
+                let arr = self.checkEditTimeForRipa(eventtDate: date)
+                let dayStr = arr[0] as? String
+                let hourStr = arr[1] as? String
+                var dayInt = Int(dayStr!)
+                var hourInt = Int(hourStr!)
+                if dayInt! < 0 {
+                    dayInt = -(dayInt!)
+                }
+                if hourInt! < 0 {
+                    hourInt = -(hourInt!)
+                }
+                if (dayInt! < 1 && hourInt! < 24) {
+                    pendingEnable = true
+                }
+            }
+            
             let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed(sender:)))
             cell.view.addGestureRecognizer(longPressRecognizer)
             cell.callTypeTxt.attributedText = setAttributedTextForCallType(index: indexPath.row)
+            
+            if pendingEnable {
+                cell.statusLbl.text = "Edit " + "Pending Review"
+            }
         }
-        else if status == "Approved"{
+        else if status == "Approved" || status == "Resume"{
+            cell.statusLbl.text = "Approved"
             cell.view.backgroundColor = #colorLiteral(red: 0.9091035724, green: 0.9883603454, blue: 0.9224985242, alpha: 1)
             cell.textView.backgroundColor = #colorLiteral(red: 0.1629365087, green: 0.8004216552, blue: 0.2451622188, alpha: 1)
             cell.leftstyleview.backgroundColor = #colorLiteral(red: 0.1629365087, green: 0.8004216552, blue: 0.2451622188, alpha: 1)
@@ -310,16 +369,63 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        self.selectedIndex = indexPath.row
         let note = savedRipaList[indexPath.row].note
-        if note == ""{
-            selectFunc(indexPath:indexPath.row)
-        }
-        else{
-            showAlert(index:indexPath.row)
-        }
+        var date = savedRipaList[indexPath.row].stopDate
+        let timeStr = savedRipaList[indexPath.row].stopTime
         
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MM/dd/yyyy HH:mm"
+
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "MM/dd/yyyy"
+        isEnable = false
+
+        if let datde = dateFormatterGet.date(from: date) {
+            date = dateFormatterPrint.string(from: datde) + " " + timeStr
+            let arr = self.checkEditTimeForRipa(eventtDate: date)
+            let dayStr = arr[0] as? String
+            let hourStr = arr[1] as? String
+            var dayInt = Int(dayStr!)
+            var hourInt = Int(hourStr!)
+            if dayInt! < 0 {
+                dayInt = -(dayInt!)
+            }
+            if hourInt! < 0 {
+                hourInt = -(hourInt!)
+            }
+            if (dayInt! < 1 && hourInt! < 24) {
+                isEnable = true
+            }
+        }
+            if note == ""{
+                selectFunc(indexPath:indexPath.row)
+            }
+            else{
+                showAlert(index:indexPath.row)
+            }
     }
+    
+    func checkEditTimeForRipa(eventtDate : String) -> NSArray {
+        let arr = NSMutableArray()
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+       // print(eventtDate) 05/19/2022
+        dateFormatter.dateFormat = "MM/dd/yyyy HH:mm"
+        if let releaseDate = dateFormatter.date(from: eventtDate){
+          let diffDateComponents = calendar.dateComponents([.day, .hour, .minute, .second], from: currentDate, to: releaseDate as Date)
+
+            var dayStr : String = ""
+            var hourStr : String = ""
+            dayStr = "\(diffDateComponents.day ?? 0)"
+            hourStr = "\(diffDateComponents.hour ?? 0)"
+            arr.add(dayStr)
+            arr.add(hourStr)
+        }
+            return arr
+    }
+    
     
     
     func showTemplateAlert(index:Int){
@@ -330,7 +436,9 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             indexForTemplate = index
             savedListViewModel.savedListModelDelegate = self
             savedListViewModel.forTemplate = true
-            savedListViewModel.getApprovedOrPendingPram(activityId:self.savedRipaList[index].activityId)
+            if !self.savedRipaList.isEmpty {
+                savedListViewModel.getApprovedOrPendingPram(activityId:self.savedRipaList[index].activityId)
+            }
             
         }         )
         )
@@ -351,7 +459,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         self.present(alert, animated: true, completion: nil)
     }
     
-    
+
     
     func selectFunc(indexPath:Int){
         
@@ -386,7 +494,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
            // print( AppManager.getLastSavedLoginDetails()?.result?.county_id)
          }
         
-        if saveRipaStatus == "Approved" || saveRipaStatus == "Pending Review" || saveRipaStatus == "Saved" {
+        if saveRipaStatus == "Approved" || saveRipaStatus == "Pending Review" || saveRipaStatus == "Saved" || saveRipaStatus == "Edit Required" || saveRipaStatus == "Template"{
             let activity_id = savedRipaList[indexPath].activityId
  
             setConstant(indexPath: indexPath)
@@ -406,11 +514,22 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
            
              if saveRipaStatus == "Edit Required"{
                 let activity_uid = savedRipaList[indexPath].tempType
-                
+                 personArray = dashboardViewModel.getUseSavedRipa(key: savedRipaList[indexPath].key)
                 savedListViewModel.savedListModelDelegate = self
                 self.savedListViewModel.forTemplate = false
                 savedListViewModel.getRejectedRipaPram(uid: activity_uid)
+                 
+                 convertDateFormater(date: savedRipaList[indexPath].ticketDate)
+                 let dur = Date().calculateTime(from_date: savedRipaList[indexPath].ticketDate, to_date:  savedRipaList[indexPath].declarationDate)
+                 AppConstants.duration = dur
                 
+                 AppConstants.city =  savedRipaList[indexPath].city
+                 print(AppConstants.city)
+                 AppConstants.address =  savedRipaList[indexPath].location
+                 AppConstants.key = savedRipaList[indexPath].key
+                 AppConstants.trafficId = savedRipaList[indexPath].skeletonID
+                 AppConstants.notes = savedRipaList[indexPath].note
+                 
                 return
             }
             
@@ -464,6 +583,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
                      self.performSegue(withIdentifier: "ShowPreview", sender: self)
                 }
                 else{
+                    self.isListRipaEditable = false
                 self.performSegue(withIdentifier: "ShowRipaView", sender: self)
                 }
             }
@@ -499,16 +619,12 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         AppConstants.zone = savedRipaList[indexPath].zone
         
       }
-    
      
-    
-    
-    
+
     func proceedToRejectedView(applicationData: RejectedApplication?) {
         rejectedApplication = applicationData
         self.performSegue(withIdentifier: "RejectedApplicationView", sender: self)
     }
-    
   
     var previewPersonArray = [RipaPerson]()
     
@@ -519,12 +635,18 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             saveTemplateDetail(templatePersonArray: previewPram)
             return
         }
-        
         if saveRipaStatus == "Saved"{
+            self.isListRipaEditable = false
             self.performSegue(withIdentifier: "ShowRipaView", sender: self)
         }
-        else{
+        else if saveRipaStatus == "Pending Review" && isEnable == false{
             self.performSegue(withIdentifier: "ShowPreview", sender: self)
+        }
+        else{
+            let activity_uid = self.savedRipaList[self.selectedIndex].tempType
+            self.savedListViewModel.savedListModelDelegate = self
+            self.savedListViewModel.forTemplate = false
+            self.savedListViewModel.getRejectedRipaPram(uid: activity_uid)
         }
     }
     
@@ -572,24 +694,33 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         let segueID = segue.identifier
         if(segueID! == "ShowRipaView"){
             let vc = segue.destination as! NewRipaViewController
-            
+            vc.isListRipaEditable = self.isListRipaEditable
             vc.viewType = "UseSaveRipa"
+            
+            AppUtility.writeToDocumentsFile(fileName: "UseLastRipa", value: "Use Save Ripa From Saved Ripa List")
             vc.saveRipaStatus = saveRipaStatus
             vc.personArray = personArray
             vc.savedRipaList = savedRipaList[ripaIndex!]
         }
         
-        if(segueID! == "RejectedApplicationView"){
+       else if(segueID! == "RejectedApplicationView"){
             let vc = segue.destination as! RejectedApplicationViewController
             vc.rejectedApplication = rejectedApplication
+           AppUtility.writeToDocumentsFile(fileName: "RejectedRipa", value: "Use Rejected Ripa From Saved Ripa List")
+           vc.isPendingEdit = false
+             if isEnable || saveRipaStatus == "Edit Required"{
+                   vc.screenType = "EditPending"
+                   vc.isPendingEdit = true
+              }
             vc.viewType = "UseSaveRipa"
             vc.saveRipaStatus = "Created"
             vc.personArray = personArray
             vc.savedRipaList = savedRipaList[ripaIndex!]
         }
         
-        if(segueID! == "ShowPreview"){
+       else if(segueID! == "ShowPreview"){
             let vc = segue.destination as! PreviewViewController
+           AppUtility.writeToDocumentsFile(fileName: "ShowPreview", value: "Show Preview From Saved Ripa List")
             vc.personArray = personArray
             vc.addressString = self.addressStr
             //   vc.previewPersonArray = self.previewPersonArray
@@ -597,7 +728,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         }
     }
     
-    
+ 
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return  UITableView.automaticDimension

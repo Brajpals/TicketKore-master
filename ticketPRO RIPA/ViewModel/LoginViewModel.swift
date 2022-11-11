@@ -2,10 +2,11 @@
 import UIKit
 import SwiftyJSON
 
-
+//ASDFGHJK
 
 protocol LoginOTPViewModelDelegate: AnyObject {
     func proceedToOTP(isValidLogin: Int, message:String)
+    func showPopupForCustId()
 }
 
 protocol ActivityStoreDelegate: AnyObject {
@@ -109,10 +110,10 @@ extension LoginViewModel {
     
     
     
-    func setLoginParam(enrollment_id : String , phone:String, password:String ) ->  [String:Any] {
+    func setLoginParam(enrollment_id : String , phone:String, password:String,custId:String ) ->  [String:Any] {
         AppConstants.getDeviceToken()
         print(AppConstants.deviceToken)
-        let param:[String : Any] = ["enrollment_id":enrollment_id , "fcm_token": AppConstants.deviceToken, "phone":phone, "devicetype":"ios", "devicetoken":"", "custId" : "","password": password]
+        let param:[String : Any] = ["enrollment_id":enrollment_id , "fcm_token": AppConstants.deviceToken, "phone":phone, "devicetype":"ios", "devicetoken":"", "custId" : custId,"password": password]
         let params:[String : Any] = ["id":"82F85DB43CBF6", "method":"ripaLogin" , "params": param, "jsonrpc": "2.0"]
         return params
     }
@@ -141,7 +142,8 @@ extension LoginViewModel {
         var URL:String?
         getLoginDetails()
         URL = AppConstants.Api.otpRequest
-        
+        print(URL!)
+        print(params)
         ApiManager.getUserDetail(params: params, loginType: loginType, methodTyPe: .post, url: URL!, completion: { [self] (success) in
             AppUtility.hideProgress(nil)
             if success == true{
@@ -149,9 +151,15 @@ extension LoginViewModel {
                 let result = data?.result
                 // result?.serviceError != nil
                 if result?.serviceError != "" ,let msgStr = result?.serviceError{
-                    AppUtility.showAlertWithProperty("Alert", messageString: msgStr)
+                    if result?.status == "5" || result?.statuss == 5 {
+                        self.OTPdelegate?.showPopupForCustId()
+                    }
+                    else {
+                     AppUtility.showAlertWithProperty("Alert", messageString: msgStr)
+                    }
                 }
                 else{
+                   // print(result)
                     ripa_enrollment_id = (result?.ripa_enrollment_id)!
                     enrollment_id = (result?.enrollment_id)!
                     custId = (result?.custid)!
@@ -263,13 +271,19 @@ extension LoginViewModel {
                 let versionnew = Double(appVersionStr)
                 if version ?? 1.0 > versionnew ?? 1.0{
                     let refreshAlert = UIAlertController.init(title: "Update Available", message: "A new version of ticketPRO RIPA STOP is available. If you have access to the App Store, select the Update Now button below. Otherwise, contact your IT Administrator to get the update.", preferredStyle: .alert)
-                    refreshAlert.addAction(UIAlertAction(title: "Update Now", style: .default, handler: { (action: UIAlertAction!) in
+                    refreshAlert.addAction(UIAlertAction(title: "", style: .default, handler: { (action: UIAlertAction!) in
                         if let url = NSURL(string:"https://apps.apple.com/in/app/ripa-stop/id1567247543") {
                             UIApplication.shared.open(url as URL)
                         }
                     }))
                     DispatchQueue.main.async{
                         UIApplication.topViewController()?.present(refreshAlert, animated: true, completion: nil)
+                    }
+                    
+                    let when = DispatchTime.now() + 2
+                    DispatchQueue.main.asyncAfter(deadline: when){
+                      // your code with delay
+                        refreshAlert.dismiss(animated: true, completion: nil)
                     }
                 }
             }
@@ -285,6 +299,7 @@ extension LoginViewModel {
             }
         }
     }
+    
     
     func removeDuplicate(string: String, char: Character) -> String {
         if var idx = string.firstIndex(of: char) {

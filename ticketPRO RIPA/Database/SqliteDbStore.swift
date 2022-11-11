@@ -50,7 +50,7 @@ class SqliteDbStore {
     
    // let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "", order_number: orderN, option_id: opId, cascade_option_id: "", main_question_id: mId)
     
-    var  createRipaResponseTable = "create table if not exists ripaResponseTable (question_id TEXT, response TEXT, internal TEXT, userid TEXT,question TEXT,CreatedBy TEXT,physical_attribute TEXT,key TEXT,personId TEXT,description TEXT,question_code TEXT,cascade_ques_id TEXT,order_number TEXT,option_id TEXT,cascade_option_id TEXT,main_question_id TEXT)"
+    var  createRipaResponseTable = "create table if not exists ripaResponseTable (question_id TEXT, response TEXT, internal TEXT, userid TEXT,question TEXT,CreatedBy TEXT,physical_attribute TEXT,key TEXT,personId TEXT,description TEXT,question_code TEXT,cascade_ques_id TEXT,order_number TEXT,option_id TEXT,cascade_option_id TEXT,main_question_id TEXT,os_version TEXT,is_trainee TEXT)"
     
     
     var  createQuestionsTable = "create table if not exists QuestionTable (id TEXT,custid TEXT,question TEXT ,question_info TEXT,question_key TEXT, question_code TEXT, questionTypeId TEXT, inputTypeId TEXT, is_add_value TEXT,`internal` TEXT, is_required TEXT, isAddtion TEXT, isCascade_Question TEXT, ripa_group_id TEXT, isDescription_Required TEXT, common_question TEXT, editable_question TEXT, visible_question TEXT,order_number TEXT,is_active TEXT, CreatedBy TEXT,CreatedOn TEXT,UpdatedBy TEXT, UpdatedOn TEXT,inputTypeCode TEXT,questionTypeCode TEXT,groupName TEXT);"
@@ -256,7 +256,15 @@ class SqliteDbStore {
     func insertRipaResponse(ripaRes : RipaResponse) {
         var insertStatement: OpaquePointer?
         
-        let insertQuestionString = "insert into ripaResponseTable(question_id, response, internal, userid, question, CreatedBy, physical_attribute, key, personId, description,question_code,cascade_ques_id,order_number,option_id,cascade_option_id,main_question_id,supervisorId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+        let insertQuestionString = "insert into ripaResponseTable(question_id, response, internal, userid, question, CreatedBy, physical_attribute, key, personId, description,question_code,cascade_ques_id,order_number,option_id,cascade_option_id,main_question_id,supervisorId,os_version,is_trainee) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+        
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+       
         
         if sqlite3_prepare_v2(db, insertQuestionString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (ripaRes.question_id as NSString).utf8String , -1, nil)
@@ -276,6 +284,8 @@ class SqliteDbStore {
             sqlite3_bind_text(insertStatement, 15,(ripaRes.cascade_option_id as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 16,(ripaRes.main_question_id as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 17,(ripaRes.supervisorId as NSString).utf8String , -1, nil)
+            sqlite3_bind_text(insertStatement, 18,(os.getFullVersion() as NSString).utf8String , -1, nil)
+            sqlite3_bind_text(insertStatement, 19,(traini as NSString).utf8String , -1, nil)
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
             } else {
@@ -290,7 +300,14 @@ class SqliteDbStore {
     func getRipaResponse()-> RipaResponse? {
         let queryString = "SELECT * FROM ripaResponseTable"
         
-        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "0", order_number: "", option_id: "", cascade_option_id: "0", main_question_id: "", supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        
+        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "0", order_number: "", option_id: "", cascade_option_id: "0", main_question_id: "", supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(),is_trainee : traini)
         var stmt:OpaquePointer?
         
         if sqlite3_prepare(db, queryString, -1, &stmt, nil) != SQLITE_OK{
@@ -298,6 +315,8 @@ class SqliteDbStore {
             print("error preparing insert: \(errmsg)")
             return nil
         }
+        
+        
         while(sqlite3_step(stmt) == SQLITE_ROW){
             let question_id = String(cString: sqlite3_column_text(stmt, 0))
             let response = String(cString: sqlite3_column_text(stmt, 1))
@@ -318,7 +337,7 @@ class SqliteDbStore {
             if option_id.count == 0 {
                 option_id = "0"
             }
-            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
+            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
           //  ripaList.append(rips)
         }
         return ripaList
@@ -482,9 +501,6 @@ class SqliteDbStore {
         }
         return ripaPerson
     }
-    
-    
-    
     
     
     

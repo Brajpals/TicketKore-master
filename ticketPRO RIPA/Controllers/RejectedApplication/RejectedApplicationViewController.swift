@@ -16,6 +16,9 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     @IBOutlet weak var dateLbl: UILabel!
     
     @IBOutlet weak var officerLbl: UILabel!
+    @IBOutlet weak var reviewerNameLbl: UILabel!
+    @IBOutlet weak var locationNameLbl: UILabel!
+    @IBOutlet weak var cityNameLbl: UILabel!
     @IBOutlet weak var cityLbl: UILabel!
     
     @IBOutlet weak var locationLbl: UILabel!
@@ -36,6 +39,9 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     var saveRipaStatus:String?
     var  personArray: [[String: Any]] = []
     var savedRipaList:RipaTempMaster?
+    
+    var screenType : String = ""
+    var isPendingEdit:Bool = false
 
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -77,6 +83,18 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
      //   noteDetailTextField.isUserInteractionEnabled = false
         activity = rejectedApplication?.ativity
         response = rejectedApplication?.response ?? []
+        
+        for i in (0..<response.count)
+        {
+            let mainId = response[i].main_question_id
+            var respo = [Response]()
+            if mainId == "14" {
+                respo.append(response[i])
+                response.remove(at: i)
+                response.insert(respo[0], at: 0)
+            }
+        }
+        
         setData()
         getCityId()
         
@@ -98,10 +116,12 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     var address = ""
     func setData(){
         activityIdLbl.text = activity!.activityID
-        officerLbl.text = officerLbl.text! + activity!.activityCheckedBy
+       
+        reviewerNameLbl.text = activity!.activityCheckedBy
         dateLbl.text = convertDateFormater(date: activity!.activityCreationDate)
-        cityLbl.text = cityLbl.text! + activity!.city
-        locationLbl.text = activity?.location
+        cityNameLbl.text = activity!.city
+        locationNameLbl.text = activity!.location
+      
     //    noteDetailTextField.text = "  " + activity!.activityNotes
       //  noteDetailTextField.isHidden = true
         noteReviewTextView.text = "  " + activity!.activityNotes
@@ -131,13 +151,23 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         let cell = tableView.dequeueReusableCell(withIdentifier: "RejectedApplicationCell", for: indexPath as IndexPath) as! RejectedApplicationCell
  
         cell.personLbl.text = response[indexPath.row].personName
-        cell.descriptionLbl.text = "Explaination for " + response[indexPath.row].question
+        cell.descriptionLbl.text = "Explanation for " + response[indexPath.row].question
+        if response[indexPath.row].main_question_id == "14" {
+            cell.descriptionLbl.text = "Reason Explanation"
+        }
+        else if response[indexPath.row].main_question_id == "25" {
+            cell.descriptionLbl.text = "Search Basis Explanation"
+        }
+        
+        
         cell.descriptionTextView.text = response[indexPath.row].response
        
         responsetext = response[indexPath.row].response
         cell.descriptionTextView.tag = indexPath.row
         cell.descriptionTextView.delegate = self
         index = indexPath.row
+        cell.descriptionTextView.textAlignment = .justified
+        
         cell.clearBtn.tag = indexPath.row
         cell.clearBtn.addTarget(self, action: #selector(clearTxt(sender:)), for: .touchUpInside)
         
@@ -165,7 +195,10 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
            let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "NewRipaViewController") as! NewRipaViewController
            vc.viewType = "UseSaveRipa"
            vc.saveRipaStatus = "Saved"
+            vc.screenType = screenType
+            vc.isPendingEdit = isPendingEdit
            vc.ripaTypeStr = "Edit"
+           AppConstants.status = ""
            vc.personArray = personArray
            vc.savedRipaList = savedRipaList
            self.navigationController?.pushViewController(vc, animated: true)
@@ -394,12 +427,12 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         let alertController = UIAlertController.init(title: title, message: messageString, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: { [self] action in
            
-            let id = activity?.activityID
-            let db = SqliteDbStore()
-            db.openDatabase()
-            db.deleteAllfrom(table: "ripaTempMasterTable WHERE activityId = \(id!)")
-            self.navigationController?.popViewController(animated: true)
+//            let id = activity?.activityID
+//            let db = SqliteDbStore()
+//            db.openDatabase()
+//            db.deleteAllfrom(table: "ripaTempMasterTable WHERE activityId = \(id!)")
             
+              self.navigationController?.popViewController(animated: true)
          })
         )
         self.present(alertController, animated: true, completion: nil)

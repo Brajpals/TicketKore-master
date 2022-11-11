@@ -61,6 +61,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     @IBOutlet weak var countyLbl: UITextField!
     @IBOutlet weak var countyView: UIView!
     @IBOutlet weak var countyBtn: UIButton!
+    @IBOutlet weak var addPersonBtn: UIButton!
     
     
     
@@ -93,6 +94,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     var cascadeQuestionType:String?
     var indexPath:Int?
     var is_k12:Bool?
+    var age:Int = 0
     
     var questionType:String?
     let enterTextPopup = EnterTextPopupViewController.instantiate()
@@ -148,6 +150,8 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     let timePicker = UIDatePicker()
     
     var textAdded:Bool = false
+    var isListRipaEditable:Bool = false
+    var isEdit:Bool = false
     
     @IBOutlet var optionTypeLbl : UILabel!
     
@@ -159,11 +163,21 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     var ripaTypeStr : String = ""
     var descriptionStrFirst : String = ""
     var checkGenderSelection : Bool = false
+    weak var selectedIndexDelegate : GoToQuestion?
+    
+    var screenType : String = ""
+    var isPendingEdit:Bool = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.addPersonBtn.isHidden = true
         let mainString = AppConstants.address
+        
+        if viewType == "UseLastRipa"{
+           AppConstants.duration = ""
+        }
        
         if mainString.count > 2 {
             let components = mainString.components(separatedBy: "BLOCK")
@@ -252,7 +266,10 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
                 submitBtn.setTitle("UPDATE", for: .normal)
             }
-            
+            if saveRipaStatus == "Saved" {
+                submitBtn.setTitle("SUBMIT", for: .normal)
+            }
+            self.isEdit = true
             editForPerson(personIndex: personArray.count-1, personArray: personArray)
             personNumber.text = "P" + "" + String(personArray.count)
             if viewType == "UseLastRipa" || viewType == "Template"{
@@ -261,6 +278,13 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             checkAndAddViolations()
         }
         else{
+            self.isEdit = false
+            
+            let checkTime = self.checkDataDateTimeForCreateRipa(dttt: AppConstants.date, timeT: AppConstants.time)
+            if checkTime {
+                self.showAlertMessage(titleStr: "", messageStr: "Provided stop time is already available for today's date. Please choose different stop time.\nClick on change stop time for new time selection. Click on current time to set current time as stop time.")
+            }
+        
             if  saveRipaStatus == "Created"{
                 let trafficeViolTupple = newRipaViewModel.splitViolatons(code: savedRipaList!.offenceCode, violation: savedRipaList!.violation)
                 offenceArr = trafficeViolTupple.0!
@@ -276,8 +300,10 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             }
         }
         
+        let lastName =  AppManager.getLastSavedLoginDetails()!.result!.last_name
+        let firstName =  AppManager.getLastSavedLoginDetails()!.result!.first_name
+        userNameLbl.text = "\(lastName) \(firstName)"
         
-        userNameLbl.text = AppManager.getLastSavedLoginDetails()?.result?.first_name
         autoNextBtn.setImage(UIImage(named: AppConstants.autoNext == true ? "checked" : "unchecked"), for: .normal)
         
         tableView.register(UINib(nibName: "SingleChoiceCell", bundle: nil), forCellReuseIdentifier: "SingleChoiceCell")
@@ -301,6 +327,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         self.tableView.estimatedRowHeight = 100.0
         self.tableView.rowHeight = UITableView.automaticDimension
         is_k12 = false
+        AppConstants.isStudent = "0"
         
         loadData()
         
@@ -308,9 +335,27 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         showTimePicker()
         durationTxtField.delegate = self
         durationTxtField.tag = 10
+        durationTxtField.addTarget(self, action: #selector(textIsChanging), for: UIControl.Event.editingChanged)
+
+        if AppConstants.duration.contains("-") {
+            AppConstants.duration = AppConstants.duration.replacingOccurrences(of: "-", with: "")
+        }
         durationTxtField.text = AppConstants.duration
         dateTextField.text = AppConstants.date
         timeTxtField.text = AppConstants.time
+        if self.isEdit == false {
+            let userId =  "AND userid is " + (AppManager.getLastSavedLoginDetails()?.result?.userid)!
+            var savedAllRipaList = [RipaTempMaster]()
+            savedAllRipaList = self.db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE mainStatus is NOT 1 \(userId) order by stopDate DESC") ?? []
+            let filtSaveArr = savedAllRipaList.filter { data in
+                data.stopDate == AppConstants.date && data.stopTime == AppConstants.time
+            }
+            if filtSaveArr.count > 0 {
+                self.showAlertMessage(titleStr: "", messageStr: "Provided stop time is already available for today's date. Please choose different stop time.\nClick on change stop time for new time selection. Click on current time to set current time as stop time.")
+            }
+        }
+        
+        
         durationTxtField.keyboardType = UIKeyboardType.numberPad
         
         if AppConstants.duration == ""{
@@ -324,15 +369,61 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         let isNil = "0"
         userDefaults.set(isNil, forKey: "isOffline")
         
-        
         //submitBtn
         
+       // self.animateTable(tblVW: self.tableView)
+        
+//        let question = newRipaViewModel.getCascadeQuestionUsingQuestionCode(questionCode: "C16")
+//
+//        for questionOption in question.questionoptions!{
+//            if questionOption.cascade_ques_id == "41" {
+//                print(questionOption.question)
+//            }
+//        }
+        
     }
+    
+    func animateTable(tblVW: UITableView) {
+        self.tableView.reloadData()
+
+            let cells = self.tableView.visibleCells
+            let tableHeight: CGFloat = self.tableView.bounds.size.height
+
+            for i in cells {
+                let cell: UITableViewCell = i as UITableViewCell
+                cell.transform = CGAffineTransform(translationX: 0, y: tableHeight)
+            }
+
+            var index = 0
+
+            for a in cells {
+                let cell: UITableViewCell = a as UITableViewCell
+                UIView.animate(withDuration: 0, delay: 0.0 * Double(index), options: .allowAnimatedContent, animations: {
+                    cell.transform = CGAffineTransform(translationX: 0, y: 0);
+                }, completion: nil)
+                index += 1
+            }
+        }
+
+
+    override func viewDidLayoutSubviews() {
+             animateTable(tblVW: self.tableView)
+        }
+    
+    func scrollToBottom(_ animated: Bool = true) {
+            let numberOfSections = self.tableView.numberOfSections
+            if numberOfSections > 0 {
+                let numberOfRows = self.tableView.numberOfRows(inSection: numberOfSections - 1)
+                if numberOfRows > 0 {
+                    let indexPath = IndexPath(row: numberOfRows - 1, section: (numberOfSections - 1))
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
+                }
+            }
+        }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(self.userSettingArray)
         if AppConstants.theme == "1"{
             overrideUserInterfaceStyle = .dark
         }
@@ -344,26 +435,67 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String {
             self.optionTypeLbl.text = userOption
         }
+        
+        if  let attribute = UserDefaults.standard.object(forKey: "physical_attribute") as? String,attribute == "9999" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                let istraini = UserDefaults.standard.bool(forKey: "isTraini")
+                if  istraini {
+                    self.checkTrainingAssignment()
+                }
+            }
+        }
+        if self.isListRipaEditable {
+            self.isListRipaEditable = false
+            self.performSegue(withIdentifier: "ShowPreview", sender: self)
+        }
+        
     }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         //self.mainView.backgroundlayer()
         self.groupView.orangeGradientButton()
+        
+        if screenType == "EditPending" {
+            trackApplicationTime()
+            createPersonDict(checkEditHidden: true)
+            screenType = ""
+            self.performSegue(withIdentifier: "ShowPreview", sender: self)
+        }
     }
     
+    func checkTrainingAssignment() {
+        let alert = UIAlertController(title: "", message: "Assignment is set to Training/Testing. This activity will not be processed. Continue?", preferredStyle: .alert)
+            
+             let ok = UIAlertAction(title: "YES", style: .default, handler: { action in
+                 UserDefaults.standard.set(false, forKey: "isTraini")
+             })
+             let cancel = UIAlertAction(title: "NO", style: .default, handler: { action in
+                 self.sendUserSettingController()
+             })
+             alert.addAction(cancel)
+             alert.addAction(ok)
+             DispatchQueue.main.async(execute: {
+                self.present(alert, animated: true)
+        })
+    }
+    
+    
+    func sendUserSettingController() {
+      /*  let vc2 = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "UserSettingsViewController") as! UserSettingsViewController
+        vc2.flag = 1
+        vc2.delegate = self
+        self.navigationController?.pushViewController(vc2, animated: true)
+       */
+    }
     
     func sendSettingInfo(data : UserSettingModel){
         self.userSettingArray = data
     }
     
     @IBAction func actionChangeUserInfo(_ sender: Any) {
-
-        let vc2 = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "UserSettingsViewController") as! UserSettingsViewController
-        vc2.flag = 1
-        vc2.delegate = self
-        self.navigationController?.pushViewController(vc2, animated: true)
+        self.sendUserSettingController()
     }
+    
     
     func getCounty(){
         db.openDatabase()
@@ -387,7 +519,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             }
         }
     }
-    
     
     
     var offenceArr = [[String]]()
@@ -700,7 +831,9 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
                 }
                 if check == true && attr == "4" {
                     self.descriptionBtn.isHidden = true
-                    enterDescription?.textView.text = ""
+                    if (enterDescription?.textView) != nil {
+                        enterDescription?.textView.text = ""
+                    }
                 }
                 print(optionsArray![i].isSelected)
             }
@@ -753,6 +886,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
               }
             for i in (0..<optionsArray!.count)
             {
+                
                 let optionId = optionsArray![i].option_id
                 if optionId.count == 0 {
                     optionsArray![i].option_id = "0"
@@ -846,7 +980,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     
     func showTimePicker(){
-        //Formate Date
+        //"[Expired]"
         
         timePicker.datePickerMode = .time
         timeTxtField.inputView = timePicker
@@ -855,9 +989,22 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         timePicker.frame = CGRect(x: 10, y: 50, width: self.view.frame.width, height: 200)
         let now = Date()
         
-        timePicker.maximumDate = now
-        // timePicker.date = now
-        //ToolBar
+        print(viewType)
+        
+        if viewType == "StartNewRipa" ||  viewType == "Template"{
+            timePicker.maximumDate = now
+        }
+        else {
+            print(AppConstants.date)
+            let checkDateStr = AppConstants.date.compareDateToCurrent(eventtDate: AppConstants.date)
+            if checkDateStr == "[Expired]" {
+                timePicker.date = now
+            }
+            else {
+                timePicker.maximumDate = now
+            }
+        }
+        
         let toolbar = UIToolbar();
         toolbar.sizeToFit()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(donetimePicker));
@@ -870,13 +1017,17 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     }
     
     
-    
-    
     @objc func donetimePicker(){
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
-        timeTxtField.text = formatter.string(from: timePicker.date)
-        AppConstants.time = timeTxtField.text!
+        let checkTime = self.checkDataDateTimeForCreateRipa(dttt: dateTextField.text!, timeT: formatter.string(from: timePicker.date))
+        if checkTime && self.isEdit == false{
+            self.showAlertMessage(titleStr: "", messageStr: "Provided stop time is already available for today's date. Please choose different stop time.\nClick on change stop time for new time selection.")
+        }
+        else {
+            timeTxtField.text = formatter.string(from: timePicker.date)
+            AppConstants.time = timeTxtField.text!
+        }
         self.view.endEditing(true)
     }
     
@@ -885,18 +1036,70 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     @objc func donedatePicker(){
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
-        dateTextField.text = formatter.string(from: datePicker.date)
-        datetime = dateTextField.text!
-        //var d1 = formatter.string(from: datePicker.date)
-        AppConstants.date = dateTextField.text!
-        if formatter.string(from: datePicker.date) < formatter.string(from: timePicker.date)
-        {
-            timePicker.maximumDate = nil
+        let checkTime = self.checkDataDateTimeForCreateRipa(dttt: formatter.string(from: datePicker.date), timeT: timeTxtField.text!)
+        if checkTime && self.isEdit == false{
+            self.showAlertMessage(titleStr: "", messageStr: "Provided stop time is already available for today's date. Please choose different stop time.\nClick on change stop time for new time selection.")
         }
-        else{
-            timePicker.maximumDate = Date()
+        else {
+            dateTextField.text = formatter.string(from: datePicker.date)
+            datetime = dateTextField.text!
+            AppConstants.date = dateTextField.text!
+            if formatter.string(from: datePicker.date) < formatter.string(from: timePicker.date)
+            {
+                timePicker.maximumDate = nil
+            }
+            else{
+                timePicker.maximumDate = Date()
+            }
         }
         self.view.endEditing(true)
+    }
+    
+    func checkDataDateTimeForCreateRipa(dttt : String, timeT : String) -> Bool {
+        let userId =  "AND userid is " + (AppManager.getLastSavedLoginDetails()?.result?.userid)!
+        var savedAllRipaList = [RipaTempMaster]()
+        let combinedDateTime = "\(dttt) \(timeT)"
+        savedAllRipaList = self.db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE mainStatus is NOT 1 \(userId) order by stopDate DESC") ?? []
+        
+        for data in savedAllRipaList {
+            let dateFormatterGet = DateFormatter()
+            dateFormatterGet.dateFormat = "MM/dd/yyyy HH:mm"
+            let rDate = data.stopDate
+            let rTime = data.stopTime
+            if let datde = dateFormatterGet.date(from: rDate) {
+                dateFormatterGet.dateFormat = "MM/dd/yyyy"
+                let frDate = dateFormatterGet.string(from: datde) + " " + rTime
+                if combinedDateTime ==  frDate{
+                    return true
+                }
+            }
+        }
+     
+        return false
+    }
+    
+    func checkDateTimeForUpdate(dttt : String, timeT : String) -> Bool {
+        let userId = AppManager.getLastSavedLoginDetails()?.result?.userid
+        let ripaUserId = ripaActivity?.userid
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy HH:mm"
+        
+        let combinedDateTime = "\(dttt) \(timeT)"
+        
+        let ripaDate = AppConstants.date
+        let ripaTime = AppConstants.time
+        let ripaCombineDate = "\(ripaDate) \(ripaTime)"
+        
+        let ripaFinalDate = formatter.date(from: ripaCombineDate)
+        
+        if let releaseDate = formatter.date(from: combinedDateTime){
+            if releaseDate == ripaFinalDate && userId == ripaUserId && self.isEdit == false{
+                return true
+            }
+        }
+        
+        return false
     }
     
     
@@ -908,9 +1111,24 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     func setRipaActivity(){
         print(AppConstants.city)
+        
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+     if viewType == "UseLastRipa"{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        AppConstants.date = dateFormatter.string(from: NSDate() as Date)
+        dateFormatter.dateFormat = "HH:mm"
+        AppConstants.time = dateFormatter.string(from: NSDate() as Date)
+     }
+        
        
         let getExperience = previewViewModel.calculateYearOfExp()
-        ripaActivity = Ripaactivity(key: AppConstants.key, custid: previewViewModel.custId!, City: AppConstants.city, date_time: dateLbl.text!, userid: String(previewViewModel.userId!), username:  previewViewModel.userName!, Notes: AppConstants.notes, latitude: AppConstants.lati , longitude:  AppConstants.longi, start_date: startDate, end_date: "", deviceid: 0, Location: AppConstants.address, officer_experience: getExperience, is_K_12_Student: AppConstants.isStudent , CreatedBy:String(previewViewModel.userId!), ip_address: previewViewModel.strIPAddress , stop_date: AppConstants.date , stop_time: AppConstants.time, stop_duration: AppConstants.duration, app_version: previewViewModel.appVersion!, platform: "ios", traffic_id: AppConstants.trafficId, activity_status_id: AppConstants.activityStatusId, access_token: AppManager.getLastSavedLoginDetails()?.result?.access_token ?? "", timetaken: previewViewModel.getTimeTaken(), citation_number: AppConstants.citation, county_id: AppManager.getLastSavedLoginDetails()?.result?.county_id ?? "0", activity_id: AppConstants.activityID, time_duration_enable: AppConstants.ripaTimeDuration, call_number: AppConstants.call_number, onscene_time: AppConstants.onscene_time, clear_time_of_the_Offrcer: AppConstants.clear_time_of_the_Offrcer, overall_call_clear_time: AppConstants.overall_call_clear_time, call_type: AppConstants.call_type, unitId: AppConstants.unitId, zone: AppConstants.zone, ripaPersons: [], supervisorId: "", ripa_activity: AppConstants.activityID)
+        ripaActivity = Ripaactivity(key: AppConstants.key, custid: previewViewModel.custId!, City: AppConstants.city, date_time: dateLbl.text!, userid: String(previewViewModel.userId!), username:  previewViewModel.userName!, Notes: AppConstants.notes, latitude: AppConstants.lati , longitude:  AppConstants.longi, start_date: startDate, end_date: "", deviceid: 0, Location: AppConstants.address, officer_experience: getExperience, is_K_12_Student: AppConstants.isStudent , CreatedBy:String(previewViewModel.userId!), ip_address: previewViewModel.strIPAddress , stop_date: AppConstants.date , stop_time: AppConstants.time, stop_duration: AppConstants.duration, app_version: previewViewModel.appVersion!, platform: "ios", traffic_id: AppConstants.trafficId, activity_status_id: AppConstants.activityStatusId, access_token: AppManager.getLastSavedLoginDetails()?.result?.access_token ?? "", timetaken: previewViewModel.getTimeTaken(), citation_number: AppConstants.citation, county_id: AppManager.getLastSavedLoginDetails()?.result?.county_id ?? "0", activity_id: AppConstants.activityID, time_duration_enable: AppConstants.ripaTimeDuration, call_number: AppConstants.call_number, onscene_time: AppConstants.onscene_time, clear_time_of_the_Offrcer: AppConstants.clear_time_of_the_Offrcer, overall_call_clear_time: AppConstants.overall_call_clear_time, call_type: AppConstants.call_type, unitId: AppConstants.unitId, zone: AppConstants.zone, ripaPersons: [], supervisorId: "", ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
         
     
         previewViewModel.ripaActivity = ripaActivity
@@ -981,8 +1199,58 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     
     @IBAction func actionSaveToServer(_ sender: Any) {
+        if consensualEncounter() == false{
+            AppUtility.showAlertWithProperty("Alert", messageString: "Consensual encounter resulting in search was selected as a Reason for stop. Either Search of property was conducted or Search of Person was conducted must be selected for this question.")
+            return
+       }
+        durationTxtField.text = AppConstants.duration
+        var durr : Int = 0
+        if let durInt = durationTxtField.text {
+            durr = Int(durInt) ?? 0
+        }
+       if durr < 2 {
+           AppUtility.showAlertWithProperty("Alert", messageString: "Duration of stop should be between 1 to 1440 in minutes (24 hours).")
+           return
+       }
+       if self.age != 0 && (self.age < 1 || self.age > 120){
+           AppUtility.showAlertWithProperty("Alert", messageString: "Age should be greater than 1 & less than 120.")
+           return
+       }
+        if self.age == 0 && questNumber == 1{
+            AppUtility.showAlertWithProperty("Alert", messageString: "Age should be greater than 1 & less than 120.")
+            return
+        }
         trackApplicationTime()
         savetoServer(showAlertForSave: true)
+    }
+    
+    @IBAction func addPersionBtn(_ sender: Any) {
+        trackApplicationTime()
+        self.checkRequiredForAddPerson()
+        
+    }
+    
+    func checkRequiredForAddPerson(){
+        let requiredFilledData = previewViewModel.checkRequiredQuestion(questArray: questionArray, cascadeQuestArray: cascadeQuestionArray, selectedOpt: selectedOptionsArray)
+        
+         if requiredFilledData.0.count < 1 {
+            self.addPerson(personIndex:personcount, personArray: personArray)
+        }
+        else{
+            guard let customAlertVC1 = pendingQuestionPopup else { return }
+            customAlertVC1.pendingQuestionDelegate = self
+            customAlertVC1.newquestionArry = requiredFilledData.0
+            customAlertVC1.newquestionIDArray = requiredFilledData.1
+            
+            customAlertVC1.personArray = personArray
+            customAlertVC1.personIndex = personcount
+            let popupVC = PopupViewController(contentController: customAlertVC1, position:.bottom(UIScreen.main.bounds.size.width/2), popupWidth: UIScreen.main.bounds.size.width-30, popupHeight:500)
+            popupVC.cornerRadius = 5
+            popupVC.delegate = self
+            
+            present(popupVC, animated: true, completion: nil)
+        }
+        
     }
     
     
@@ -995,10 +1263,29 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     var nextEnabled = true
     @IBAction func actionNext(_ sender: Any) {
-        
+
          if consensualEncounter() == false{
              AppUtility.showAlertWithProperty("Alert", messageString: "Consensual encounter resulting in search was selected as a Reason for stop. Either Search of property was conducted or Search of Person was conducted must be selected for this question.")
              return
+        }
+        durationTxtField.text = AppConstants.duration
+        var durr : Int = 0
+        if let durInt = durationTxtField.text {
+            durr = Int(durInt) ?? 0
+        }
+        print("ActionNext")
+        print(durr)
+        if durr < 2 {
+            AppUtility.showAlertWithProperty("Alert", messageString: "Duration of stop should be between 1 to 1440 in minutes (24 hours).")
+            return
+        }
+        if self.age != 0 && (self.age < 1 || self.age > 120){
+            AppUtility.showAlertWithProperty("Alert", messageString: "Age should be greater than 1 & less than 120.")
+            return
+        }
+        if self.age == 0 && questNumber == 1{
+            AppUtility.showAlertWithProperty("Alert", messageString: "Age should be greater than 1 & less than 120.")
+            return
         }
         
         if nextEnabled == false{
@@ -1012,7 +1299,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             }
             nextQuestion()
         }
-    }
+ }
     
     
     @IBAction func actionAutoNext(_ sender: Any) {
@@ -1023,7 +1310,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     @IBAction func actionBack(_ sender: Any) {
         trackApplicationTime()
-        //AppConstants.notes = ""
         save()
     }
     
@@ -1036,6 +1322,27 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     
     
     @IBAction func actionSave(_ sender: Any) {
+        if consensualEncounter() == false{
+            AppUtility.showAlertWithProperty("Alert", messageString: "Consensual encounter resulting in search was selected as a Reason for stop. Either Search of property was conducted or Search of Person was conducted must be selected for this question.")
+            return
+       }
+        durationTxtField.text = AppConstants.duration
+        var durr : Int = 0
+        if let durInt = durationTxtField.text {
+            durr = Int(durInt) ?? 0
+        }
+       if durr < 2 {
+           AppUtility.showAlertWithProperty("Alert", messageString: "Duration of stop should be between 1 to 1440 in minutes (24 hours).")
+           return
+       }
+       if self.age != 0 && (self.age < 1 || self.age > 120){
+           AppUtility.showAlertWithProperty("Alert", messageString: "Age should be greater than 1 & less than 120.")
+           return
+       }
+        if self.age == 0 && questNumber == 1{
+            AppUtility.showAlertWithProperty("Alert", messageString: "Age should be greater than 1 & less than 120.")
+            return
+        }
         trackApplicationTime()
         createPersonDict(checkEditHidden: true)
         self.performSegue(withIdentifier: "ShowPreview", sender: self)
@@ -1060,6 +1367,52 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         }
     }
     
+    func savetoServer(showAlertForSave:Bool){
+        setRipaActivity()
+        previewViewModel.saveDelegate = self
+        previewViewModel.ripaActivityArray.removeAll()
+        createPersonDict(checkEditHidden: true)
+        previewViewModel.previewModelDelegate = self
+        
+        var traini : String = "0"
+     
+        if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
+            ripaActivity?.supervisorId = userOption
+        }
+       
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        ripaActivity?.os_version = os.getFullVersion()
+        ripaActivity?.is_trainee = traini
+        
+        if AppConstants.trafficId != ""{
+            print(AppConstants.trafficId)
+            ripaActivity?.traffic_id = AppConstants.trafficId
+        }
+        ripaActivity?.is_K_12_Student = "0"
+        if let check = is_k12,check == true {
+            ripaActivity?.is_K_12_Student = "1"
+        }
+        
+      
+        
+        // previewViewModel.setKey()
+        self.saveRipaDataToCSV(custid: self.ripaActivity!.custid)
+        previewViewModel.ripaActivity = self.ripaActivity
+        AppConstants.activityStatusId = "9"
+        previewViewModel.createPersonsDict(personArray: self.personArray, ripaActivity: ripaActivity!, statusId: "9" )
+        let updateRipa:UpdateRipa = self.previewViewModel.updateRipaParam()
+        self.previewViewModel.saveToDB(updateRipa: updateRipa, isUpdate: true, syncSccessful: "")
+        previewViewModel.submitParam(params: updateRipa, toSave: true, showAlertForSave: showAlertForSave)
+    }
+    
+    
     
     @IBAction func actionSubmit(_ sender: Any) {
         trackApplicationTime()
@@ -1075,8 +1428,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         selectedOptionsArray = personDict["SelectedOption"] as! [[Questionoptions1]]
      //   print(selectedOptionsArray)
         let requiredFilledData = previewViewModel.checkRequiredQuestion(questArray: questArr, cascadeQuestArray: cascadeQuestArr, selectedOpt: selectedOptionsArray)
-         //print(requiredFilledData)
-        // let requiredFilledId = previewViewModel.checkRequiredQuestionID(questArray: questArr, selectedOpt: selectedOptionsArray)
         
         if requiredFilledData.0.count < 1 {
             previewViewModel.previewModelDelegate = self
@@ -1086,6 +1437,9 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
            
             db.openDatabase()
             var userRipaResponse : RipaResponse = db.getRipaResponse()!
+            
+            
+            
             if userRipaResponse.question_id.isEmpty {
                  userRipaResponse  = self.createRipaResponseData(data: self.userSettingArray)
             }
@@ -1097,24 +1451,53 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
                 ripaActivity?.supervisorId = userOption
             }
+            var traini : String = "0"
+            if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+                traini = "1"
+            }
+            
+            let os = ProcessInfo().operatingSystemVersion
+            ripaActivity?.os_version = os.getFullVersion()
+            ripaActivity?.is_trainee = traini
+            
+            if AppConstants.trafficId != ""{
+                print(AppConstants.trafficId)
+                ripaActivity?.traffic_id = AppConstants.trafficId
+            }
+            
             userRipaResponse.ripa_activity = AppConstants.activityID
             ripaActivity?.ripa_activity = AppConstants.activityID
-           // print(ripaActivity?.supervisorId)
+            ripaActivity?.is_K_12_Student = "0"
+            if let check = is_k12,check == true {
+                ripaActivity?.is_K_12_Student = "1"
+            }
+            if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                ripaActivity?.activity_status_id = "4"
+            }
+            
+            if isPendingEdit {
+                AppConstants.activityStatusId = "1"
+                ripaActivity?.activity_status_id = "1"
+            }
+            
             db.insertRipaResponse(ripaRes: userRipaResponse)
             previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
             
-         //   updateRipa.params.ripaactivity.ripaPersons[0].ripaResponse.append(userRipaResponse)
-        
-            //previewViewModel.saveToDB(updateRipa: updateRipa)
                 
-          
-            self.saveRipaDataToCSV()
-            if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+            self.saveRipaDataToCSV(custid: ripaActivity!.custid)
+            
+            if saveRipaStatus == "Saved"{
+                let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
+               // print(updateRipa)
+                previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+            }
+           else if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
                 let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
                // print(updateRipa)
                 previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
             }
             else {
+                AppConstants.activityID = ""
                 let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
                // print(updateRipa)
                 previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
@@ -1137,19 +1520,19 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         }
     }
     
-    func saveRipaDataToCSV() {
-        let ripa1 = ["latitude":AppConstants.lati,"longitude" :AppConstants.longi,"City":AppConstants.city,"activity_id":AppConstants.activityID,"ripa_activity":AppConstants.activityID,"Location":AppConstants.address,"description1":self.descriptionStrFirst,"description2":self.descriptionStr] as [String : Any]
+    func saveRipaDataToCSV(custid : String) {
+        let ripa1 = ["Location":AppConstants.address,"activity_id" :AppConstants.activityID,"custid":custid,"Basis_for_search":self.descriptionStr,"Reason_for_stop":self.descriptionStr] as [String : Any]
       
         let data:NSMutableArray  = NSMutableArray()
         data.add(ripa1)
         
-        let header = ["latitude", "longitude", "City", "activity_id","ripa_activity","Location","description1","description2"]
+        let header = ["Location", "activity_id", "custid", "Basis_for_search","Reason_for_stop"]
         // Create a object for write CSV
         let writeCSVObj = CSV()
         writeCSVObj.rows = data
         writeCSVObj.delimiter = DividerType.comma.rawValue
         writeCSVObj.fields = header as NSArray
-        writeCSVObj.name = "ripalist"
+        writeCSVObj.name = "custId_activityId"
         
         // Write File using CSV class object
         let output = CSVExport.export(writeCSVObj)
@@ -1162,7 +1545,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             }
             
             print("File Path: \(filePath)")
-          //  self.readCSVPath(filePath)
+            self.readCSVPath(filePath)
         } else {
             print("Export Error: \(String(describing: output.message))")
         }
@@ -1174,8 +1557,8 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         //webview.loadRequest(request as URLRequest)
         print(request)
         // Read File and convert as CSV class object
-        _ = CSVExport.readCSVObject(filePath);
-        
+        let csvFile = CSVExport.readCSVObject(filePath);
+        print(csvFile)
         // Use 'SwiftLoggly' pod framework to print the Dictionary
 //        loggly(LogType.Info, text: readCSVObj.name)
 //        loggly(LogType.Info, text: readCSVObj.delimiter)
@@ -1252,7 +1635,14 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             supId = respo
         }
         
-        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(), is_trainee: traini)
         
         return ripaRes
     }
@@ -1295,7 +1685,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         let alert = UIAlertController(title: nil, message: "Submitted Succesfully", preferredStyle: UIAlertController.Style.alert)
         //  alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
-            //            AppManager.removeData()
             
             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
             let nextViewController = storyBoard.instantiateViewController(withIdentifier: "DashBoardViewController") as! DashBoardViewController
@@ -1329,12 +1718,21 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             vc.cascadeQuestionsArray = cascadeQuestionArray!
             vc.personIndex = personcount
             vc.personArray = personArray
+            vc.saveRipaStatus = saveRipaStatus
             vc.viewType = viewType
+            vc.isPendingEdit = isPendingEdit
             vc.ripaActivity = ripaActivity
         }
+        else if(segueID! == "ShowSuccess"){
+            let vc = segue.destination as! SuccessViewController
+            if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                vc.viewType = "Saved"
+            }
+            else{
+                vc.viewType = "New"
+            }
+        }
     }
-    
-    
     
     
     func createPersonDict(checkEditHidden:Bool){
@@ -1382,6 +1780,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         newRipaViewModel.questionsArray = questionArray
         newRipaViewModel.cascadeQuestionArray = cascadeQuestionArray
         // splitOptions()
+        AppConstants.isStudent = "0"
         is_k12 = false
         tableView.reloadData()
     }
@@ -1415,7 +1814,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         editQuest(personIndex: personIndex, personArray: personArray, addIfNonCommon: false, resetsk12: false)
         personcount = personArray.count
         personNumber.text = "P" + "" + String(personArray.count + 1)
-        questNumber = 0
+        questNumber = 1
         // self.personIndex = personIndex
         splitOptions()
         tableView.reloadData()
@@ -1458,7 +1857,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         editQuest(personIndex: personIndex, personArray: personArray, addIfNonCommon: true, resetsk12: false)
         splitOptions()
     }
-    
     
     
     func resetArray(){
@@ -1517,10 +1915,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         newRipaViewModel.questionsArray = questionArray
         newRipaViewModel.cascadeQuestionArray = cascadeQuestionArray
         
-        
     }
-    
-    
     
     @IBAction func actionAddOption(_ sender: Any) {
         trackApplicationTime()
@@ -1611,13 +2006,17 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         checkMandatorySelection()
         
     }
-    
-    
-    
-    
+  
     func loadData(){
         questNumber = 0
         countLbl.text = currentQuestNumb
+        if let ttlString = currentQuestNumb, let range = ttlString.range(of: "/") {
+            let firstPart = ttlString[ttlString.startIndex..<range.lowerBound]
+            let results = String(ttlString.prefix(firstPart.count))
+            let attributeStr: NSMutableAttributedString = NSMutableAttributedString(string: ttlString)
+            attributeStr.setColor(color: UIColor(red:0/255.0, green:124/255.0, blue:183/255.0, alpha: 1.0), forText: results)
+            countLbl.attributedText = attributeStr
+        }
         splitOptions()
         showPrevNextBtn()
         
@@ -1689,9 +2088,41 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             questionId = questionArray![questNumber!].id
             checkAddBtn(show: questionArray![questNumber!].isAddtion)
             countLbl.text = currentQuestNumb
+            
+            if let ttlString = currentQuestNumb, let range = ttlString.range(of: "/") {
+                let firstPart = ttlString[ttlString.startIndex..<range.lowerBound]
+                let results = String(ttlString.prefix(firstPart.count))
+                let attributeStr: NSMutableAttributedString = NSMutableAttributedString(string: ttlString)
+                attributeStr.setColor(color: UIColor(red:0/255.0, green:124/255.0, blue:183/255.0, alpha: 1.0), forText: results)
+                countLbl.attributedText = attributeStr
+            }
+           
             groupLbl.text = questionArray![questNumber!].groupName
+            
             optionsArray = questionArray![questNumber!].questionoptions!
+            
+            if questionArray![questNumber!].question_code == "15" && viewType == "StartNewRipa"{
+                let check = checkQuestionUpdate15()
+                if  !check{
+                    optionsArray![0].isSelected = true
+                    optionsArray![1].isSelected = false
+                }
+            }
+            
+            if questionArray![questNumber!].question_code == "15" && (viewType == "UseSaveRipa" || viewType == "Template") && saveRipaStatus == "Saved"{
+                let check = checkQuestionUpdate15()
+                if  check{
+                    optionsArray![0].isSelected = true
+                    optionsArray![1].isSelected = false
+                }
+            }
         }
+        
+        self.addPersonBtn.isHidden = true
+        if questionArray![questNumber!].question_code == "21"{
+            self.addPersonBtn.isHidden = false
+        }
+       
         
         cascadeArray.removeAll()
         checkCityAndAdd()
@@ -1707,6 +2138,22 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         setmodelArray()
         tableView.reloadData()
         
+    }
+    
+    func checkQuestionUpdate15() -> Bool {
+        var check : Bool = false
+        for person in personArray{
+            var  selectedOptionsArray=[[Questionoptions1]]()
+            selectedOptionsArray = (person["SelectedOption"] as! [[Questionoptions1]])
+            for options in selectedOptionsArray{
+                for opt in options{
+                    if opt.option_value == "Yes" {
+                        check = true
+                    }
+                }
+            }
+        }
+        return check
     }
     
     
@@ -1988,11 +2435,13 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         let studentQuest = newRipaViewModel.getCascadeQuestionUsingQuestionCode(questionCode: "C27")
         if studentQuest.questionoptions![0].isSelected == true{
             is_k12 = true
+            AppConstants.isStudent = "1"
         }
         cascadeQuestionType = ad.questionTypeCode
         if (ad.questionoptions![0] ).isSelected == true {
             
-            //  is_k12 = true
+              is_k12 = true
+            AppConstants.isStudent = "1"
             studentQuest.is_required = "1"
             //questionArray![questNumber!+1].is_required = "1"
         }
@@ -2098,8 +2547,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             
             for option in consentQues.questionoptions!{
                 
-                
-                
                 if  (option.physical_attribute == "18" && option.isSelected) || (option.physical_attribute == "20" && option.isSelected){
                     basisQues.is_required = "1"
                     basisQues.isDescription_Required = "1"
@@ -2137,7 +2584,21 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
     func checkForSingleSelection(index : Int){
         if questionType == "SC" || questionType == "MC"{
             cascadeArray.removeAll()
-         /*   let checkSelect = !optionsArray![index].isSelected
+            
+            if questionArray![questNumber!].question_code == "15"{
+                for i in (0 ..< 2) {
+                        optionsArray![i].isSelected = false
+                   }
+            }
+            else {
+                optionsArray![index].isSelected  =  !optionsArray![index].isSelected
+            }
+            
+            if questionArray![questNumber!].question_code == "15"{
+                optionsArray![index].isSelected  =  true
+            }
+            
+           /* let checkSelect = !optionsArray![index].isSelected
             if questionArray![questNumber!].question_code == "15"{
                 for i in (0 ..< questionArray!.count) {
                     if i == index {
@@ -2150,9 +2611,9 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             }
             else {
                 optionsArray![index].isSelected  =  !optionsArray![index].isSelected
-            }  */
+            } */
      
-            optionsArray![index].isSelected  =  !optionsArray![index].isSelected
+           // optionsArray![index].isSelected  =  !optionsArray![index].isSelected
             
             let defaultSelected = checkDefaultSelected()
             
@@ -2209,22 +2670,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         checkMandatorySelection()
     }
  
-    func savetoServer(showAlertForSave:Bool){
-        setRipaActivity()
-        previewViewModel.saveDelegate = self
-        previewViewModel.ripaActivityArray.removeAll()
-        createPersonDict(checkEditHidden: true)
-        previewViewModel.previewModelDelegate = self
-        
-        // previewViewModel.setKey()
-        previewViewModel.ripaActivity = self.ripaActivity
-        previewViewModel.createPersonsDict(personArray: self.personArray, ripaActivity: ripaActivity!, statusId: "9" )
-        let updateRipa:UpdateRipa = self.previewViewModel.updateRipaParam()
-        self.previewViewModel.saveToDB(updateRipa: updateRipa, isUpdate: true, syncSccessful: "")
-        previewViewModel.submitParam(params: updateRipa, toSave: true, showAlertForSave: showAlertForSave)
-    }
-    
-    
     
     func addEnteredOption(option: Questionoptions1) {
         for options in questionArray![questNumber!].questionoptions!{
@@ -2276,7 +2721,6 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             if AppConstants.status == "Resume"{
                 newRipaViewModel.removeThisRipa()
             }
-            AppManager.removeData()
             
             self.navigationController?.popViewController(animated: true)
             
@@ -2298,11 +2742,16 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
                 //  saveToDb(toUpdate: false)
                 saveToDb(toUpdate: false)
             }
-            AppManager.removeData()
+            
             if AppConstants.status != "Saved"{
                 self.navigationController?.popViewController(animated: true)
             }
         }
+        
+        if Reachability.isConnectedToNetwork(){
+            AppManager.removeData()
+        }
+        
     }
     
     func save(){
@@ -2379,9 +2828,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         
     }
     
-    
-    
-    
+   
     func numberOfSections(in tableView: UITableView) -> Int {
         
         if questionArray![questNumber!].question_code == "25" {
@@ -2405,9 +2852,6 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         return optionsArray!.count
     }
     
-    
-    
-    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if questionArray![questNumber!].question_code == "25" {
@@ -2430,11 +2874,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         return UITableView.automaticDimension
     }
     
-    
-    
-    
-    
-    
+ 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         return 55
     }
@@ -2519,19 +2959,30 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                 else{
                     sectionButton.tag = section
                     sectionButton.addTarget(self, action: #selector(selectOption(sender:)), for: .touchUpInside)
-
-                    
                 }
             }
         }
         
+//           for i in (0 ..< 2) {
+//                optionsArray![i].isSelected = false
+//           }
         
+
         if  optionsArray![section].isSelected && questionArray![questNumber!].question_code != "25"{
             view.backgroundColor = UIColor(named: "SelectionBlue")
         }
         else{
             view.backgroundColor = UIColor(named: "LightGrayLightBlack")
         }
+        
+     /*   if questionArray![questNumber!].question_code == "15" && optionsArray![section].option_value == "Yes"{
+            view.backgroundColor = UIColor(named: "SelectionBlue")
+           
+        }
+        else{
+            view.backgroundColor = UIColor(named: "LightGrayLightBlack")
+        }
+      */
         
         headerView.addSubview(sectionButton)
         
@@ -2643,9 +3094,46 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         }
     }
     
-    
+    @objc func textIsChanging(_ textField:UITextField) -> Bool{
+
+     print ("TextField is changing")
+        var newString = textField.text!
+        if questionType == "MC" && questionArray![questNumber!].question == "Location"{
+            if textField.tag == 10{
+                if let intValue = Int(newString), intValue > 1440{
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Duration should be between 1 to 1440 (24 hour)")
+                    newString.removeLast()
+                    self.durationTxtField.text = newString
+                    return false
+                }
+                else  if let intValue = Int(newString), intValue == 0{
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Duration should be between 1 to 1440 (24 hour)")
+                    newString.removeLast()
+                    self.durationTxtField.text = newString
+                    return false
+                }
+                ripaActivity?.stop_duration = newString
+                if newString.contains("-") {
+                    newString = newString.replacingOccurrences(of: "-", with: "")
+                }
+                self.durationTxtField.text = ""
+                self.durationTxtField.text = newString
+                print("should change character")
+                print(newString)
+                AppConstants.duration = newString
+                return true
+            }
+            else if let intValue = Int(newString), intValue > 999999{
+                return false
+            }
+            
+        }
+       return true
+    }
+ 
+   
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
+        var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
         ///  let newLength:Int = newString.count
         
         if  questionArray![questNumber!].question_code == "11" || questionArray![questNumber!].question_code == "25"{
@@ -2655,30 +3143,48 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         }
         
         if questionType == "MC" && questionArray![questNumber!].question == "Location"{
-            if textField.tag == 10{
+           /* if textField.tag == 10{
                 if let intValue = Int(newString), intValue > 1440{
                     AppUtility.showAlertWithProperty("Alert", messageString: "Duration should be between 1 to 1440 (24 hour)")
                     return false
                 }
+                else  if let intValue = Int(newString), intValue == 0{
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Duration should be between 1 to 1440 (24 hour)")
+                    return false
+                }
+                ripaActivity?.stop_duration = newString
+                if newString.contains("-") {
+                    newString = newString.replacingOccurrences(of: "-", with: "")
+                }
+                self.durationTxtField.text = ""
+                self.durationTxtField.text = newString
+                print("should change character")
+                print(self.durationTxtField.text)
+                print(newString)
                 AppConstants.duration = newString
                 return true
             }
             else if let intValue = Int(newString), intValue > 999999{
                 return false
             }
-            
+            */
         }
         
         if questionArray![questNumber!].question_code == "23" || questionArray![questNumber!].question_code == "25" {
             indexPath = textField.tag
         }
-        
-        blockStr = newString
-        answer = newString
-        if questionArray![questNumber!].question_code != "23"{
-            checkSingleAndMultiline()
+        if textField.tag != 10{
+            blockStr = newString
+            answer = newString
+            if questionArray![questNumber!].question_code != "23"{
+                checkSingleAndMultiline()
+            }
+            let questionTypeCode = optionsArray![questNumber!].questionTypeCode
+            if questionTypeCode == "SL"{
+                self.age = Int(newString) ?? 0
+            }
         }
-        
+       
         checkMandatorySelection()
         
         return true
@@ -2777,10 +3283,11 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                     studentQuest.questionoptions![0].isSelected = false
                     studentQuest.questionoptions![1].isSelected = true
                     is_k12 = false
+                    
                     resetIsK12Options()
                 }
                 else{
-                    AppConstants.isStudent = ""
+                    AppConstants.isStudent = "0"
                     question.questionoptions![1].isSelected = false
                 }
             }
@@ -2900,6 +3407,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
             AppConstants.schoolName = ""
             AppConstants.isSchoolSelected = ""
             is_k12 = false
+            AppConstants.isStudent = "0"
             optionsArray![4].isSelected = false
             resetIsK12Options()
         }
@@ -3017,7 +3525,6 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
             }
         }
         
-        
         tableView.reloadData()
     }
     
@@ -3048,6 +3555,13 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                     question.questionoptions![0].main_question_id = self.questionId
                     optionsArray![indexPath.row].isSelected = true
                     cell.TxtField.text = question.questionoptions?.first?.option_value
+                     if let myNumber = NumberFormatter().number(from: cell.TxtField.text!) {
+                        self.age = myNumber.intValue
+                      }
+                    else {
+                        self.age = 0
+                    }
+                   
                     cell.clearTxtBtn.isHidden = false
                     cell.clearTxtBtn.addTarget(self, action: #selector(clearOption(sender:)), for: .touchUpInside)
                     cell.clearTxtBtn.tag = indexPath.row
@@ -4041,6 +4555,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
             for violation in violationTypeArray{
                 if violation.isSelected{
                     hasVal = true
+                    print(violation.option_value)
                     violation.order_number = orderId!
                     violation.mainQuestOrder = orderId!
                     //optionsArray![indexPath!].order_number = orderId!
@@ -4068,7 +4583,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
             for violation in list! as! [ViolationsResult]{
                 if violation.isSelected{
                     option = newRipaViewModel.createObj(mainQuestId: questionId, ripaID: String(questionID!), optionValue: violation.violationDisplay, physical_attribute: "", description: violation.offense_code, isSelected: true, mainQuestOrder: orderId!)
-                    
+                    print(violation.violationDisplay)
                     selectedViolationArray.append(option as! Questionoptions1)
                     selectedViolationArray2.append(option as! Questionoptions1)
                     
@@ -4192,6 +4707,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
         AppConstants.schoolName = ""
         resetIsK12Options()
         is_k12 = false
+        AppConstants.isStudent = "0"
     }
     
     
@@ -4255,7 +4771,6 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                 }
             }
         }
- 
         return conducted
     }
     
@@ -4377,6 +4892,8 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.isDragging {
             trackApplicationTime()
+            
+            
         }
     }
     
@@ -4481,7 +4998,7 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
             }
             return indexPaths
         }
-        
+       
         
         if optionsArray![section].isExpanded{
             

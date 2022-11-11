@@ -3,6 +3,9 @@ import UIKit
 
 extension String {
     
+    
+  
+    
     var digits: String {
         return components(separatedBy: CharacterSet.decimalDigits.inverted)
             .joined()
@@ -106,6 +109,34 @@ extension String {
     var htmlToString: String {
         return htmlToAttributedString?.string ?? ""
     }
+    
+    
+    func compareDateToCurrent(eventtDate : String) -> String {
+    let currentDate = Date()
+        var dateTimerString : String = ""
+        let dateFormatter = DateFormatter()
+      //  print(eventtDate)
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        if let releaseDate = dateFormatter.date(from: eventtDate){
+            let checkExDate = endEvent(currentdate: currentDate, eventdate: releaseDate)
+            if checkExDate ==  "[Expired]"{
+                dateTimerString = checkExDate
+            }
+        }
+        
+        return dateTimerString
+    }
+    
+    func endEvent(currentdate: Date, eventdate: Date) -> String{
+        var expDateSTr : String = ""
+        let cDate = Date()
+        if eventdate.timeIntervalSince(cDate).sign == FloatingPointSign.minus {
+            expDateSTr = "[Expired]"
+        }
+        return expDateSTr
+    }
+    
+    
 }
 
 //MARK: Text size

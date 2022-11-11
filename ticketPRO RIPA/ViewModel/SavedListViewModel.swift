@@ -45,6 +45,13 @@ class SavedListViewModel {
         
          URL = AppConstants.Api.questions
         
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        
         if Reachability.isConnectedToNetwork(){
             ApiManager.getrejectedApplicationWithUID(params: params, methodTyPe: .post, url: URL!, completion: { (success,message) in
                 AppUtility.hideProgress(nil)
@@ -74,8 +81,8 @@ class SavedListViewModel {
                                     option_id = checkId
                                 }
                                 
-                                
-                                let ripaResponse = RipaResponse(question_id: response["question_id"].stringValue, response: response["response"].stringValue, internal: response["internal"].stringValue, userid:"", question: response["question"].stringValue, CreatedBy: "", physical_attribute: response["physical_attribute"].stringValue, key: "", personId: "", description: response["Description"].stringValue, question_code: response["question_code"].stringValue, cascade_ques_id: response["cascade_ques_id"].stringValue, order_number: response["order_number"].stringValue , option_id: option_id, cascade_option_id: response["cascade_option_id"].stringValue, main_question_id: response["main_question_id"].stringValue, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID)
+                                print(response["cascade_ques_id"].stringValue)
+                                let ripaResponse = RipaResponse(question_id: response["question_id"].stringValue, response: response["response"].stringValue, internal: response["internal"].stringValue, userid:"", question: response["question"].stringValue, CreatedBy: "", physical_attribute: response["physical_attribute"].stringValue, key: "", personId: "", description: response["Description"].stringValue, question_code: response["question_code"].stringValue, cascade_ques_id: response["cascade_ques_id"].stringValue, order_number: response["order_number"].stringValue , option_id: option_id, cascade_option_id: response["cascade_option_id"].stringValue, main_question_id: response["main_question_id"].stringValue, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                                 
                                    ripaResponseArr.append(ripaResponse)
                                 
@@ -291,12 +298,15 @@ class SavedListViewModel {
     
     func getQuestionUsingQuestionCode(questionCode:String,question_Id:String, questArray:[QuestionResult1]?)->QuestionResult1{
         var quest:QuestionResult1?
-         for question in questArray!{
-             if  question.question_code == questionCode{
-                quest = question
-                return quest!
-            }
+        if let qArray = questArray {
+            for question in qArray{
+                if  question.question_code == questionCode{
+                   quest = question
+                   return quest!
+               }
+           }
         }
+        
         if quest == nil{
             quest = getQuestionUsingQuestionId(question_Id: question_Id, questionCode: questionCode, questArray: questionsArray)
         }
@@ -376,7 +386,8 @@ class SavedListViewModel {
  
                                
                                 for item in json["result"]["response"].arrayValue {
-                                    let  response = Response(recID: item["rec_id"].stringValue, activityID: item["activity_id"].stringValue, ripaPersonID: item["ripa_person_id"].stringValue, userid: item["userid"].stringValue, questionID: item["question_id"].stringValue, question: item["question"].stringValue, questionCode: item["question_code"].stringValue, cascadeQuesID: item["cascade_ques_id"].stringValue, optionID: item["option_id"].stringValue, response: item["response"].stringValue, physicalAttribute: item["physical_attribute"].stringValue, responseInternal: item["internal"].stringValue, responseDescription: item["Description"].stringValue, devicesUniqueNo: item["devices_unique_no"].stringValue, orderNumber: item["order_number"].stringValue, createdBy: item["CreatedBy"].stringValue, createdOn: item["CreatedOn"].stringValue, updatedBy: item["UpdatedBy"].stringValue, updatedOn: item["UpdatedOn"].stringValue, personName: item["person_name"].stringValue)
+                                    print(item["cascade_ques_id"].stringValue)
+                                    let  response = Response(recID: item["rec_id"].stringValue, activityID: item["activity_id"].stringValue, ripaPersonID: item["ripa_person_id"].stringValue, userid: item["userid"].stringValue, questionID: item["question_id"].stringValue, question: item["question"].stringValue, questionCode: item["question_code"].stringValue, cascadeQuesID: item["cascade_ques_id"].stringValue, optionID: item["option_id"].stringValue, response: item["response"].stringValue, physicalAttribute: item["physical_attribute"].stringValue, responseInternal: item["internal"].stringValue, responseDescription: item["Description"].stringValue, devicesUniqueNo: item["devices_unique_no"].stringValue, orderNumber: item["order_number"].stringValue, createdBy: item["CreatedBy"].stringValue, createdOn: item["CreatedOn"].stringValue, updatedBy: item["UpdatedBy"].stringValue, updatedOn: item["UpdatedOn"].stringValue, personName: item["person_name"].stringValue, main_question_id: item["main_question_id"].stringValue)
                                     responseArr.append(response)
                                 }
                                 

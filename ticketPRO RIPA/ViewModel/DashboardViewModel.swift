@@ -35,7 +35,7 @@ protocol GetListDelegate: AnyObject {
     //Bundle.main.infoDictionary?["CFBundleVersion"] as? String
     let id = AppManager.getLastSavedLoginDetails()?.id
     
-    
+
     
     
     
@@ -266,7 +266,7 @@ protocol GetListDelegate: AnyObject {
         else{
             print("Internet Connection not Available!")
             AppUtility.hideProgress(nil)
-            AppUtility.showAlertWithProperty("Alert", messageString: "Internet connection not available.")
+         //   AppUtility.showAlertWithProperty("Alert", messageString: "Internet connection not available.")
             getNewRipaFromDB()
         }
         
@@ -369,6 +369,7 @@ protocol GetListDelegate: AnyObject {
                     let errorMsg = json["result"][0]["serviceError"].stringValue
                      if  errorMsg == ""{
                         db.deleteAllfrom(table: "featureTable")
+                         print("Features Table Data \(json)")
                         for item in json["result"].arrayValue {
                          // var countyList = [CountyResult]()
                             
@@ -514,7 +515,6 @@ protocol GetListDelegate: AnyObject {
     }
     
     
-    
     func getDatefromStopTime(date: String){
         if date != ""{
             let inputFormatter = DateFormatter()
@@ -576,8 +576,9 @@ protocol GetListDelegate: AnyObject {
                     if let json = try? JSON(data: jsonObj as! Data) {
                         let errorMsg = json["result"][0]["serviceError"].stringValue
                         print(json)
+                        let string = "\"\("Created")\""
                         if  errorMsg == ""{
-                            let string = "\"\("Created")\""
+                        
                             
                             db.deleteAllfrom(table: "ripaTempMasterTable WHERE status = \(string)")
                             for item in json["result"].arrayValue {
@@ -638,21 +639,27 @@ protocol GetListDelegate: AnyObject {
                                                            ripaTempId: "",
                                                            tempType: "",
                                                            stopDate: convertDateFormater(date: ticketDate) ,
-                                                           stopTime: getTime(date: item["ticket_date"].stringValue),
+                                                           stopTime: getTime(date: ticketDate),
                                                            stopDuration: duration,
                                                            rejectedURL:"", syncStatus: "",startDate:"",endDate:"",is_K_12_Student:"", lat:"" ,long: "", timeTaken: "0", countyId: "", deviceid: item["device_id"].stringValue,
                                                            
                                                            callNumber: item["call_number"].stringValue, callTime: "", onsceneTime: item["onscene_time"].stringValue, clearTimeOfOfficer: item["clear_time_of_the_Offrcer"].stringValue, overallCallClearTime: item["overall_call_clear_time"].stringValue, callType: item["call_type"].stringValue, unitId: item["unitId"].stringValue, zone: item["zone"].stringValue )
                                 
                                 db.insertRipaTempMaster(ripaResponse: ripas, tableName: db.ripaTempMaster)
+                                
+                               
                             }
                              
                         }
                         else{
+                           
                             let code = json["result"][0]["status"].intValue
                             if code == 0{
                                 DashboardViewModel.showAlertWithProperty("Alert", messageString: errorMsg, code:code )
                                 return
+                            }
+                            else if code == 2{
+                                db.deleteAllfrom(table: "ripaTempMasterTable WHERE status = \(string)")
                             }
                         }
                     }
@@ -686,7 +693,7 @@ protocol GetListDelegate: AnyObject {
         else{
             print("Internet Connection not Available!")
             AppUtility.hideProgress(nil)
-            AppUtility.showAlertWithProperty("Alert", messageString: "Internet connection not available.")
+          //  AppUtility.showAlertWithProperty("Alert", messageString: "Internet connection not available.")
             
         }
     }

@@ -220,7 +220,6 @@ class PreviewViewModel {
     }
     
     
-    
     func submitParam(params:UpdateRipa , toSave:Bool, showAlertForSave:Bool){
         let encodedData = try! JSONEncoder().encode(params)
         let jsonString = String(data: encodedData,
@@ -297,7 +296,7 @@ class PreviewViewModel {
          AppUtility.showProgress(nil, title:nil)
         var URL:String?
         
- //     saveToDB(updateRipa : updateRipaParam() , isUpdate: true, syncSccessful: "0")
+    //  saveToDB(updateRipa : updateRipaParam() , isUpdate: true, syncSccessful: "0")
 //      previewModelDelegate?.setPreviewDelegate(success: ""  ,message:"Success")
          
         URL = AppConstants.Api.updateRipa
@@ -342,7 +341,15 @@ class PreviewViewModel {
         self.ripaPersonsArray.removeAll()
         
         self.ripaActivity = ripaActivity
-        print(AppConstants.activityID)
+        print(self.ripaActivity?.activity_status_id)
+        
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        
         var i = 1
         for person in personArray{
             updateResopnseArray.removeAll()
@@ -378,7 +385,7 @@ class PreviewViewModel {
                         timeTaken = getTimeTaken()
                     }
                     
-                    var obj = RipaResponse(question_id: question.id, response: timeTaken!, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                    var obj = RipaResponse(question_id: question.id, response: timeTaken!, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                     obj.activity_id = AppConstants.activityID
                     updateResopnseArray.append(obj)
                     continue
@@ -390,7 +397,7 @@ class PreviewViewModel {
                 if question.is_required == "0" && question.visible_question == "1"{
                     let selectedOptionalArray =  question.questionoptions!.filter { $0.isSelected }
                     if selectedOptionalArray.count < 1{
-                        var obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                        var obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                         obj.activity_id = AppConstants.activityID
                         updateResopnseArray.append(obj)
                         continue
@@ -399,7 +406,7 @@ class PreviewViewModel {
                 
                 if question.question_code == "22"{
                     let exp = calculateYearOfExp()
-                    var obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                    var obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                     obj.activity_id = AppConstants.activityID
                     updateResopnseArray.append(obj)
                     continue
@@ -411,7 +418,7 @@ class PreviewViewModel {
                     if AppConstants.isSchoolSelected == "Yes" {
                         let option = question.questionoptions!.first
                        // let orderNo = option!.order_number
-                        var obj = RipaResponse(question_id: option!.ripa_id, response: option!.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "0", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                        var obj = RipaResponse(question_id: option!.ripa_id, response: option!.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: option!.option_id, cascade_option_id: "0", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                         obj.activity_id = AppConstants.activityID
                         updateResopnseArray.append(obj)
                         continue
@@ -424,7 +431,7 @@ class PreviewViewModel {
                     address.main_question_id = question.id
                     address.ripa_id = question.id
                     
-                    var obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                    var obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                     obj.activity_id = AppConstants.activityID
                     updateResopnseArray.append(obj)
                     //continue
@@ -436,11 +443,11 @@ class PreviewViewModel {
                             var obj:RipaResponse?
                             
                             if question.question_code == "C6" || question.question_code == "C7" || question.question_code == "C26" || question.question_code == "C25"{
-                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                                 obj?.activity_id = AppConstants.activityID
                             }
                             else{
-                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: opt.option_id, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                                 obj?.activity_id = AppConstants.activityID
                                 if opt.main_question_id == ""{
                                     print(opt.mainQuestId)
@@ -505,6 +512,13 @@ class PreviewViewModel {
         
         self.ripaActivity = ripaActivity
         
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        
         var i = 1
         for person in personArray{
             updateResopnseArray.removeAll()
@@ -540,7 +554,7 @@ class PreviewViewModel {
                         timeTaken = getTimeTaken()
                     }
                     
-                    var obj = RipaResponse(question_id: question.id, response: timeTaken!, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                    var obj = RipaResponse(question_id: question.id, response: timeTaken!, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                     obj.activity_id = AppConstants.activityID
                     updateResopnseArray.append(obj)
                     continue
@@ -552,7 +566,7 @@ class PreviewViewModel {
                 if question.is_required == "0" && question.visible_question == "1"{
                     let selectedOptionalArray =  question.questionoptions!.filter { $0.isSelected }
                     if selectedOptionalArray.count < 1{
-                        var obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                        var obj = RipaResponse(question_id: question.id, response: "", internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key , personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: question.id, order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                         obj.activity_id = AppConstants.activityID
                         updateResopnseArray.append(obj)
                         continue
@@ -568,7 +582,7 @@ class PreviewViewModel {
                 
                 if question.question_code == "22"{
                     let exp = calculateYearOfExp()
-                    var obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                    var obj = RipaResponse(question_id: question.id, response: exp, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: "", key:AppConstants.key, personId: String(i) , description: "", question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                     obj.activity_id = AppConstants.activityID
                     updateResopnseArray.append(obj)
                     continue
@@ -586,7 +600,7 @@ class PreviewViewModel {
                         }
                         
                        // let orderNo = option!.order_number
-                        var obj = RipaResponse(question_id: option!.ripa_id, response: option!.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: optionId, cascade_option_id: "0", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                        var obj = RipaResponse(question_id: option!.ripa_id, response: option!.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: "", question_code: option!.question_code_for_cascading_id, cascade_ques_id: option!.cascade_ripa_id, order_number: option!.order_number, option_id: optionId, cascade_option_id: "0", main_question_id: address.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                         obj.activity_id = AppConstants.activityID
                         updateResopnseArray.append(obj)
                         continue
@@ -599,7 +613,7 @@ class PreviewViewModel {
                     address.main_question_id = question.id
                     address.ripa_id = question.id
                     
-                    var obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                    var obj = RipaResponse(question_id: question.id, response: address.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: address.physical_attribute, key: AppConstants.key, personId: String(i) , description: address.optionDescription, question_code: question.question_code, cascade_ques_id: "0", order_number: question.order_number, option_id: "0", cascade_option_id: "0", main_question_id: question.id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                     obj.activity_id = AppConstants.activityID
                     updateResopnseArray.append(obj)
                     //continue
@@ -617,10 +631,11 @@ class PreviewViewModel {
                             }
                             
                             if question.question_code == "C6" || question.question_code == "C7" || question.question_code == "C26" || question.question_code == "C25"{
-                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: optionId, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                                obj = RipaResponse(question_id: opt.mainQuestId, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: question.question_code, cascade_ques_id: opt.ripa_id, order_number: opt.mainQuestOrder , option_id: optionId, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                             }
                             else{
-                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: optionId, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID)
+                                obj = RipaResponse(question_id: question.id, response: opt.option_value, internal: question.internal, userid: String(userId!), question: question.question, CreatedBy: String(userId!), physical_attribute: opt.physical_attribute, key: AppConstants.key, personId: String(i) , description: opt.optionDescription, question_code: opt.question_code_for_cascading_id, cascade_ques_id: opt.cascade_ripa_id, order_number:  opt.mainQuestOrder , option_id: optionId, cascade_option_id: opt.option_id, main_question_id: opt.main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
+                                
                                 
                                 if opt.main_question_id == ""{
                                     print(opt.mainQuestId)
@@ -636,7 +651,7 @@ class PreviewViewModel {
                                 obj?.question_id = question.id
                             }
                             
-                            if obj?.question_code == ""{
+                            if obj?.question_code == "" || obj?.question_code == "0"{
                                 obj?.question_code = question.question_code
                             }
                             
@@ -694,6 +709,7 @@ class PreviewViewModel {
         ripaActivity?.longitude = AppConstants.longi
         ripaActivity?.activity_id = AppConstants.activityID
         ripaActivity?.time_duration_enable = AppConstants.ripaTimeDuration
+        ripaActivity?.Notes = AppConstants.notes
         if AppConstants.ripaTimeDuration == "Y"{
             ripaActivity?.timetaken = getTimeTaken()
         }
@@ -788,7 +804,7 @@ class PreviewViewModel {
         
         for quest in questArray!{
             if quest.question_code == "5"{
-                if AppConstants.date == "" || AppConstants.duration == "" || AppConstants.time == "" || AppConstants.address == "" || AppConstants.city == "" {
+                if AppConstants.date == "" || AppConstants.duration == "" || AppConstants.time == "" || AppConstants.address == "" || AppConstants.city == "" || AppConstants.address.count < 6 {
                     newarray.append(quest.question)
                     questionIdArray.append(i)
                 }
@@ -872,7 +888,7 @@ class PreviewViewModel {
         
         for quest in questArray!{
             if quest.question_code == "5"{
-                if AppConstants.date == "" || AppConstants.duration == "" || AppConstants.time == "" || AppConstants.address == "" || AppConstants.city == "" {
+                if AppConstants.date == "" || AppConstants.duration == "" || AppConstants.time == "" || AppConstants.address == "" || AppConstants.city == "" || AppConstants.address.count < 6 {
                     newarray.append(quest.question)
                     questionIdArray.append(i)
                 }

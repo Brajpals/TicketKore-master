@@ -5,7 +5,6 @@ import IQKeyboardManagerSwift
 
 class AppUtility {
     
-    
     func setRootView(view:String) {
          let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let viewController = mainStoryboard.instantiateViewController(withIdentifier: view) as! EnrollementViewController
@@ -149,7 +148,33 @@ class AppUtility {
         return false
     }
     
-    
+    class func writeToDocumentsFile(fileName:String,value:String) {
+       let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
+       let path = documentsPath.appendingPathComponent(fileName)
+       do{
+       try value.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+   }catch{
+       }
+       }
+
+    class func readFromDocumentsFile(fileName:String) -> String {
+       let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
+       let path = documentsPath.appendingPathComponent(fileName)
+       let checkValidation = FileManager.default
+       var file:String
+
+       if checkValidation.fileExists(atPath: path) {
+           do{
+          try file = NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String
+           }catch{
+               file = ""
+           }
+           } else {
+           file = ""
+       }
+
+       return file
+   }
   
     
 }

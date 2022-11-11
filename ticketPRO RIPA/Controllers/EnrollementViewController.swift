@@ -14,8 +14,7 @@ import SafariServices
 import LocalAuthentication
 
 
-
-class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFieldDelegate,LoginOTPViewModelDelegate, ActivityStoreDelegate
+class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFieldDelegate,LoginOTPViewModelDelegate, ActivityStoreDelegate,loginPopupDelegate
 {
     
     @IBOutlet weak var phoneTxtDeleteBtn: UIButton!
@@ -57,6 +56,8 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     @IBOutlet weak var passSwitchView: UIView!
     @IBOutlet weak var passSwitch: UISwitch!
     
+    let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    
     
     var validation = Validation()
     var loginModel = LoginViewModel()
@@ -80,7 +81,8 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         userTxt.delegate = self
         isSignin = true
         
-        userTxt.keyboardType = UIKeyboardType.numbersAndPunctuation
+       // userTxt.keyboardType = UIKeyboardType.numbersAndPunctuation
+      //  passTxt.keyboardType = UIKeyboardType.emailAddress
         
         phoneView.layer.cornerRadius = 5
         enrollView.layer.cornerRadius = 5
@@ -163,7 +165,7 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     
     override func viewDidAppear(_ animated: Bool) {
         setGradientBackground()
-        loginModel.updateVesionApp()
+     //   loginModel.updateVesionApp()
         
     }
     
@@ -172,8 +174,6 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         //self.mainView.backgroundlayer()
         self.submitbtn.orangeGradientButton()
     }
-    
-    
     
     
     @IBAction func openPrivacyLink(_ sender: Any) {
@@ -293,13 +293,12 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         UIApplication.shared.windows.first?.makeKeyAndVisible()
         UIApplication.shared.registerForRemoteNotifications()
      }
-    
-    
   
     
     // MARK: - Button Click
     var isEmail:Bool?
     @IBAction func submitClick(_ sender: UIButton) {
+        
         isEmail = false
         loginModel.OTPdelegate = self
         let isCorrectId = loginModel.checkId(id: enrollmentTxt.text!)
@@ -313,13 +312,11 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             isCorrectEmail = loginModel.checkEmail(email: phoneTxt.text!)
         }
         
-        
-        
         if isCorrectId == true{
             isCorrectPhone = loginModel.checkNumber(number: phoneTxt.text!)
         }
         if isCorrectId == true && (isCorrectPhone == true || isCorrectEmail == true) && isSignin == false{
-             pram  = loginModel.setLoginParam(enrollment_id: enrollmentTxt.text!, phone: phoneTxt.text!, password: "")
+            pram  = loginModel.setLoginParam(enrollment_id: enrollmentTxt.text!, phone: phoneTxt.text!, password: "", custId: "")
             loginType = "phone"
             if isCorrectEmail == true{
                 loginType = "email"
@@ -328,9 +325,9 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             loginModel.getOtpWith(params: pram!, loginType: "login")
         }
         else if (isCorrectPhone == true || isCorrectEmail == true) && isSignin == true{
-              pram  = loginModel.setLoginParam(enrollment_id: "", phone: phoneTxt.text!, password: "")
+            pram  = loginModel.setLoginParam(enrollment_id: "", phone: phoneTxt.text!, password: "", custId: "")
              if passSwitch.isOn == false{
-                pram = loginModel.setLoginParam(enrollment_id: "", phone: phoneTxt.text!, password: passTxt.text!)
+                 pram = loginModel.setLoginParam(enrollment_id: "", phone: phoneTxt.text!, password: passTxt.text!, custId: "")
                 if isCorrectPass == false{
                     if passTxt.text == ""{
                         AppUtility.showAlertWithProperty("Alert", messageString: "Please enter password.")
@@ -346,9 +343,9 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             loginModel.getOtpWith(params: pram!, loginType: "login")
         }
         else if isCorrectUserId == true && isSignin == true{
-             pram  = loginModel.setLoginParam(enrollment_id: "", phone: userTxt.text!, password: "")
+            pram  = loginModel.setLoginParam(enrollment_id: "", phone: userTxt.text!, password: "", custId: "")
             if passSwitch.isOn == false{
-                pram  = loginModel.setLoginParam(enrollment_id: "", phone: userTxt.text!, password: passTxt.text!)
+                pram  = loginModel.setLoginParam(enrollment_id: "", phone: userTxt.text!, password: passTxt.text!, custId: "")
                 if isCorrectPass == false{
                     if passTxt.text == ""{
                         AppUtility.showAlertWithProperty("Alert", messageString: "Please enter password.")
@@ -404,6 +401,131 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
                 AppUtility.showAlertWithProperty("Alert", messageString: "Please enter valid user id.")
             }
         }
+    }
+    
+    
+    func showPopupForCustId(){
+        self.blurEffectView.frame = view.bounds
+          self.blurEffectView.backgroundColor = .black
+          self.blurEffectView.alpha = 0.6
+          self.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+          self.view.addSubview(blurEffectView)
+          
+          let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "LoginPopupViewController") as! LoginPopupViewController
+          vc.modalPresentationStyle = .overCurrentContext
+          vc.delegate = self
+          self.present(vc, animated: true)
+    }
+    
+    func sendLoginIdToServer(loginTxt : String){
+        
+        isEmail = false
+        loginModel.OTPdelegate = self
+        let isCorrectId = loginModel.checkId(id: enrollmentTxt.text!)
+        let isCorrectUserId = loginModel.checkUserId(id: userTxt.text!)
+        var isCorrectPhone = loginModel.checkNumber(number: phoneTxt.text!)
+        let isCorrectPass = loginModel.checkId(id: passTxt.text!)
+        var isCorrectEmail = false
+        
+        if phoneTxt.text!.hasSpecialCharactersforMail(){
+            isEmail = true
+            isCorrectEmail = loginModel.checkEmail(email: phoneTxt.text!)
+        }
+        
+        if isCorrectId == true{
+            isCorrectPhone = loginModel.checkNumber(number: phoneTxt.text!)
+        }
+        if isCorrectId == true && (isCorrectPhone == true || isCorrectEmail == true) && isSignin == false{
+            pram  = loginModel.setLoginParam(enrollment_id: enrollmentTxt.text!, phone: phoneTxt.text!, password: "", custId: loginTxt)
+            loginType = "phone"
+            if isCorrectEmail == true{
+                loginType = "email"
+            }
+            AppConstants.loginVia = phoneTxt.text!
+            loginModel.getOtpWith(params: pram!, loginType: "login")
+        }
+        else if (isCorrectPhone == true || isCorrectEmail == true) && isSignin == true{
+            pram  = loginModel.setLoginParam(enrollment_id: "", phone: phoneTxt.text!, password: "", custId: loginTxt)
+             if passSwitch.isOn == false{
+                 pram = loginModel.setLoginParam(enrollment_id: "", phone: phoneTxt.text!, password: passTxt.text!, custId: loginTxt)
+                if isCorrectPass == false{
+                    if passTxt.text == ""{
+                        AppUtility.showAlertWithProperty("Alert", messageString: "Please enter password.")
+                        return
+                    }
+                  }
+            }
+            loginType = "phone"
+            if isCorrectEmail == true{
+                loginType = "email"
+            }
+            AppConstants.loginVia = phoneTxt.text!
+            loginModel.getOtpWith(params: pram!, loginType: "login")
+        }
+        else if isCorrectUserId == true && isSignin == true{
+            pram  = loginModel.setLoginParam(enrollment_id: "", phone: userTxt.text!, password: "", custId: loginTxt)
+            if passSwitch.isOn == false{
+                pram  = loginModel.setLoginParam(enrollment_id: "", phone: userTxt.text!, password: passTxt.text!, custId: loginTxt)
+                if isCorrectPass == false{
+                    if passTxt.text == ""{
+                        AppUtility.showAlertWithProperty("Alert", messageString: "Please enter password.")
+                        return
+                    }
+                 }
+            }
+            loginType = "rmsid"
+            AppConstants.loginVia = userTxt.text!
+            loginModel.getOtpWith(params: pram!, loginType: "login")
+            
+        }
+        else{
+            if enrollmentTxt.text == "" && isSignin! != true{
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter Enrollment id.")
+            }
+            else if phoneTxt.text == "" && isSignin! != true{
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter Phone Number.")
+            }
+            
+            else if userTxt.text == "" && isSignin! == true && `switch`.isOn == false{
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter User Id.")
+            }
+            
+            else if ((userTxt.text?.isEmpty) == nil && isSignin! == true  && `switch`.isOn == false){
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter User Id.")
+            }
+            
+            else if (userTxt.text!.count < 3 || userTxt.text!.count > 8) && isSignin! == true && `switch`.isOn == false {
+                if (userTxt.text!.count < 3 || userTxt.text!.count > 8){
+                    AppUtility.showAlertWithProperty("Alert", messageString: "User ID length should be 3 to 8 characters.")
+                }
+               else{
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Please enter valid user ID")
+                 }
+            }
+            else if phoneTxt.text == "" && (`switch`.isOn == true || isSignin! != true){
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter Phone Number.")
+            }
+            
+            else if (isCorrectPhone == false || isCorrectEmail == false) && (`switch`.isOn == true || isSignin! != true){
+                if isEmail == true{
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Please enter valid e-mail address")
+                }else{
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter valid number")
+                }
+            }
+            
+            else if isCorrectId == false  && isSignin! == false{
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter valid enrollment id.")
+            }
+            else if isCorrectUserId == false && isSignin! != false{
+                AppUtility.showAlertWithProperty("Alert", messageString: "Please enter valid user id.")
+            }
+        }
+        self.blurEffectView.removeFromSuperview()
+    }
+    
+    func removePopupView(){
+        self.blurEffectView.removeFromSuperview()
     }
     
     
@@ -594,7 +716,6 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
                 // Fallback on earlier versions
             }
             let reason = "Enter passcode to identify yourself!"
-            
             context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) {
                 [unowned self] success, authenticationError in
                 
@@ -633,7 +754,6 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             }
         }
     }
-    
     
     
     

@@ -41,6 +41,11 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
     
     var previewPersonArray = [RipaPerson]()
     var previewPersonIndex = 0
+    var isPendingEdit:Bool = false
+    var viewType : String = ""
+    
+    var userSettingArray = UserSettingModel()
+    let db = SqliteDbStore()
     
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -85,6 +90,10 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
             submitBtn.isHidden = true
             noteBtn.isHidden = true
          }
+        
+        if isPendingEdit {
+            self.submitBtn.setTitle("UPDATE RIPA", for: .normal)
+        }
        
         previewViewModel.ripaActivity = ripaActivity
         previewViewModel.questionArray = questionsArray!
@@ -126,8 +135,7 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
         self.performSegue(withIdentifier: "ShowSuccess", sender: self)
     }
     
-    
-    
+  
     func goToDashboard(){
         let alert = UIAlertController(title: nil, message: "Submitted Succesfully", preferredStyle: UIAlertController.Style.alert)
         //  alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
@@ -147,21 +155,155 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
             AppUtility.showAlertWithProperty("Alert", messageString: "Fill all required questions or their description for \(checkRequiredFilled().0)")
             return
         }
-        
-        
         previewViewModel.previewModelDelegate = self
         previewViewModel.personArray = personArray
-        previewViewModel.createPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1")
-        // previewViewModel.createPersonsSelectedOptionDict(questionArray: questionsArray!, cascadeQuestArray: cascadeQuestionsArray!)
-        let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
         
+        db.openDatabase()
+        var userRipaResponse : RipaResponse = db.getRipaResponse()!
+        
+        
+        if userRipaResponse.question_id.isEmpty {
+             userRipaResponse  = self.createRipaResponseData(data: self.userSettingArray)
+        }
+        var temp1 : String!
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String{
+            temp1 = "\(userOption)"
+            userRipaResponse.response = temp1
+        }
+        if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
+            ripaActivity?.supervisorId = userOption
+        }
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        
+        let os = ProcessInfo().operatingSystemVersion
+        ripaActivity?.os_version = os.getFullVersion()
+        ripaActivity?.is_trainee = traini
+        
+        if AppConstants.trafficId != ""{
+            print(AppConstants.trafficId)
+            ripaActivity?.traffic_id = AppConstants.trafficId
+        }
+        
+        userRipaResponse.ripa_activity = AppConstants.activityID
+        ripaActivity?.ripa_activity = AppConstants.activityID
+        
+       
+      //  previewViewModel.createPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1")
+        // previewViewModel.createPersonsSelectedOptionDict(questionArray: questionsArray!, cascadeQuestArray: cascadeQuestionsArray!)
+       
         //previewViewModel.saveToDB(updateRipa: updateRipa)
         
-        previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+        ripaActivity?.ripa_activity = AppConstants.activityID
+        
+        if viewType == "UseSaveRipa" || viewType == "Saved"{
+            ripaActivity?.activity_status_id = "4"
+        }
+        
+        if isPendingEdit {
+            AppConstants.activityStatusId = "1"
+            ripaActivity?.activity_status_id = "1"
+        }
+        
+        previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
+        
+        if viewType == "UseSaveRipa" || viewType == "Saved"{
+            let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
+           // print(updateRipa)
+            previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+        }
+        else {
+            let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
+           // print(updateRipa)
+            previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+        }
         
     }
     
-    
+    func createRipaResponseData(data:UserSettingModel) -> RipaResponse {
+        let optionArray = data.option?.filter({ item in
+            item.is_select == true
+        })
+        let idUser = (AppManager.getLastSavedLoginDetails()?.result?.userid)!
+        var questionId : String = ""
+        if let qId = data.question?.id {
+            questionId = qId
+        }
+        
+        var rep : String = ""
+        if let respo = data.question?.response {
+            rep = respo
+        }
+        
+        var inter : String = ""
+        if let respo = data.question?.internall {
+            inter = respo
+        }
+        
+        var questn : String = ""
+        if let respo = data.question?.question {
+            questn = respo
+        }
+        
+        var cDate : String = ""
+        if let respo = data.question?.CreatedBy {
+            cDate = respo
+        }
+        
+        var attri : String = ""
+        if let respo = optionArray?[0].physical_attribute {
+            attri = respo
+        }
+        
+        var keyS : String = ""
+        if let respo = data.question?.question_key {
+            keyS = respo
+        }
+        
+        var pId : String = ""
+        if let respo = data.supervisor?[0].PersonId {
+            pId = respo
+        }
+        
+        var qCode : String = ""
+        if let respo = data.question?.question_code {
+            qCode = respo
+        }
+        
+        var orderN : String = ""
+        if let respo = optionArray?[0].order_number {
+            orderN = respo
+        }
+        
+        var opId : String = "0"
+        if let respo = optionArray?[0].option_id {
+            opId = respo
+        }
+        
+        var mId : String = ""
+        if let respo = data.question?.id {
+            mId = respo
+        }
+        
+        var supId : String = ""
+        if let arr = data.supervisor,let respo = arr[0].SupervisorId {
+            supId = respo
+        }
+        
+        var traini : String = "0"
+        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+            traini = "1"
+        }
+        
+        let os = ProcessInfo().operatingSystemVersion
+        
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(), is_trainee: traini)
+        
+        return ripaRes
+    }
     
     
     func checkRequiredFilled() -> (String,Bool){
@@ -318,6 +460,10 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
             vc.personIndex = prsonIndex
             vc.personArray = personArray
         }
+        else if (segueID! == "ShowSuccess"){
+                let vc = segue.destination as! SuccessViewController
+            vc.isPendingEdit = isPendingEdit
+            }
     }
     
     

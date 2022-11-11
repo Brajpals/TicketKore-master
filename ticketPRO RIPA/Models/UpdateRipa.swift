@@ -77,11 +77,14 @@ struct Ripaactivity:Encodable {
     var supervisorId : String
     var ripa_activity : String
     
+    var os_version : String
+    var is_trainee : String
+    
  
     var ripaPersons: [RipaPerson]
     
  
-    init(key: String, custid: String, City : String, date_time: String, userid: String, username: String, Notes: String, latitude: String, longitude: String, start_date: String, end_date: String, deviceid: Int, Location: String, officer_experience:String, is_K_12_Student: String, CreatedBy: String, ip_address: String , stop_date: String , stop_time: String , stop_duration: String, app_version: String, platform: String, traffic_id: String, activity_status_id: String, access_token: String, timetaken : String, citation_number: String ,county_id: String,activity_id:String,time_duration_enable: String, call_number : String, onscene_time : String, clear_time_of_the_Offrcer : String, overall_call_clear_time : String, call_type : String, unitId : String, zone : String, ripaPersons: [RipaPerson], supervisorId : String,ripa_activity : String) {
+    init(key: String, custid: String, City : String, date_time: String, userid: String, username: String, Notes: String, latitude: String, longitude: String, start_date: String, end_date: String, deviceid: Int, Location: String, officer_experience:String, is_K_12_Student: String, CreatedBy: String, ip_address: String , stop_date: String , stop_time: String , stop_duration: String, app_version: String, platform: String, traffic_id: String, activity_status_id: String, access_token: String, timetaken : String, citation_number: String ,county_id: String,activity_id:String,time_duration_enable: String, call_number : String, onscene_time : String, clear_time_of_the_Offrcer : String, overall_call_clear_time : String, call_type : String, unitId : String, zone : String, ripaPersons: [RipaPerson], supervisorId : String,ripa_activity : String,os_version : String,is_trainee : String) {
         self.key = key
         self.custid = custid
         self.date_time = date_time
@@ -124,6 +127,9 @@ struct Ripaactivity:Encodable {
         self.zone = zone
         self.supervisorId = supervisorId
         self.ripa_activity = supervisorId
+        
+        self.os_version = os_version
+        self.is_trainee = is_trainee
      }
 }
 
@@ -176,9 +182,11 @@ struct RipaResponse:Encodable {
     var other_assignment_value: String
     var activity_id: String
     var ripa_activity: String
+    var os_version: String
+    var is_trainee: String
  
 
-    init(question_id: String, response: String, `internal`: String, userid: String, question: String, CreatedBy: String, physical_attribute: String , key: String, personId: String, description: String, question_code: String, cascade_ques_id: String ,order_number: String, option_id:String, cascade_option_id: String, main_question_id: String, supervisorId: String, other_assignment_value: String,activity_id: String,ripa_activity: String) {
+    init(question_id: String, response: String, `internal`: String, userid: String, question: String, CreatedBy: String, physical_attribute: String , key: String, personId: String, description: String, question_code: String, cascade_ques_id: String ,order_number: String, option_id:String, cascade_option_id: String, main_question_id: String, supervisorId: String, other_assignment_value: String,activity_id: String,ripa_activity: String,os_version: String,is_trainee: String) {
         self.question_id = question_id
         self.response = response
         self.internall = `internal`
@@ -201,5 +209,7 @@ struct RipaResponse:Encodable {
         self.other_assignment_value = other_assignment_value
         self.activity_id = activity_id
         self.ripa_activity = ripa_activity
+        self.os_version = os_version
+        self.is_trainee = is_trainee
     }
 }

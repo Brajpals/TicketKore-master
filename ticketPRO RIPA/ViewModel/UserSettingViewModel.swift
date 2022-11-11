@@ -39,7 +39,7 @@ func getSupervisorRipa(params: [String:Any]){
     var URL:String?
     
      URL = AppConstants.Api.questions
-    // print(params)
+     print(params)
     if Reachability.isConnectedToNetwork(){
         ApiManager.getrejectedApplicationWithUID(params: params, methodTyPe: .post, url: URL!, completion: { (success,message) in
             AppUtility.hideProgress(nil)
@@ -71,7 +71,7 @@ func getSupervisorRipa(params: [String:Any]){
     else{
         print("Internet Connection not Available!")
         AppUtility.hideProgress(nil)
-        AppUtility.showAlertWithProperty("Alert", messageString: "Internet connection not available.")
+       // AppUtility.showAlertWithProperty("Alert", messageString: "Internet connection not available.")
          
     }
   }
@@ -93,7 +93,7 @@ func getSupervisorRipa(params: [String:Any]){
         updateUserInformation(params: params)
  }
     
- //["jsonrpc": 2.0, "result": ["message": success], "id": 82F85DB43CBF6]
+
     func updateUserInformation(params: [String:Any]){
         AppUtility.showProgress(nil, title: nil)
         var URL:String?

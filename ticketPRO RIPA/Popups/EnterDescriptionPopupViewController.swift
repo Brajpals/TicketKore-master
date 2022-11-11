@@ -186,6 +186,27 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
     }
     
     @IBAction func action_clear(_ sender: Any) {
+        enteredText = textView.text
+        let trimmed = enteredText!.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if trimmed.count > 0{
+            let alert = UIAlertController(title: "", message: "Clear current description?", preferredStyle: .alert)
+                 let ok = UIAlertAction(title: "CANCEL", style: .default, handler: { action in
+                     
+                 })
+                 alert.addAction(ok)
+                 let cancel = UIAlertAction(title: "YES", style: .default, handler: { action in
+                     self.deleteDescriptionMessage()
+                 })
+                 alert.addAction(cancel)
+                 DispatchQueue.main.async(execute: {
+                    self.present(alert, animated: true)
+            })
+            
+        }
+    }
+    
+    func deleteDescriptionMessage() {
         
         textView.text = ""
         self.audioEngine.stop()
@@ -193,7 +214,7 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
         
         self.micBtn.isEnabled = true
         micBtn.tintColor = UIColor.darkGray
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
             //call any function
             textView.text = ""
             enteredText = ""
@@ -201,8 +222,6 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
         }
         
     }
-    
-    
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool{
         
