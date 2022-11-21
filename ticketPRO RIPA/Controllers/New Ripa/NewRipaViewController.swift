@@ -3463,7 +3463,6 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
     
     
     @objc func swapStreetAndIntersection(sender:UIButton){
-        
         var streetAvailable = false
         var intersectionAvailable = false
         var tempstOption:Questionoptions1?

@@ -10,10 +10,8 @@ import OTPFieldView
 import FirebaseAuth
 
 
-
 class OTPVerificationViewController: UIViewController,ActivityStoreDelegate {
  
-    
     
     @IBOutlet var phoneNumber: UILabel!
     @IBOutlet var timelbl: UILabel!

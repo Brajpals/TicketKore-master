@@ -218,7 +218,7 @@ protocol GetListDelegate: AnyObject {
                     if data?.result != nil && data?.result![0].serviceError == ""{
                         let questArray:[QuestionResult] = (data?.result)!
                         
-                        print(questArray)
+                        print(data?.result)
                         
                         db.deleteAllfrom(table: db.AllQues)
                         db.deleteAllfrom(table: db.AllOptions)
