@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  ticketPRO RIPA
 //id:654321 :pass:1111
-
+//dollyt1@triazinesoft.com , pass : 1111
 import UIKit
 import IQKeyboardManagerSwift
 import Firebase
@@ -14,7 +14,6 @@ import FirebaseMessaging
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     var window: UIWindow?
-    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         

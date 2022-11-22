@@ -164,7 +164,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "C5B51E6F-D891-41A6-B34E-485E855D1C5D - 255f172e71dbdac"
+                  uuid = "C5B51E6F-D891-41A6-B34E-485E855D1C5D - 255f172e71dbdcf"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -174,12 +174,12 @@
                   urlString = "file:///Users/mac/Desktop/RIPA28Oct22/ticketPRO%20RIPA/Controllers/New%20Ripa/NewRipaViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "4419"
-                  endingLineNumber = "4419"
+                  startingLineNumber = "4418"
+                  endingLineNumber = "4418"
                   offsetFromSymbolStart = "1261">
                </Location>
                <Location
-                  uuid = "C5B51E6F-D891-41A6-B34E-485E855D1C5D - 255f172e71dbdac"
+                  uuid = "C5B51E6F-D891-41A6-B34E-485E855D1C5D - 255f172e71dbdcf"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -189,12 +189,12 @@
                   urlString = "file:///Users/mac/Desktop/RIPA28Oct22/ticketPRO%20RIPA/Controllers/New%20Ripa/NewRipaViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "4419"
-                  endingLineNumber = "4419"
+                  startingLineNumber = "4418"
+                  endingLineNumber = "4418"
                   offsetFromSymbolStart = "1366">
                </Location>
                <Location
-                  uuid = "C5B51E6F-D891-41A6-B34E-485E855D1C5D - 255f172e71dbdac"
+                  uuid = "C5B51E6F-D891-41A6-B34E-485E855D1C5D - 255f172e71dbdcf"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -204,8 +204,8 @@
                   urlString = "file:///Users/mac/Desktop/RIPA28Oct22/ticketPRO%20RIPA/Controllers/New%20Ripa/NewRipaViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "4419"
-                  endingLineNumber = "4419"
+                  startingLineNumber = "4418"
+                  endingLineNumber = "4418"
                   offsetFromSymbolStart = "4706">
                </Location>
             </Locations>
@@ -256,22 +256,6 @@
             startingLineNumber = "5096"
             endingLineNumber = "5096"
             landmarkName = "fetchedLocationDetails(location:countryCode:city:street:intersection:county:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0365EA64-9956-4986-8853-D1BE4ADC27AB"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ticketPRO RIPA/Controllers/New Ripa/NewRipaViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2276"
-            endingLineNumber = "2276"
-            landmarkName = "checkCityAndAdd()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -432,6 +416,22 @@
             startingLineNumber = "1915"
             endingLineNumber = "1915"
             landmarkName = "editQuest(personIndex:personArray:addIfNonCommon:resetsk12:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5B772BDF-CF3D-49F2-B880-9BC3FA840C5B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ticketPRO RIPA/ViewModel/NewRipaViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "getSchool(cityID:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
