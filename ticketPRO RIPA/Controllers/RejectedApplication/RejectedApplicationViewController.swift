@@ -42,6 +42,7 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     
     var screenType : String = ""
     var isPendingEdit:Bool = false
+    var isEditRequired:Bool = false
 
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -198,6 +199,7 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
             vc.screenType = screenType
             vc.isPendingEdit = isPendingEdit
            vc.ripaTypeStr = "Edit"
+           vc.isEditRequired = self.isEditRequired
            AppConstants.status = ""
            vc.personArray = personArray
            vc.savedRipaList = savedRipaList
@@ -328,7 +330,6 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     }
       
     
-    
     var updateRipaResponseArray = [UpdateRipaResponse]()
     var updateRipaLocation = [UpdateRipaLocation]()
     var updatePram:UpdateParams?
@@ -376,8 +377,6 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         let updateRejectedApplication = UpdateRejectedApplication(id: "82F85DB43CBF6", jsonrpc: "2.0", method: "ripaResubmitActivity", params: updatePram!)
           submitParam(params: updateRejectedApplication)
     }
-    
-    
     
     func submitParam(params:UpdateRejectedApplication){
         let encodedData = try! JSONEncoder().encode(params)

@@ -117,7 +117,7 @@ class OTPVerificationViewController: UIViewController,ActivityStoreDelegate {
     
     @IBAction func close(_ sender: UIButton) {
           self.presentingViewController?.dismiss(animated: true, completion:nil)
-  }
+    }
     
     
     
@@ -138,7 +138,6 @@ class OTPVerificationViewController: UIViewController,ActivityStoreDelegate {
     
     
  
- 
     @IBAction func verifyOtp(_ sender: Any) {
         submitOTP()
          }
@@ -147,6 +146,7 @@ class OTPVerificationViewController: UIViewController,ActivityStoreDelegate {
     @IBAction func resendOTP(_ sender: Any) {
         if emailLogin == false{
         AppUtility.showProgress(title: nil)
+        print(phoneNum!)
         PhoneAuthProvider.provider().verifyPhoneNumber(phoneNum!, uiDelegate: nil)
         { (verificationID, error) in
             AppUtility.hideProgress()

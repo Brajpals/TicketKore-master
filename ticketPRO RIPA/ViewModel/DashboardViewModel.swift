@@ -67,7 +67,7 @@ protocol GetListDelegate: AnyObject {
             db.deleteAllfrom(table: "cityTable")
         }
         let count = Int(db.checkEmptyTable(insertTableString: "cityTable"))
-        if count == 0 {
+        if count == 0 || count ?? 0 > 0 {
             let params = getParam(cityId:"", method: "ripaCities")
             print(params)
             getData(params: params, method: "Cities")
@@ -86,7 +86,7 @@ protocol GetListDelegate: AnyObject {
             db.deleteAllfrom(table: "locationTable")
         }
         let count = Int(db.checkEmptyTable(insertTableString: "locationTable"))
-        if count == 0 {
+        if count == 0 || count ?? 0 > 0 {
             let params = getParam(cityId: "", method: "ripaLocations")
             getData(params: params, method: "Location")
             print(params)
@@ -105,7 +105,7 @@ protocol GetListDelegate: AnyObject {
             db.deleteAllfrom(table: "violationTable")
         }
         let count = Int(db.checkEmptyTable(insertTableString: "violationTable"))
-        if count == 0 {
+        if count == 0 || count ?? 0 > 0{
             let params = getParam(cityId: "", method: "ripaNewViolationsCode")
             getData(params: params, method: "Violations")
             print(params)
@@ -124,7 +124,7 @@ protocol GetListDelegate: AnyObject {
             db.deleteAllfrom(table: "schoolTable")
         }
         let count = Int(db.checkEmptyTable(insertTableString: "schoolTable"))
-        if count == 0 {
+        if count == 0 || count ?? 0 > 0 {
             let params = getParam(cityId: "", method: "RipaSchools")
             getData(params: params, method: "School")
             print(params)
@@ -143,7 +143,7 @@ protocol GetListDelegate: AnyObject {
             db.deleteAllfrom(table: "educationCodeTable")
         }
         let count = Int(db.checkEmptyTable(insertTableString: "educationCodeTable"))
-        if count == 0 {
+        if count == 0 || count ?? 0 > 0 {
             let params = getParam(cityId: "", method: "ripaEducation")
             getData(params: params, method: "Education")
             print(params)
@@ -163,22 +163,26 @@ protocol GetListDelegate: AnyObject {
             
             if self.forListRefresh == false{
                 if method == "Cities"{
+                    AppUtility.showProgress(title: "")
                     self.setLocationParam()
                 }
                 if method == "Location"{
+                    AppUtility.showProgress(title: "")
                     self.setViolationsParam()
                 }
                 if method == "Violations"{
+                    AppUtility.showProgress(title: "")
                     self.setSchoolParam()
                 }
                 if method == "School"{
+                    AppUtility.showProgress(title: "")
                     self.setEducationParam()
                 }
             }
             self.getListDelegate?.getList(success:successmsg)
         })
         { (error, code, message) in
-            // AppUtility.hideProgress(nil)
+             AppUtility.hideProgress(nil)
             if let errorMessage = message {
               print(errorMessage)
                 //AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)
@@ -195,12 +199,7 @@ protocol GetListDelegate: AnyObject {
         print(params)
         getQuestionsData(params: params)
     }
-    
-    
-    
-    
-    
-    
+ 
     func getQuestionsData(params: [String:Any]) {
         AppUtility.showProgress(nil, title: nil)
         var URL:String?
@@ -218,7 +217,7 @@ protocol GetListDelegate: AnyObject {
                     if data?.result != nil && data?.result![0].serviceError == ""{
                         let questArray:[QuestionResult] = (data?.result)!
                         
-                        print(data?.result)
+                      //  print(data?.result)
                         
                         db.deleteAllfrom(table: db.AllQues)
                         db.deleteAllfrom(table: db.AllOptions)

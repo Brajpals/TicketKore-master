@@ -29,8 +29,7 @@ import ObjectMapper
      var violationGroup: String = ""
      var offense_code: String = ""
      var isSelected : Bool
-    
- 
+     
     init(violationID:String,custid : String,violation : String,code:String,orderNumber : String,violationDisplay : String,isActive:String,violationType : String, violationGroup : String,  offense_code : String, isSelected : Bool) {
         self.violationID = violationID
         self.custid = custid

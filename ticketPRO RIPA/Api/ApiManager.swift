@@ -280,7 +280,7 @@ public struct ApiManager{
     // TO GET COUNTY LIST
     static func getCountyList( methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
-          let params:[String : Any] =  ["id":"82F85DB43CBF6", "method": "getCounties","jsonrpc": "2.0"]
+        let params:[String : Any] =  ["id":"82F85DB43CBF6", "method": "getCounties","jsonrpc": "2.0"]
         let url = AppConstants.BaseURL.URL
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
@@ -290,6 +290,7 @@ public struct ApiManager{
                 
                 if let responseValue = response.result.value {
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
+                    print(responseValue)
                     _ = JSON(responseValue)
                     completion(response.data!, "Success")
                    
@@ -380,7 +381,8 @@ public struct ApiManager{
         db.openDatabase()
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
+        print(url)
+        print(params)
         Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
@@ -388,26 +390,32 @@ public struct ApiManager{
                 
                 if method == "Cities"{
                     print(jsonString)
+                    AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "cityTable")
                 }
                 
                 else if method == "Location"{
+                    AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "locationTable")
                 }
                 
                 else if method == "Violations"{
+                    AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "violationTable")
                 }
                 
                 else if method == "School"{
+                    print(jsonString)
+                    AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "schoolTable")
                 }
                 else if method == "Education"{
+                    AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "educationCodeTable")
                 }
                 
                 if response.result.value != nil {
-                    
+                    AppUtility.hideProgress(nil)
                     completion(jsonString, "true")
                 } else {
                     completion(jsonString, "false")
@@ -528,7 +536,35 @@ public struct ApiManager{
         }
     }
     
-    
+    static func getDefaultCityByCustId(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
+        
+        let headers = ["Content-Type" : "application/json"] as [String : String]
+        
+        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+            switch response.result {
+            case .success:
+                
+                if let responseValue = response.result.value {
+                    
+                    let json = JSON(responseValue)
+                    if let serviceError = json["result"][0]["serviceError"].string {
+                        completion(serviceError, "Fail")
+                    }
+                    else{
+                        completion(response.data!, "Success")
+                    }
+                } else {
+                    completion("", "Fail")
+                }
+                break
+            case .failure(let error):
+                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                AppUtility.hideProgress()
+                completion("", "Fail")
+            }
+        }
+    }
     
     
     static func getrejectedApplicationWithUID(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {

@@ -20,15 +20,11 @@ class SuccessViewController: UIViewController {
         if viewType == "Saved" || isPendingEdit{
             successLbl.text = "Your Ripa Report has been successfully Updated."
         }
-
-        // Do any additional setup after loading the view.
-        
-        
         //Your Ripa Report has been successfully submitted.
     }
     
     
-    override func viewWillAppear(_ animated: Bool) {
+  override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     if AppConstants.theme == "1"{
         overrideUserInterfaceStyle = .dark
@@ -37,7 +33,7 @@ class SuccessViewController: UIViewController {
        overrideUserInterfaceStyle = .light
         AppConstants.theme = "0"
      }
-        }
+  }
     
     
     override func viewDidAppear(_ animated: Bool) {

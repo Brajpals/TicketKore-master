@@ -128,10 +128,14 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         
         let yourAttributes2 = [NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.2343381047, green: 0.5642583966, blue: 0.8001195788, alpha: 1) ,NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)] as [NSAttributedString.Key : Any]
         
-        let attributedString = NSMutableAttributedString(string: "By signing in, I agree to",attributes: yourAttributes as [NSAttributedString.Key : Any])
+        let attributedString = NSMutableAttributedString(string: "By signing in, I agree to the",attributes: yourAttributes as [NSAttributedString.Key : Any])
         let attributedString1 = NSMutableAttributedString(string: " Privacy Policy ",attributes: yourAttributes2)
+        let attributedString3 = NSMutableAttributedString(string: "and",attributes: yourAttributes as [NSAttributedString.Key : Any])
+        let attributedString4 = NSMutableAttributedString(string: " Terms of Service ",attributes: yourAttributes2)
         
         attributedString.append(attributedString1)
+        attributedString.append(attributedString3)
+        attributedString.append(attributedString4)
         
         privacyLbl.attributedText = attributedString
         
@@ -226,7 +230,7 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     
   
     //  var code = "+91"
-    var code = "+1"
+      var code = "+1"
     
     func proceedToOTP(isValidLogin: Int, message: String) {
         print(loginType)
@@ -540,7 +544,7 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             showSignin()
         }
         else{
-            enrollTopLbl.text = "Enroll Now"
+            enrollTopLbl.text = "Enroll"
             enrollLbl.text = "Enter enrollment info below and submit"
             signinBtn.setTitle("Sign In", for: .normal)
             signinLblTxt.text = "Already Enrolled?"

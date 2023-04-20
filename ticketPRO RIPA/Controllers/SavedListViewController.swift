@@ -3,7 +3,7 @@
 //  ticketPRO RIPA
 //
 //  Created by Nitin Singh on 27/05/21.
-//
+//65013 2095
 
 import UIKit
 import SafariServices
@@ -12,9 +12,6 @@ import EzPopup
 
 class SavedListViewController: UIViewController,PopupViewControllerDelegate, UITableViewDelegate, UITableViewDataSource,SavedListModelDelegate,FilterPopupDelegate {
    
-    
-    
-    
     var savedRipaList = [RipaTempMaster]()
     var dashboardViewModel = DashboardViewModel()
     var questionsArray : [QuestionResult1]?
@@ -41,7 +38,9 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var refreshBtn: UIButton!
     
-    
+    var isEditRequired:Bool = false
+    var isCreatedSaved:Bool = false
+    var isTemplateAvailable:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -373,6 +372,13 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         let note = savedRipaList[indexPath.row].note
         var date = savedRipaList[indexPath.row].stopDate
         let timeStr = savedRipaList[indexPath.row].stopTime
+        let status = savedRipaList[indexPath.row].status
+        if status == "Edit Required"{
+            self.isEditRequired = true
+        }
+        if status == "Saved"{
+            self.isCreatedSaved = true
+        }
         
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "MM/dd/yyyy HH:mm"
@@ -470,6 +476,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         AppConstants.deviceid = "0"
         AppConstants.citation = ""
         AppConstants.activityID = savedRipaList[indexPath].activityId
+        print(AppConstants.activityID)
         
         setDispatchConstant(indexPath:indexPath)
         
@@ -479,22 +486,21 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             AppConstants.applicationtime = String(timeInSec)
             print(AppConstants.applicationtime)
             
-//            if saveRipaStatus == "Template"{
-//            setConstant(indexPath: indexPath)
-//            }
-            
             if savedRipaList[indexPath].countyId != ""{
-            AppManager.getLastSavedLoginDetails()?.result?.county_id = savedRipaList[indexPath].countyId
+              AppManager.getLastSavedLoginDetails()?.result?.county_id = savedRipaList[indexPath].countyId
              }
             else{
                 AppManager.getLastSavedLoginDetails()?.result?.county_id = UserDefaults.standard.string(forKey: "defaultCountyId") ?? "1"
-               // print(AppManager.getLastSavedLoginDetails()?.result?.county_id as Any)
              }
             AppManager.saveLoginDetails()
-           // print( AppManager.getLastSavedLoginDetails()?.result?.county_id)
          }
-        
-        if saveRipaStatus == "Approved" || saveRipaStatus == "Pending Review" || saveRipaStatus == "Saved" || saveRipaStatus == "Edit Required" || saveRipaStatus == "Template"{
+        if saveRipaStatus == "Template"{
+            AppConstants.status = "Template"
+            checkData()
+            AppUtility.writeToDocumentsFile(fileName: "UseTemplate", value: "Use Template From Dashboard.")
+            self.performSegue(withIdentifier: "ShowRipaView", sender: self)
+        }
+        else if saveRipaStatus == "Approved" || saveRipaStatus == "Pending Review" || saveRipaStatus == "Saved" || saveRipaStatus == "Edit Required"{
             let activity_id = savedRipaList[indexPath].activityId
  
             setConstant(indexPath: indexPath)
@@ -505,7 +511,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
                 }
             }
             
-             savedListViewModel.savedListModelDelegate = self
+            savedListViewModel.savedListModelDelegate = self
             self.savedListViewModel.forTemplate = false
             savedListViewModel.getApprovedOrPendingPram(activityId:activity_id)
             
@@ -591,6 +597,21 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     }
     
     
+    func checkData(){
+        
+        let userId =  "AND userid is " + (AppManager.getLastSavedLoginDetails()?.result?.userid)!
+        let countForTemplate = Int(db.checkEmptyTable(insertTableString: "ripaTempMasterTable WHERE key is 0 \(userId)"))
+        if countForTemplate! > 0 {
+            isTemplateAvailable = true
+        }
+        else{
+            isTemplateAvailable = false
+        }
+        
+        db.openDatabase()
+    }
+    
+    
     func setConstant(indexPath:Int){
         AppConstants.activityID = savedRipaList[indexPath].activityId
          AppConstants.address = savedRipaList[indexPath].location
@@ -609,6 +630,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     func setDispatchConstant(indexPath:Int){
         AppConstants.activityID = savedRipaList[indexPath].activityId
+        print(AppConstants.activityID)
         AppConstants.call_number = savedRipaList[indexPath].callNumber
         AppConstants.onscene_time =  savedRipaList[indexPath].onsceneTime
         AppConstants.clear_time_of_the_Offrcer = savedRipaList[indexPath].clearTimeOfOfficer
@@ -640,6 +662,9 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             self.performSegue(withIdentifier: "ShowRipaView", sender: self)
         }
         else if saveRipaStatus == "Pending Review" && isEnable == false{
+            self.performSegue(withIdentifier: "ShowPreview", sender: self)
+        }
+        else if saveRipaStatus == "Approved"{
             self.performSegue(withIdentifier: "ShowPreview", sender: self)
         }
         else{
@@ -692,26 +717,35 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
         let segueID = segue.identifier
-        if(segueID! == "ShowRipaView"){
+        if segueID! == "ShowRipaView" && saveRipaStatus == "Template" && isTemplateAvailable == true{
+           let vc = segue.destination as! NewRipaViewController
+           setLastRipaData(forData: "Template")
+           vc.saveRipaStatus = saveRipaStatus
+           vc.personArray = self.personArray
+           vc.viewType = "Template"
+       }
+       else if(segueID! == "ShowRipaView"){
             let vc = segue.destination as! NewRipaViewController
             vc.isListRipaEditable = self.isListRipaEditable
             vc.viewType = "UseSaveRipa"
             
             AppUtility.writeToDocumentsFile(fileName: "UseLastRipa", value: "Use Save Ripa From Saved Ripa List")
+            vc.isCreatedSaved = self.isCreatedSaved
             vc.saveRipaStatus = saveRipaStatus
             vc.personArray = personArray
             vc.savedRipaList = savedRipaList[ripaIndex!]
         }
-        
        else if(segueID! == "RejectedApplicationView"){
             let vc = segue.destination as! RejectedApplicationViewController
             vc.rejectedApplication = rejectedApplication
            AppUtility.writeToDocumentsFile(fileName: "RejectedRipa", value: "Use Rejected Ripa From Saved Ripa List")
-           vc.isPendingEdit = false
+            vc.isPendingEdit = false
+            vc.isEditRequired = false
              if isEnable || saveRipaStatus == "Edit Required"{
                    vc.screenType = "EditPending"
                    vc.isPendingEdit = true
               }
+            vc.isEditRequired = self.isEditRequired
             vc.viewType = "UseSaveRipa"
             vc.saveRipaStatus = "Created"
             vc.personArray = personArray
@@ -721,6 +755,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
        else if(segueID! == "ShowPreview"){
             let vc = segue.destination as! PreviewViewController
            AppUtility.writeToDocumentsFile(fileName: "ShowPreview", value: "Show Preview From Saved Ripa List")
+            vc.isEditRequired = self.isEditRequired
             vc.personArray = personArray
             vc.addressString = self.addressStr
             //   vc.previewPersonArray = self.previewPersonArray
@@ -728,7 +763,24 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         }
     }
     
- 
+    func setLastRipaData(forData:String){
+        let userId =  "AND userid is " + (AppManager.getLastSavedLoginDetails()?.result?.userid)!
+        var master=[RipaTempMaster]()
+         master = db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE key is 0 \(userId)")!
+        print(master[0].key)
+         personArray = dashboardViewModel.getUseSavedRipa(key: master[0].key)
+         dashboardViewModel.setKey()
+        
+        AppConstants.city =  master[0].city
+        AppConstants.address =  master[0].location
+        AppConstants.notes = master[0].note
+      
+        if forData == "Template"{
+        AppConstants.duration = ""
+        AppConstants.time = ""
+        AppConstants.date = ""
+         }
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return  UITableView.automaticDimension

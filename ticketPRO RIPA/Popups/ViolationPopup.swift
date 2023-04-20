@@ -218,6 +218,7 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
             
         }
         else{
+            
             violationArray![indexPath.row].isSelected = !violationArray![indexPath.row].isSelected
             self.tableView.reloadData()
         }

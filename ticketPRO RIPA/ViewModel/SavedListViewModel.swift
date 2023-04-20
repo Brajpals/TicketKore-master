@@ -81,11 +81,12 @@ class SavedListViewModel {
                                     option_id = checkId
                                 }
                                 
-                                print(response["cascade_ques_id"].stringValue)
+                                print(response["question"].stringValue)
+                                print(response["response"].stringValue)
                                 let ripaResponse = RipaResponse(question_id: response["question_id"].stringValue, response: response["response"].stringValue, internal: response["internal"].stringValue, userid:"", question: response["question"].stringValue, CreatedBy: "", physical_attribute: response["physical_attribute"].stringValue, key: "", personId: "", description: response["Description"].stringValue, question_code: response["question_code"].stringValue, cascade_ques_id: response["cascade_ques_id"].stringValue, order_number: response["order_number"].stringValue , option_id: option_id, cascade_option_id: response["cascade_option_id"].stringValue, main_question_id: response["main_question_id"].stringValue, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
                                 
                                    ripaResponseArr.append(ripaResponse)
-                                
+                                 
 //                                if ripaResponse.question.contains("Name of school") && ripaResponse.question_code == "C9"{
 //                                    AppConstants.schoolName = ripaResponse.response!
 //                                    AppConstants.isSchoolSelected = "Yes"
@@ -178,17 +179,37 @@ class SavedListViewModel {
                     question = getQuestionUsingQuestionId(question_Id: response.question_id, questionCode: response.question_code, questArray: questionsArray)
                 }
                 
+                if response.question_code == "C29"{
+                     question = getQuestionUsingQuestionCode(questionCode: response.question_code, question_Id: response.question_id , questArray: questionsArray)
+                }
+                if response.question_code == "C30"{
+                    print(response.response)
+                    question = getQuestionUsingQuestionId(question_Id: response.question_id, questionCode: response.question_code, questArray: questionsArray)
+                }
+                if response.question_code == "C32"{
+                    print(response.response)
+                    question = getQuestionUsingQuestionId(question_Id: response.question_id, questionCode: response.question_code, questArray: questionsArray)
+                }
+                
+              /*  if response.question_code == "C27"{
+                     question = getQuestionUsingQuestionCode(questionCode: response.question_code, question_Id: response.question_id , questArray: questionsArray)
+                }
+                if response.question_code == "C33"{
+                     question = getQuestionUsingQuestionCode(questionCode: response.question_code, question_Id: response.question_id , questArray: questionsArray)
+                }
+                if response.question_code == "C28"{
+                     question = getQuestionUsingQuestionCode(questionCode: response.question_code, question_Id: response.question_id , questArray: questionsArray)
+                }
+                if response.question_code == "C34"{
+                    question = getQuestionUsingQuestionId(question_Id: response.question_id, questionCode: response.question_code, questArray: questionsArray)
+                } */
                  // Start
-                 if response.cascade_option_id == "" || response.cascade_option_id == "0"{
+             if response.cascade_option_id == "" || response.cascade_option_id == "0"{
                     let option = newripaViewModel.createObj(mainQuestId: response.main_question_id, ripaID: question?.id, optionValue: response.response, physical_attribute: response.physical_attribute, description: response.description, isSelected: true, mainQuestOrder: String(response.order_number))
                     
                     if response.question_code == "17"{
                         print("")
                     }
-                    
-//                    if response.question_code == "C9" && response.question.contains("Name of school"){
-//                        AppConstants.schoolName = response.response!
-//                    }
                      
                      if response.question_code == "C9"{
                          AppConstants.schoolName = response.response
@@ -249,12 +270,6 @@ class SavedListViewModel {
             var questarr = [QuestionResult1]()
             var cascadeQuestArr = [QuestionResult1]()
             
-            
-//            if AppConstants.status == "Saved"{
-//                for quest in questionsArray!{
- //            }
-            
-         //   if AppConstants.status != "Saved"{
             for quest in questionsArray!{
                 if !quest.question_code.contains("C") && quest.visible_question == "1"{
                 // let questionArr = quest.copy()
@@ -300,6 +315,8 @@ class SavedListViewModel {
         var quest:QuestionResult1?
         if let qArray = questArray {
             for question in qArray{
+                print(question.question_code)
+                print(questionCode)
                 if  question.question_code == questionCode{
                    quest = question
                    return quest!
@@ -365,7 +382,7 @@ class SavedListViewModel {
                             let error = json["result"]["serviceError"].stringValue
                             
                             if  error == ""{
-                                
+                              //  print(json)
                                 print("old Token " + (AppManager.getLastSavedLoginDetails()?.result?.access_token)!)
                                 
                                  let token = json["result"]["logindata"]["access_token"].stringValue

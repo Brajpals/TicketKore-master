@@ -475,9 +475,7 @@ class SqliteDbStore {
         sqlite3_finalize(insertStatement)
     }
     
-    
-    
-    
+  
     func getRipaPerson(tableName:String)-> [RipaPerson]? {
         let queryString = "SELECT * FROM \(tableName)"
         

@@ -48,13 +48,13 @@ class NewRipaViewModel {
         AppConstants.ripaTimeDuration = "N"
         
           for feature in featureList{
-             if feature.feature == "RipaCounty"  &&  feature.isActive == "Y"{
+             if feature.feature == "RipaCounty"  &&  feature.isActive == "Y"  &&  feature.admin == "Y"  &&  feature.officer == "Y"{
                 AppConstants.ripaCounty = "Y"
            }
-            if feature.feature == "RipaGps"  &&  feature.isActive == "Y"{
+            if feature.feature == "RipaGps"  &&  feature.isActive == "Y"  &&  feature.admin == "Y"  &&  feature.officer == "Y"{
                AppConstants.ripaGPS = "Y"
           }
-            if feature.feature == "RipaTimeDuration"  &&  feature.isActive == "Y"{
+            if feature.feature == "RipaTimeDuration"  &&  feature.isActive == "Y"  &&  feature.admin == "Y"  &&  feature.officer == "Y"{
                AppConstants.ripaTimeDuration = "Y"
           }
        }
@@ -112,7 +112,7 @@ class NewRipaViewModel {
                             let city = CityResult(city_id: item["city_id"].stringValue, custid: item["custid"].stringValue, city_name: item["city_name"].stringValue, county_id: item["county_id"].stringValue, order_number: item["order_number"].stringValue, isSelected: false)
  
                             if city.county_id ==  AppManager.getLastSavedLoginDetails()?.result?.county_id{
-                            cities.append(city)
+                             cities.append(city)
                             }
                         }
                       }
@@ -168,7 +168,36 @@ class NewRipaViewModel {
                             
                             if cityID == school.cityid{
                                 schools.append(school)
-                              }
+                            }
+                           
+                         }
+                      }
+                }
+                }
+        
+        let schl = self.getSchoolForDiffernt(cityID: "0")
+        if !schl.isEmpty {
+            schools.append(schl[0])
+        }
+       
+        return (schools)
+     }
+    
+    func getSchoolForDiffernt(cityID:String)->([SchoolResult]){
+        db.openDatabase()
+                var schools = [SchoolResult]()
+                let jsonString = db.getCity(tableName: "schoolTable")
+        if jsonString != nil{
+                if let data = jsonString!.data(using: .utf8) {
+                    if let json = try? JSON(data: data) {
+                        for item in json["result"].arrayValue {
+                            let school = SchoolResult(schoolsID: item["schools_Id"].stringValue, custid: item["custid"].stringValue, cdsCode: item["CDSCode"].stringValue, ncesDist: item["NCESDist"].stringValue, ncesSchool: item["NCESSchool"].stringValue, statusType: item["StatusType"].stringValue, countyid: item["countyid"].stringValue, county: item["County"].stringValue, district: item["District"].stringValue, school: item["School"].stringValue, street: item["Street"].stringValue, streetABR: item["StreetAbr"].stringValue, cityid: item["cityid"].stringValue, city: item["City"].stringValue, zip: item["Zip"].stringValue, state: item["State"].stringValue, phone: item["Phone"].stringValue, ext: item["Ext"].stringValue, faxNumber: item["FaxNumber"].stringValue, email: item["Email"].stringValue, webSite: item["WebSite"].stringValue, doc: item["DOC"].stringValue, docType: item["DOCType"].stringValue, soc: item["SOC"].stringValue, socType: item["SOCType"].stringValue, edOpsCode: item["EdOpsCode"].stringValue, edOpsName: item["EdOpsName"].stringValue, eilCode: item["EILCode"].stringValue, eilName: item["EILName"].stringValue, gSoffered: item["GSoffered"].stringValue, gSserved: item["GSserved"].stringValue, latitude: item["Latitude"].stringValue, longitude: item["Longitude"].stringValue, isK12School: item["isK_12School"].stringValue, isActive: item["isActive"].stringValue, orderNumber: item["order_number"].stringValue, createdBy: item["CreatedBy"].stringValue, createdOn: item["CreatedOn"].stringValue, updatedBy: item["UpdatedBy"].stringValue, updatedOn: item["UpdatedOn"].stringValue, isSelected: false)
+ 
+                            
+                            if cityID == school.cityid{
+                                schools.append(school)
+                            }
+                           
                          }
                       }
                 }

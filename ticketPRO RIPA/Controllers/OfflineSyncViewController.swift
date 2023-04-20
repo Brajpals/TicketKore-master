@@ -150,9 +150,9 @@ class OfflineSyncViewController: PreviewModelDelegate,userSettingsDelegate, User
             
             for question in questArray{
                 
-                if question.question_code == "C6"{
-                    print(question.question)
-                }
+//                if question.question_code == "C6"{
+//                    print(question.question)
+//                }
                 
                 if question.question_code == "25"{
                     continue
@@ -492,6 +492,8 @@ class OfflineSyncViewController: PreviewModelDelegate,userSettingsDelegate, User
         
         
         URL = AppConstants.Api.updateRipa
+        print(URL as Any)
+        print(params)
         ApiManager.updateRipa(params: params, methodTyPe: .post, url: URL!, completion: { [self] (success,message) in
             
             if message == "Success"{

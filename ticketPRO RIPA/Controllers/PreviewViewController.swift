@@ -54,7 +54,8 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     var descriptionFirst:String = ""
     var descriptionSecond:String = ""
     var isPendingEdit:Bool = false
-    
+    var isEditRequired:Bool = false
+    var isCreatedSaved:Bool = false
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         trackApplicationTime()
@@ -93,7 +94,6 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
              notesBtn.isHidden = true
             questionsArray = personDict["QuestionArray"] as? [QuestionResult1]
             cascadeQuestionsArray = personDict["CascadeQuestionArray"] as? [QuestionResult1]
-            
         }
        
         
@@ -137,6 +137,8 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
      }
         
+        print(viewType)
+        print(saveRipaStatus)
         if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
             self.submitBtn.setTitle("UPDATE RIPA", for: .normal)
         }
@@ -173,11 +175,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         personLbl.text = "Person" + " " + String(Int(personIndex!)+1)
    //     }
     }
-    
-    
-    
-    
-    
+  
     func numberOfSections(in tableView: UITableView) -> Int {
            return questionsArray!.count
      }
@@ -209,8 +207,10 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
 //            label.text = previewPersonArray[0].ripa_response[section].question
 //        }
 //        else{
-        label.text = questNumber + questionsArray![section].question
+        label.text = questNumber + (questionsArray?[section].question ?? "")
  //       }
+        
+        
         
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
@@ -393,7 +393,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
                 descriptionSecond = descriptionString
             }
             else{
-              cell.answer_lbl.text = selectedOptionsArray[indexPath.section][indexPath.row].option_value
+                cell.answer_lbl.text = selectedOptionsArray[indexPath.section][indexPath.row].option_value
             }
             if indexPath.row == 0{
                 cell.check_img.isHidden = false
@@ -441,14 +441,15 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     
     
     @IBAction func actionSubmit(_ sender: Any) {
+       
         trackApplicationTime()
         if AppConstants.status == "Pending Review" || AppConstants.status == "Approved"{
             self.performSegue(withIdentifier: "ShowPersonView", sender: self)
          }
         else{
+          
          let requiredFilledData = previewViewModel.checkPreviewRequiredQuestion(questArray: questionsArray, cascadeQuestArray: cascadeQuestionsArray, selectedOpt: selectedOptionsArray)
             
-        
         if personArray.count > 1{
             self.performSegue(withIdentifier: "ShowPersonView", sender: self)
         }
@@ -462,21 +463,23 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             if userRipaResponse.question_id.isEmpty {
                  userRipaResponse  = self.createRipaResponseData(data: self.userSettingArray)
             }
-            var temp1 : String!
+            var typeAssignment : String = ""
             if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String{
-                temp1 = "\(userOption)"
-                userRipaResponse.response = temp1
+                typeAssignment = "\(userOption)"
+                userRipaResponse.response = typeAssignment
             }
             if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
                 ripaActivity?.supervisorId = userOption
             }
-                if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
-                    ripaActivity?.activity_status_id = "4"
-                }
                 
-                if isPendingEdit {
+                if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
                     AppConstants.activityStatusId = "1"
                     ripaActivity?.activity_status_id = "1"
+                }
+                
+                if isEditRequired {
+                    AppConstants.activityStatusId = "4"
+                    ripaActivity?.activity_status_id = "4"
                 }
                 
                 var traini : String = "0"
@@ -488,10 +491,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
                     print(AppConstants.trafficId)
                     ripaActivity?.traffic_id = AppConstants.trafficId
                 }
-//                ripaActivity?.is_K_12_Student = "0"
-//                if let check = is_k12,check == true {
-//                    ripaActivity?.is_K_12_Student = "1"
-//                }
+
                 let os = ProcessInfo().operatingSystemVersion
                 ripaActivity?.os_version = os.getFullVersion()
                 ripaActivity?.is_trainee = traini
@@ -501,9 +501,27 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
               previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
                 
                 self.saveRipaDataToCSV()
-                
-                if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                AppUtility.showProgress(nil, title:nil)
+                if typeAssignment.count == 0{
+                    AppUtility.showAlertWithProperty("", messageString: "Type of assignment is blank.")
+                }
+                else if isEditRequired {
                     let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
+                   // print(updateRipa)
+                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                }
+                else if isCreatedSaved {
+                    let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
+                   // print(updateRipa)
+                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                }
+                else if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                     let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
+                    // print(updateRipa)
+                     previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                 }
+                else if saveRipaStatus == "Saved"{
+                    let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
                    // print(updateRipa)
                     previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
                 }
@@ -512,9 +530,9 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
                    // print(updateRipa)
                     previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
                 }
-                
              }
             else{
+                AppUtility.hideProgress()
                 guard let customAlertVC1 = pendingQuestionPopup else { return }
                 customAlertVC1.pendingQuestionDelegate = self
                 customAlertVC1.newquestionArry = requiredFilledData.0
@@ -726,7 +744,6 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     func checkRequired(){
         let requiredFilledData = previewViewModel.checkRequiredQuestion(questArray: questionsArray, cascadeQuestArray: cascadeQuestionsArray, selectedOpt: selectedOptionsArray)
         
-        // let requiredFilledId = previewViewModel.checkRequiredQuestionID(questArray: questionsArray, selectedOpt: selectedOptionsArray)
         
          if requiredFilledData.0.count < 1 {
             navigationController!.removeViewController(PersonViewController.self)

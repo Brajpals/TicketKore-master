@@ -2,7 +2,9 @@
 //  AppDelegate.swift
 //  ticketPRO RIPA
 //id:654321 :pass:1111
+//
 //dollyt1@triazinesoft.com , pass : 1111
+//361628 , pass Password1
 import UIKit
 import IQKeyboardManagerSwift
 import Firebase
@@ -155,6 +157,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
  
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+      //  Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.prod)
         Messaging.messaging().apnsToken = deviceToken
     }
     

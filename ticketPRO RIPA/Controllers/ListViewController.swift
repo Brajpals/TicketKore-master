@@ -402,7 +402,10 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if listType == "Violation"{
+           
+            
             (listArray![indexPath.row] as! ViolationsResult).isSelected = !(listArray![indexPath.row] as! ViolationsResult).isSelected
+            
             submitBtn.isHidden = false
             tableView.reloadData()
         }
@@ -434,15 +437,19 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
                         AppUtility.showAlertWithProperty("Alert", messageString: "Street and intersection cannot be same")
                         return
                     }
-                }
+                 }
                   if listType == "Intersection"{
                     if  (listArray![indexPath.row] as! LocationResult).location == streetName{
                         AppUtility.showAlertWithProperty("Alert", messageString: "Street and intersection cannot be same")
                         return
                     }
                 }
+                if (listArray![indexPath.row] as! LocationResult).location.count < 5 || (listArray![indexPath.row] as! LocationResult).location.count > 250 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Street should be between 5 to 250 in length.")
+                    return
+                }
                    (listArray![indexPath.row] as! LocationResult).isSelected = !(listArray![indexPath.row] as! LocationResult).isSelected
-                self.locationdelegate?.refreshLocationLists(list:listArray, listType: listType!)
+                  self.locationdelegate?.refreshLocationLists(list:listArray, listType: listType!)
             }
             else if listType == "EducationCode"{
                 (listArray![indexPath.row] as! EducationCodeSection).isSelected = !(listArray![indexPath.row] as! EducationCodeSection).isSelected
@@ -470,4 +477,10 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
     }
     
     
+}
+
+extension Array {
+    func filtered<T>(by _: T.Type) -> [T] {
+        return filter { type(of: $0) == T.self } as! [T]
+   }
 }

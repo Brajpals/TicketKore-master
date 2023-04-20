@@ -64,6 +64,8 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     
     var userSettingArray = UserSettingModel()
     
+    @IBOutlet weak var newRipaWidthConstrait : NSLayoutConstraint!
+    
     
     @objc func appMovedToForeground() {
       //  loginModel.updateVesionApp()
@@ -95,13 +97,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         autoNextBtn.setImage(UIImage(named: AppConstants.autoNext == true ? "checked" : "unchecked"), for: .normal)
         self.navigationController?.navigationBar.isHidden = true
         
-        DispatchQueue.background(background: {
-            self.dashboardViewModel.setCityParam()
-            self.dashboardViewModel.getCountyList()
-        }, completion:{
-            // when background job finished, do something in main thread
-            print("background job finished")
-        })
         
         dashboardViewModel.questiondelegate = self
         
@@ -121,6 +116,12 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         }
     
         versionLbl.text = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        
+//       self.saveRipaButton.setWidth(self.view.frame.size.width-20, animateTime: 0.0)
+//        newRipaWidthConstrait.constant = self.view.frame.size.width-20
+//         UIView.animate(withDuration: 0, animations:{
+//             self.saveRipaButton.layoutIfNeeded()
+//         })
         
 //        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
 //        print(paths[0])
@@ -152,6 +153,14 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
                 self.offlinesync.updateActvityOffline()
             }
         }
+        
+        DispatchQueue.background(background: {
+            self.dashboardViewModel.setCityParam()
+            self.dashboardViewModel.getCountyList()
+        }, completion:{
+            // when background job finished, do something in main thread
+            print("background job finished")
+        })
         
 //        DispatchQueue.background(background: {
 //            self.offlinesync.updateActvityOffline()
@@ -456,9 +465,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
             vc.filterFor = self.filterFor
             
         }
-        
     }
-    
     
     
     func setGradientBackground() {
@@ -500,7 +507,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
             AppConstants.time = master[0].stopTime
             dashboardViewModel.getDatefromStopTime(date: master[0].stopDate)
          }
-        
+        print(master[0].key)
          personArray = dashboardViewModel.getUseSavedRipa(key: master[0].key)
          dashboardViewModel.setKey()
         
@@ -554,7 +561,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     }
     
     
-    
     func logout(){
         let alert = UIAlertController(title: nil, message: "Are you sure want to logout?", preferredStyle: UIAlertController.Style.alert)
         
@@ -564,6 +570,8 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
             UserDefaults.standard.set("", forKey: "userOption")
             UserDefaults.standard.set("", forKey: "supervisorId")
             UserDefaults.standard.set("", forKey: "physical_attribute")
+            self.db.openDatabase()
+            self.db.deleteAllfrom(table: "ripaTempMasterTable")
            
             let story = UIStoryboard(name: "Main", bundle:nil)
             let vc = story.instantiateViewController(withIdentifier: "EnrollementViewController") as! EnrollementViewController
@@ -605,30 +613,30 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
                     if success{
                         let boolValue = true
                         UserDefaults.standard.set(boolValue , forKey: "BiometricSet")
-                        biometricView.isHidden = true
+                        self.biometricView.isHidden = true
                         //  biometricSwitch.isOn = true
                         
-                        if onSwitch == true && biometricSwitch.isOn != true{
+                        if onSwitch == true && self.biometricSwitch.isOn != true{
                             UserDefaults.standard.set(false , forKey: "BiometricSet")
                         }
                         else if onSwitch == false{
-                            biometricSwitch.isOn = true
+                            self.biometricSwitch.isOn = true
                         }
                     }
                     else {
                         if UserDefaults.standard.bool(forKey: "BiometricSet") == true{
                             if onSwitch == false{
-                                showAuthAlert()
-                                biometricView.isHidden = false
+                                self.showAuthAlert()
+                                self.biometricView.isHidden = false
                             }
-                            biometricSwitch.isOn = true
+                            self.biometricSwitch.isOn = true
                         }
                         else{
                             print("not")
                             let boolValue = false
                             UserDefaults.standard.set(boolValue , forKey: "BiometricSet")
-                            biometricSwitch.isOn = false
-                            biometricView.isHidden = true
+                            self.biometricSwitch.isOn = false
+                            self.biometricView.isHidden = true
                         }
                     }
                 }
@@ -646,11 +654,11 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
                                        reply: { [self] (success, error) in
                     DispatchQueue.main.async {
                         if success {
-                            biometricView.isHidden = true
+                            self.biometricView.isHidden = true
                         }
                         else{
-                            showAuthAlert()
-                            biometricView.isHidden = false
+                            self.showAuthAlert()
+                            self.biometricView.isHidden = false
                         }
                     }
                 })
@@ -690,13 +698,13 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
                                    reply: { [self] (success, error) in
                 DispatchQueue.main.async {
                     if success {
-                        biometricView.isHidden = true
+                        self.biometricView.isHidden = true
                         UserDefaults.standard.set(switchOn , forKey: "BiometricSet")
-                        biometricSwitch.isOn = switchOn
+                        self.biometricSwitch.isOn = switchOn
                     }
                     else{
-                        showAuthAlert()
-                        biometricView.isHidden = false
+                        self.showAuthAlert()
+                        self.biometricView.isHidden = false
                     }
                 }
             })
@@ -738,6 +746,9 @@ extension DashBoardViewController:GPSLocationDelegate{
         print(location,countryCode,city)
         AppConstants.lati = String(location.coordinate.latitude)
         AppConstants.longi = String(location.coordinate.longitude)
+        
+        UserDefaults.standard.set(String(location.coordinate.latitude), forKey: "latitude")
+        UserDefaults.standard.set(String(location.coordinate.longitude), forKey: "longitude")
     }
     
     func failedFetchingLocationDetails(error: Error) {

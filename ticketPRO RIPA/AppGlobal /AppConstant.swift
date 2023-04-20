@@ -42,6 +42,7 @@ struct AppConstants {
  //Prod//'https://tpwebservices.ticketproweb.com/public/index.php/service'
  //Dev//https://tpwebservicesdev.ticketproweb.com/public/index.php/service
  //Stage//http://tpwebservicestage.ticketproweb.com/public/index.php/service
+ //https://tpwebservicesdev.ticketproweb.com/public/index.php/service/genericv1
     
     struct Api {
             static let otpRequest = BaseURL.URL + "/ripav1"

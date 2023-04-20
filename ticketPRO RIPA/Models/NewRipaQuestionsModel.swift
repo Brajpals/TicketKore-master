@@ -193,7 +193,6 @@ class QuestionResult1  {
     
     var questionoptions:[Questionoptions1]?
     
-    
     init(id: String, custid: String, question: String, question_info: String,question_key: String, question_code: String, questionTypeId: String, inputTypeId: String, is_add_value: String, `internal`: String, is_required: String, isAddtion: String, isCascade_Question: String, ripa_group_id: String, isDescription_Required: String, common_question: String, editable_question: String, visible_question: String, order_number: String, is_active: String, CreatedBy: String, CreatedOn: String, UpdatedBy: String, UpdatedOn: String, inputTypeCode: String, questionTypeCode: String, groupName: String, questionoptions:[Questionoptions1]?) {
         
         self.id = id

@@ -96,7 +96,7 @@ class EnterTextPopupViewController: UIViewController,UITextFieldDelegate, GPSLoc
 //            }
 //            else
             if popupType == "Location" || popupType == "Intersection"{
-                if let strength = inputField.text, strength.count > 5 && strength.count < 250 {
+                if let strength = inputField.text, strength.count > 4 && strength.count < 250 {
                     let option = LocationResult(location_id: "", custid: "", location: text, zone_id: "", order_number: "", is_active: "", county_id: countyID!, city_id: cityId, isSelected: false)
                     self.addLocationDelegate?.addEnteredOption(option: option)
                 }

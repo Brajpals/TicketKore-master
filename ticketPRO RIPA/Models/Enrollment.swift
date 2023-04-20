@@ -40,10 +40,6 @@ struct ripaResponseGetData{
 }
  
 
-
-
- 
-
 class LoginDetailsOTP: Mappable {
     
     var result: Result?

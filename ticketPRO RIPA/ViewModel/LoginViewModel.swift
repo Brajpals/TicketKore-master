@@ -61,9 +61,12 @@ extension LoginViewModel {
             // AppUtility.showAlertWithProperty("Alert", messageString: "Please enter your id.")
             return false
         }
-        else if id.count < 8{
+        else if id.count < 6{
             return false
         }
+        else if id.count > 8{
+             return false
+         }
         else if !validation.validatEnrollmentId(enrollment: id)
         {
             //AppUtility.showAlertWithProperty("Alert", messageString: "Please enter valid id.")
