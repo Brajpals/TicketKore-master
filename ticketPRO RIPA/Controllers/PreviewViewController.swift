@@ -10,15 +10,14 @@ import SwiftCSVExport
 
 
 protocol GoToQuestion: AnyObject {
-    func goToSelectedQuestion(personIndex: Int,  personArray: [[String : Any]], index:Int)
+    func goToSelectedQuestion(personIndex: Int,  personArray: [[String : Any]], index:Int ,descriptionString : String)
     func addPerson(personIndex:Int , personArray:[[String: Any]])
     func editForPerson(personIndex:Int , personArray:[[String: Any]])
     func setPreviewDelegate()
 }
 
-class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,PersonTypeDelegate,PreviewModelDelegate,PopupViewControllerDelegate,PendingQuestionDelegate ,UIGestureRecognizerDelegate {
- 
-    
+class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,PersonTypeDelegate,PreviewModelDelegate,PopupViewControllerDelegate,PendingQuestionDelegate ,UIGestureRecognizerDelegate, LoginOTPViewModelDelegate {
+   
     let enterDescription = EnterDescriptionPopupViewController.instantiate()
     let pendingQuestionPopup = PendingQuestionsPopup.instantiateQuestion()
     
@@ -42,7 +41,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     
      let db = SqliteDbStore()
     var ripaActivity : Ripaactivity?
-    
+    var loginModel = LoginViewModel()
     var userSettingArray = UserSettingModel()
     
     @IBOutlet weak var preview_tbl: UITableView!
@@ -99,10 +98,12 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         if #available(iOS 15.0, *) {
            self.preview_tbl.sectionHeaderTopPadding = 0.0
-       }
+        }
         
       //  else{
              selectedOptionsArray = personDict["SelectedOption"] as! [[Questionoptions1]]
+//            let aob = selectedOptionsArray
+//            print(aob)
         // questionsArray = personDict["QuestionArray"] as? [QuestionResult1]
         //selectedOptionsArray[indexPath.section][indexPath.row].option_value
               previewViewModel.ripaActivity = ripaActivity
@@ -110,6 +111,9 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             previewViewModel.viewType = viewType
             previewViewModel.questionArray = questionsArray!
             previewViewModel.cascadeQuestionArray = cascadeQuestionsArray!
+        
+//        let aob = cascadeQuestionsArray!
+//        print(aob)
     //    }
         
     }
@@ -140,7 +144,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         print(viewType)
         print(saveRipaStatus)
         if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
-            self.submitBtn.setTitle("UPDATE RIPA", for: .normal)
+            self.submitBtn.setTitle("SUBMIT RIPA", for: .normal)
         }
         
         if isPendingEdit {
@@ -183,20 +187,18 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 55.0
+        return 70.0
     }
     
     
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         
         let label = UILabel()
         let view = UIView()
         //  let imgView = UIImage()
         let sectionButton = UIButton()
         
-        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 55))
+        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 70))
         
         view.frame = CGRect.init(x: 0, y: 2, width: headerView.frame.width, height: headerView.frame.height-4)
         view.backgroundColor = #colorLiteral(red: 0.3789433241, green: 0.6938186288, blue: 0.8649699092, alpha: 1)
@@ -220,11 +222,10 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         headerView.addSubview(view)
         headerView.addSubview(label)
+        if section == 7 {
+            
+        }
         
-//        if AppConstants.status == "Pending Review" || AppConstants.status == "Approved"{
-//
-//        }
-//        else{
         if questionsArray![section].is_required == "1" {
             let mandatoryImgView = UIImageView()
             var mandatoryImage = UIImage()
@@ -237,11 +238,11 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
             headerView.addSubview(mandatoryImgView)
         }
          
-         sectionButton.tag = section
+        sectionButton.tag = section
         sectionButton.addTarget(self, action: #selector(self.goToSelectedQuest(sender:)), for: .touchUpInside)
         sectionButton.frame = CGRect.init(x: 0, y: 2, width: headerView.frame.width, height: headerView.frame.height-4)
          headerView.addSubview(sectionButton)
-  //      }
+
         
          return headerView
     }
@@ -281,22 +282,18 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-//        if AppConstants.status == "Pending Review" || AppConstants.status == "Approved"{
-//            return  1
-//        }
-//        else{
+        if AppConstants.isSchoolSelected != "" && section == 0 {
+            return 8
+        }
         if section == 0 {
-            return locationCellCount()
+            return 4
+          //  return locationCellCount()
         }
         let count = selectedOptionsArray.count
         if section < count {
             if selectedOptionsArray[section].count>0{
                 if section == 0{
                     return locationCellCount()
-                }
-                else if section == 3{
-                    return 1
                 }
                 return selectedOptionsArray[section].count
             }
@@ -305,13 +302,13 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         else {
             return 1
         }
-    //    }
     }
     
     
     func gotoselectedQuestion(index: Int, personArray: [[String : Any]]) {
         print(index)
-        self.selectedIndexDelegate?.goToSelectedQuestion(personIndex: personIndex!, personArray: personArray, index: index)
+       
+        self.selectedIndexDelegate?.goToSelectedQuestion(personIndex: personIndex!, personArray: personArray, index: index, descriptionString: "")
         navigationController?.popViewController(animated: true)
     }
     
@@ -354,47 +351,130 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
 //            return cell
 //         }
 //        else{
-        
+       
         cell.check_img.isHidden = true
         cell.answer_lbl.text = "_ _ _ _ _ _ _ _ _"
         cell.answer_lbl.textColor = UIColor(named: "BlackWhite")
         if indexPath.section == 0 {
-            if indexPath.row == 0 && AppConstants.address != ""{
+            if indexPath.row == 0 && AppConstants.city != ""{
                 cell.answer_lbl.text = AppConstants.city
                 cell.check_img.isHidden = false
             }
-            if indexPath.row == 1{
-                cell.answer_lbl.text = addressString
+            else if indexPath.row == 1{
+                cell.answer_lbl.text = "Location Type"
+            }
+            else if indexPath.row == 2{
+                if AppConstants.LocTypeIndex == 6 {
+                    cell.answer_lbl.text = "Geographic Coordinates"
+                }
+                else  if AppConstants.LocTypeIndex == 1 {
+                    cell.answer_lbl.text = "Block Number and Street Name"
+                }
+                else  if AppConstants.LocTypeIndex == 2 {
+                    cell.answer_lbl.text = "Closest Intersection"
+                }
+                else  if AppConstants.LocTypeIndex == 3 {
+                    cell.answer_lbl.text = "Highway and Closest Highway Exit"
+                }
+                else {
+                    cell.answer_lbl.text = "Other"
+                }
+            }
+            else if indexPath.row == 3{
+                print(AppConstants.LocTypeIndex)
+                if AppConstants.LocTypeIndex == 6,let latString = UserDefaults.standard.string(forKey: "latitude"),let longString = UserDefaults.standard.string(forKey: "longitude") {
+                    cell.answer_lbl.text = String(format: "Latitude : %@ , Longitude %@", String(latString.prefix(6)), String(longString.prefix(6)))
+                }
+                else  if AppConstants.LocTypeIndex == 1 {
+                    if AppConstants.block.count == 0 {
+                        cell.answer_lbl.text = String(format: "%@", AppConstants.street)
+                    }
+                    else if AppConstants.street.count == 0 {
+                        cell.answer_lbl.text = String(format: "%@", AppConstants.block)
+                    }
+                    else {
+                        cell.answer_lbl.text = String(format: " %@ & %@",AppConstants.block , AppConstants.street)
+                    }
+                }
+                else  if AppConstants.LocTypeIndex == 2 {
+                    if AppConstants.firstIntersection.count == 0 {
+                        cell.answer_lbl.text = String(format: "%@", AppConstants.secondIntersection)
+                    }
+                    else if AppConstants.secondIntersection.count == 0 {
+                        cell.answer_lbl.text = String(format: "%@", AppConstants.firstIntersection)
+                    }
+                    else {
+                        cell.answer_lbl.text = String(format: "%@ & %@", AppConstants.firstIntersection, AppConstants.secondIntersection)
+                    }
+                }
+                else  if AppConstants.LocTypeIndex == 3 {
+                    if AppConstants.highway.count == 0 {
+                        cell.answer_lbl.text = String(format: "%@", AppConstants.closestHighway)
+                    }
+                    else if AppConstants.closestHighway.count == 0 {
+                        cell.answer_lbl.text = String(format: "%@", AppConstants.highway)
+                    }
+                    else {
+                        cell.answer_lbl.text = String(format: "%@ & %@", AppConstants.highway, AppConstants.closestHighway)
+                    }
+                }
+                else {
+                    cell.answer_lbl.text = AppConstants.LocTypeDescription
+                }
+            }
+            else if indexPath.row == 4{
+                cell.answer_lbl.text = "iS K-12 school?"
+            }
+            else if indexPath.row == 5{
+                cell.answer_lbl.text = "Yes"
+                cell.answer_lbl.textColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+            }
+            else if indexPath.row == 6{
+                cell.answer_lbl.text = "Name Of School"
+            }
+            else if indexPath.row == 7,selectedOptionsArray[0].count > 3,selectedOptionsArray[0][4].questionoptions?.count ?? 0 > 0 ,let nameStr = selectedOptionsArray[0][4].questionoptions?[0].option_value,nameStr != "Yes" {
+                cell.answer_lbl.text = nameStr
+            }
+            else if indexPath.row == 7,selectedOptionsArray[0].count > 3,selectedOptionsArray[0][4].questionoptions?.count ?? 0 > 0 ,let nameStr = selectedOptionsArray[0][4].questionoptions?[0].option_value,nameStr != "Yes" {
+                cell.answer_lbl.text = nameStr
+            }
+            else if indexPath.row == 7{
+                let obj = selectedOptionsArray[0].filter({
+                    $0.ripa_id == "26" && $0.mainQuestId == "21"
+                })
+                if obj.count > 0 , obj[0].questionoptions?.count ?? 0 > 0 {
+                    cell.answer_lbl.text = obj[0].questionoptions?[0].option_value
+                }
+                else if obj.count > 0 {
+                    cell.answer_lbl.text = obj[0].option_value
+                }
             }
             if indexPath.row == 0 && AppConstants.city == ""{
                 return  cell
-            }
-            if AppConstants.isSchoolSelected != "" && (AppConstants.address == locationArray[indexPath.row] || AppConstants.isSchoolSelected == locationArray[indexPath.row] ){
-                cell.answer_lbl.textColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
-            }
-            
-            if locationArray.count > 0 && indexPath.row < locationArray.count{
-                cell.answer_lbl.text = locationArray[indexPath.row]
             }
             
             return  cell
         }
         
         if selectedOptionsArray[indexPath.section].count>0 {
-            if indexPath.section == 5 {
-                
-            }
+           
             if selectedOptionsArray[indexPath.section][indexPath.row].tag == "Description",selectedOptionsArray[indexPath.section][indexPath.row].option_value.count > 0{
-                cell.answer_lbl.text = "Description - " + selectedOptionsArray[indexPath.section][indexPath.row].option_value
+                cell.answer_lbl.text = "Reason Description - " + selectedOptionsArray[indexPath.section][indexPath.row].option_value
                 descriptionFirst = selectedOptionsArray[indexPath.section][indexPath.row].option_value
+                print(descriptionFirst)
+                if indexPath.section == 5{
+                    descriptionString = selectedOptionsArray[indexPath.section][indexPath.row].option_value
+                }
             }
             else if selectedOptionsArray[indexPath.section][indexPath.row].tag == "Description"{
-                cell.answer_lbl.text = "Description - " + descriptionString
+                cell.answer_lbl.text = "Reason Description - " + descriptionString
                 descriptionSecond = descriptionString
+                    // print(descriptionString)
             }
             else{
                 cell.answer_lbl.text = selectedOptionsArray[indexPath.section][indexPath.row].option_value
             }
+           
             if indexPath.row == 0{
                 cell.check_img.isHidden = false
             }
@@ -409,16 +489,20 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         if AppConstants.status == "Pending Review" || AppConstants.status == "Approved"{
          }
         else{
-        self.selectedIndexDelegate?.goToSelectedQuestion(personIndex: personIndex!, personArray: personArray, index: indexPath.section)
-        navigationController?.popViewController(animated: true)
+            if questionsArray![indexPath.section].is_required == "1" {
+                self.selectedIndexDelegate?.goToSelectedQuestion(personIndex: personIndex!, personArray: personArray, index: indexPath.section,descriptionString : descriptionString)
+                navigationController?.popViewController(animated: true)
+            }
         }
     }
     
     //1,1
     @objc func goToSelectedQuest(sender:UIButton){
-        trackApplicationTime()
-        self.selectedIndexDelegate?.goToSelectedQuestion(personIndex: personIndex!, personArray: personArray, index: sender.tag)
-        navigationController?.popViewController(animated: true)
+        if questionsArray![sender.tag].is_required == "1" {
+            trackApplicationTime()
+            self.selectedIndexDelegate?.goToSelectedQuestion(personIndex: personIndex!, personArray:  personArray, index: sender.tag, descriptionString: descriptionString)
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     
@@ -439,116 +523,180 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         
     }
     
+    func proceedToOTP(isValidLogin: Int, message: String) {}
+    
+    func showPopupForCustId() {}
+    
     
     @IBAction func actionSubmit(_ sender: Any) {
+        AppUtility.showProgress(nil, title:nil)
+        self.loginModel.OTPdelegate = self
+        self.loginModel.updateVesionApp()
+    }
+    
+    func currentVersionIsRunning() {
        
-        trackApplicationTime()
-        if AppConstants.status == "Pending Review" || AppConstants.status == "Approved"{
-            self.performSegue(withIdentifier: "ShowPersonView", sender: self)
-         }
-        else{
-          
-         let requiredFilledData = previewViewModel.checkPreviewRequiredQuestion(questArray: questionsArray, cascadeQuestArray: cascadeQuestionsArray, selectedOpt: selectedOptionsArray)
+        let checkReasonStop = consensualEncounterAtSubmitting()
+        if checkReasonStop == false{
+           AppUtility.showAlertWithProperty("Alert", messageString: "Consensual encounter resulting in search was selected as a Reason for stop. Either Search of property was conducted or Search of Person was conducted must be selected for this question.")
+           return
+        }
+          trackApplicationTime()
+          if (AppConstants.status == "Pending Review" || AppConstants.status == "Approved") && self.submitBtn.title(for: .normal) != "SUBMIT RIPA" {
+              self.performSegue(withIdentifier: "ShowPersonView", sender: self)
+           }
+          else{
             
-        if personArray.count > 1{
-            self.performSegue(withIdentifier: "ShowPersonView", sender: self)
-        }
-        else{
-            if requiredFilledData.0.count < 1 {
-                previewViewModel.previewModelDelegate = self
-                previewViewModel.personArray = personArray
-              //  previewViewModel.createPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1")
-            db.openDatabase()
-            var userRipaResponse : RipaResponse = db.getRipaResponse()!
-            if userRipaResponse.question_id.isEmpty {
-                 userRipaResponse  = self.createRipaResponseData(data: self.userSettingArray)
-            }
-            var typeAssignment : String = ""
-            if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String{
-                typeAssignment = "\(userOption)"
-                userRipaResponse.response = typeAssignment
-            }
-            if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
-                ripaActivity?.supervisorId = userOption
-            }
-                
-                if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
-                    AppConstants.activityStatusId = "1"
-                    ripaActivity?.activity_status_id = "1"
-                }
-                
-                if isEditRequired {
-                    AppConstants.activityStatusId = "4"
-                    ripaActivity?.activity_status_id = "4"
-                }
-                
-                var traini : String = "0"
-                if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
-                    traini = "1"
-                }
-                
-                if AppConstants.trafficId != ""{
-                    print(AppConstants.trafficId)
-                    ripaActivity?.traffic_id = AppConstants.trafficId
-                }
+           let requiredFilledData = previewViewModel.checkPreviewRequiredQuestion(questArray: questionsArray, cascadeQuestArray: cascadeQuestionsArray, selectedOpt: selectedOptionsArray)
+              
+          if personArray.count > 1{
+              self.performSegue(withIdentifier: "ShowPersonView", sender: self)
+          }
+          else{
+              if requiredFilledData.0.count < 1 {
+                  previewViewModel.previewModelDelegate = self
+                  previewViewModel.personArray = personArray
+                //  previewViewModel.createPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1")
+              db.openDatabase()
+              var userRipaResponse : RipaResponse = db.getRipaResponse()!
+              if userRipaResponse.question_id.isEmpty {
+                   userRipaResponse  = self.createRipaResponseData(data: self.userSettingArray)
+              }
+              var typeAssignment : String = ""
+              if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String{
+                  typeAssignment = "\(userOption)"
+                  userRipaResponse.response = typeAssignment
+              }
+              if  let userOption = UserDefaults.standard.object(forKey: "supervisorId") as? String{
+                  ripaActivity?.supervisorId = userOption
+              }
+                  
+                  if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                      AppConstants.activityStatusId = "1"
+                      ripaActivity?.activity_status_id = "1"
+                  }
+                  if AppConstants.isTemplate == "temp" {
+                      AppConstants.activityStatusId = "1"
+                      ripaActivity?.activity_status_id = "1"
+                  }
+                  else if isEditRequired {
+                      AppConstants.activityStatusId = "4"
+                      ripaActivity?.activity_status_id = "4"
+                  }
+                  
+                  var traini : String = "0"
+                  if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String,userOption == "Training/Testing" {
+                      traini = "1"
+                  }
+                  
+                  if AppConstants.trafficId != ""{
+                      print(AppConstants.trafficId)
+                      ripaActivity?.traffic_id = AppConstants.trafficId
+                  }
 
-                let os = ProcessInfo().operatingSystemVersion
-                ripaActivity?.os_version = os.getFullVersion()
-                ripaActivity?.is_trainee = traini
-                
-              userRipaResponse.ripa_activity = AppConstants.activityID
-              ripaActivity?.ripa_activity = AppConstants.activityID
-              previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
-                
-                self.saveRipaDataToCSV()
-                AppUtility.showProgress(nil, title:nil)
-                if typeAssignment.count == 0{
-                    AppUtility.showAlertWithProperty("", messageString: "Type of assignment is blank.")
+                  let os = ProcessInfo().operatingSystemVersion
+                  ripaActivity?.os_version = os.getFullVersion()
+                  ripaActivity?.is_trainee = traini
+                  
+                userRipaResponse.ripa_activity = AppConstants.activityID
+                ripaActivity?.ripa_activity = AppConstants.activityID
+                previewViewModel.createUserSettingPersonsDict(personArray: personArray, ripaActivity: ripaActivity!, statusId: "1", ripaResponse: userRipaResponse)
+                  
+                  self.saveRipaDataToCSV()
+                  AppUtility.showProgress(nil, title:nil)
+                  if typeAssignment.count == 0{
+                      AppUtility.showAlertWithProperty("", messageString: "Type of assignment is blank.")
+                  }
+                  else if isEditRequired {
+                      let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
+                     // print(updateRipa)
+                      previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                  }
+                  else if isCreatedSaved {
+                      let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
+                     // print(updateRipa)
+                      previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                  }
+                  else if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
+                       let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
+                      // print(updateRipa)
+                       previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                   }
+                  else if saveRipaStatus == "Saved"{
+                      let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
+                     // print(updateRipa)
+                      previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                  }
+                  else {
+                      let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
+                     // print(updateRipa)
+                      previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
+                  }
+               }
+              else{
+                  AppUtility.hideProgress()
+                  guard let customAlertVC1 = pendingQuestionPopup else { return }
+                  customAlertVC1.pendingQuestionDelegate = self
+                  customAlertVC1.newquestionArry = requiredFilledData.0
+                  customAlertVC1.newquestionIDArray = requiredFilledData.1
+                  
+                  customAlertVC1.personArray = personArray
+                  customAlertVC1.personIndex = personIndex
+                  let popupVC = PopupViewController(contentController: customAlertVC1, position:.bottom(UIScreen.main.bounds.size.width/2), popupWidth: UIScreen.main.bounds.size.width-30, popupHeight:500)
+                  popupVC.cornerRadius = 5
+                  popupVC.delegate = self
+                  
+                  present(popupVC, animated: true, completion: nil)
+              }
+          }
+      }
+    }
+    
+   
+    func consensualEncounterAtSubmitting()->Bool{
+        var conducted = true
+        for optionArr in selectedOptionsArray{
+            for questions in questionsArray!{
+                if questions.question_code == "16"{
+                    let question = self.getQuestionUsingQuestionCode(question_code: 14)
+                    for option in question.questionoptions!{
+                        if option.physical_attribute == "6" && option.isSelected == true{
+                            conducted = false
+                            for option in optionArr{
+                                if (option.physical_attribute == "18" || option.physical_attribute == "20") && option.isSelected{
+                                    conducted = true
+                                    return conducted
+                                }
+                            }
+                        }
+                    }
                 }
-                else if isEditRequired {
-                    let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
-                   // print(updateRipa)
-                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-                }
-                else if isCreatedSaved {
-                    let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
-                   // print(updateRipa)
-                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-                }
-                else if viewType == "UseSaveRipa" && saveRipaStatus == "Saved"{
-                     let updateRipa:UpdateRipa = previewViewModel.ripaCudActivity_postParam()
-                    // print(updateRipa)
-                     previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-                 }
-                else if saveRipaStatus == "Saved"{
-                    let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
-                   // print(updateRipa)
-                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-                }
-                else {
-                    let updateRipa:UpdateRipa = previewViewModel.updateRipaParam()
-                   // print(updateRipa)
-                    previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
-                }
-             }
-            else{
-                AppUtility.hideProgress()
-                guard let customAlertVC1 = pendingQuestionPopup else { return }
-                customAlertVC1.pendingQuestionDelegate = self
-                customAlertVC1.newquestionArry = requiredFilledData.0
-                customAlertVC1.newquestionIDArray = requiredFilledData.1
-                
-                customAlertVC1.personArray = personArray
-                customAlertVC1.personIndex = personIndex
-                let popupVC = PopupViewController(contentController: customAlertVC1, position:.bottom(UIScreen.main.bounds.size.width/2), popupWidth: UIScreen.main.bounds.size.width-30, popupHeight:500)
-                popupVC.cornerRadius = 5
-                popupVC.delegate = self
-                
-                present(popupVC, animated: true, completion: nil)
             }
         }
+        return conducted
+    }
+    
+    func getQuestionUsingQuestionCode(question_code:Int)->QuestionResult1{
+        var quest:QuestionResult1?
+         for question in questionsArray!{
+             if Int(question.question_code) == question_code{
+                quest = question
+            }
         }
-        
+        if quest == nil{
+            quest = getCascadeQuestionUsingQuestionCode(questionCode: String(question_code))
+        }
+         return quest!
+    }
+    
+    func getCascadeQuestionUsingQuestionCode(questionCode:String) -> QuestionResult1{
+        var quest:QuestionResult1?
+        for question in cascadeQuestionsArray!{
+            if question.question_code == questionCode{
+                quest = question
+            }
+        }
+        return quest!
     }
     
     func saveRipaDataToCSV() {
@@ -658,7 +806,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         let os = ProcessInfo().operatingSystemVersion
         
-        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini, isSelected: "")
         
         return ripaRes
     }
@@ -698,12 +846,13 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         
     }
     
-  
-    
     @IBAction func actionBack(_ sender: Any) {
         trackApplicationTime()
         self.selectedIndexDelegate?.editForPerson(personIndex:personIndex!, personArray: personArray)
-        if isPendingEdit {
+        if AppConstants.isTemplate == "temp" {
+            navigationController?.popViewController(animated: true)
+        }
+        else if isPendingEdit {
             for controller in self.navigationController!.viewControllers as Array {
                     if controller.isKind(of: RejectedApplicationViewController.self) {
                         _ =  self.navigationController!.popToViewController(controller, animated: true)
@@ -746,6 +895,7 @@ class PreviewViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         
          if requiredFilledData.0.count < 1 {
+            AppConstants.isAddPerson = true
             navigationController!.removeViewController(PersonViewController.self)
             self.selectedIndexDelegate?.addPerson(personIndex:personIndex!, personArray: personArray)
             navigationController?.popViewController(animated: true)

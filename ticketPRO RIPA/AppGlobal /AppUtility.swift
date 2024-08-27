@@ -153,9 +153,9 @@ class AppUtility {
        let path = documentsPath.appendingPathComponent(fileName)
        do{
        try value.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
-   }catch{
+         }catch{
        }
-       }
+    }
 
     class func readFromDocumentsFile(fileName:String) -> String {
        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
@@ -252,3 +252,4 @@ extension UIWindow {
         }
     }
 }
+

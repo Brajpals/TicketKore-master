@@ -26,7 +26,7 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     @IBOutlet weak var noteDetailTextField: UITextField!
     @IBOutlet weak var noteReviewTextView: UITextView!
     @IBOutlet weak var reviewNoteHeightConstrait : NSLayoutConstraint!
-    
+    @IBOutlet weak var updateBtn: UIButton!
     var rejectedApplication:RejectedApplication?
     var index:Int?
     var activity:Ativity?
@@ -43,6 +43,7 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     var screenType : String = ""
     var isPendingEdit:Bool = false
     var isEditRequired:Bool = false
+    var locArray = [Questionoptions1]()
 
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -70,6 +71,7 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        AppConstants.isTrafficData = false
         trackApplicationTime()
         newRipaViewModel.setFeature()
      //   noteReviewTextView.contentInset = UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 10)
@@ -84,6 +86,7 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
      //   noteDetailTextField.isUserInteractionEnabled = false
         activity = rejectedApplication?.ativity
         response = rejectedApplication?.response ?? []
+        
         
         for i in (0..<response.count)
         {
@@ -101,6 +104,22 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         
         savedListViewModel.savedListModelDelegate = self
         
+        AppConstants.block =  rejectedApplication?.location.block ?? ""
+        AppConstants.street =  rejectedApplication?.location.street ?? ""
+        AppConstants.highway =  rejectedApplication?.location.Highway ?? ""
+        AppConstants.firstIntersection =  rejectedApplication?.location.firstIntersection ?? ""
+        AppConstants.closestHighway =  rejectedApplication?.location.closestHighwayExit ?? ""
+        AppConstants.secondIntersection =  rejectedApplication?.location.secondIntersection ?? ""
+        AppConstants.LocTypeDescription =  rejectedApplication?.location.others ?? ""
+        var arr = (rejectedApplication?.location.geographicCoordinates ?? "").components(separatedBy: ",")
+        if arr.count > 1 {
+            AppConstants.lati = arr[0]
+            AppConstants.longi = arr[1]
+            UserDefaults.standard.set(arr[0], forKey: "latitude")
+            UserDefaults.standard.set(arr[1], forKey: "longitude")
+        }
+  
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,7 +131,7 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
        overrideUserInterfaceStyle = .light
         AppConstants.theme = "0"
      }
-        }
+    }
     
     var address = ""
     func setData(){
@@ -120,6 +139,31 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
        
         reviewerNameLbl.text = activity!.activityCheckedBy
         dateLbl.text = convertDateFormater(date: activity!.activityCreationDate)
+        
+        var dateStr = activity!.activityCreationDate
+        var timeStr = activity!.stopTime
+        timeStr = timeStr.components(separatedBy: ("."))[0]
+        var dateFormatterTime = DateFormatter()
+        dateFormatterTime.dateFormat = "HH:mm:ss"
+        if let datde = dateFormatterTime.date(from: timeStr) {
+            dateFormatterTime.dateFormat = "HH:mm"
+            timeStr = dateFormatterTime.string(from: datde)
+        }
+         
+        let dateStrr = activity!.activityCreationDate
+        let dateString = dateStrr.components(separatedBy: ("."))[0]
+        var dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "MM/dd/yyyy"
+        
+        if let datde = dateFormatterGet.date(from: dateString) {
+            let subDate = dateFormatterPrint.string(from: datde)
+            dateStr = "\(subDate) \(timeStr)"
+            dateLbl.text = dateStr
+        }
+        
         cityNameLbl.text = activity!.city
         locationNameLbl.text = activity!.location
       
@@ -179,6 +223,8 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     @objc func clearTxt(sender: UIButton){
         print(sender.tag)
         response[sender.tag].response = ""
+        responsetext = ""
+        updateBtn.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         tableView.reloadData()
     }
     
@@ -190,8 +236,11 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         
     }
     
-    func proceedToPreviewScreen(previewPram: [RipaPerson], forTemplate: Bool?) {
-        personArray = savedListViewModel.createPersonDict(personarray:previewPram)
+    func proceedToPreviewScreen(previewPram: [RipaPerson], forTemplate: Bool? , locationOptionArray : [Questionoptions1]) {
+        personArray = savedListViewModel.createPersonDict(personarray:previewPram, locArr: locationOptionArray)
+        AppConstants.numberOfPerson = 0
+         let arr = personArray
+        print(arr)
         self.setConstants ()
            let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "NewRipaViewController") as! NewRipaViewController
            vc.viewType = "UseSaveRipa"
@@ -199,9 +248,11 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
             vc.screenType = screenType
             vc.isPendingEdit = isPendingEdit
            vc.ripaTypeStr = "Edit"
+           vc.locArray = locationOptionArray
            vc.isEditRequired = self.isEditRequired
-           AppConstants.status = ""
+          // AppConstants.status = ""
            vc.personArray = personArray
+           AppConstants.numberOfPerson = personArray.count
            vc.savedRipaList = savedRipaList
            self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -256,6 +307,9 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         if let citationNumber = savedRipaList?.citationNumber {
             AppConstants.citation = citationNumber
         }
+        if let reasonForStop = savedRipaList?.reason_for_stop {
+            AppConstants.reason_for_stop = reasonForStop
+        }
         
     }
     
@@ -271,8 +325,10 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
     }
     
     @IBAction func actionUpdate(_ sender: Any) {
-        getUpdateRipaResponse()
-        trackApplicationTime()
+        if responsetext.count > 4 {
+            getUpdateRipaResponse()
+            trackApplicationTime()
+        }
     }
     
     @IBAction func actionOpenLocationEditPage(_ sender: Any) {
@@ -294,10 +350,15 @@ class RejectedApplicationViewController: UIViewController, UITableViewDelegate, 
         }
     }
     
-    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool{
         let newString = NSString(string: textView.text!).replacingCharacters(in: range, with: text)
         let newLength:Int = newString.count
+        if(newLength < 5){
+            updateBtn.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        }
+        else {
+            updateBtn.backgroundColor = UIColor(red: 221.0 / 255.0, green: 157.0 / 255.0, blue: 0.0 / 255.0, alpha: 1.0)
+        }
         if(newLength < 251){
             responsetext = newString
             index = textView.tag

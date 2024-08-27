@@ -16,6 +16,7 @@ class CLCell: UITableViewCell {
     @IBOutlet weak var swapBtn: UIButton!
     @IBOutlet weak var closeView: UIView!
     @IBOutlet weak var closeBtn: UIButton!
+    @IBOutlet weak var downImgView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

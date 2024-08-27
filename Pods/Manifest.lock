@@ -107,6 +107,7 @@ PODS:
   - SwiftCSVExport (2.6.0)
   - SwiftLoggly (1.1.0)
   - SwiftyJSON (5.0.0)
+  - Toaster (2.3.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
@@ -123,6 +124,7 @@ DEPENDENCIES:
   - SwiftCSVExport (from `https://github.com/vigneshuvi/SwiftCSVExport.git`, tag `2.6.0`)
   - SwiftLoggly
   - SwiftyJSON
+  - Toaster
 
 SPEC REPOS:
   trunk:
@@ -150,6 +152,7 @@ SPEC REPOS:
     - PromisesObjC
     - SwiftLoggly
     - SwiftyJSON
+    - Toaster
 
 EXTERNAL SOURCES:
   SwiftCSVExport:
@@ -187,7 +190,8 @@ SPEC CHECKSUMS:
   SwiftCSVExport: d9db3fb80484115028792f8d539445e3fb2c0ecb
   SwiftLoggly: 2e57a2e4fe35ce406574d0479a3654753f480254
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+  Toaster: c3473963c78e8cabbf6ea6f11ad0fdaae6f54987
 
-PODFILE CHECKSUM: be6f92f41fd7ce041ad20b29821f0614ab41cd80
+PODFILE CHECKSUM: bf645c9bc30e91a43335a4f3702bb47f81c38288
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.13.0

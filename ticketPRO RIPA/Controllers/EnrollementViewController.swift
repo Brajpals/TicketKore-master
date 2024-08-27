@@ -90,7 +90,9 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         enrollView.layer.cornerRadius = 5
         submitbtn.layer.cornerRadius = 5
         
-        versionLbl.text = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        if let versn = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            versionLbl.text = "V\(versn)"
+        }
         
         enrollTxtDeleteBtn.isHidden = true
         phoneTxtDeleteBtn.isHidden = true
@@ -98,17 +100,22 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
         passDeleteBtn.isHidden = true
         
         showSignin()
-        setPassSwitchColor()
- 
+        setPassSwitchOffColor()
+        setSwitchOffColor()
     }
     
+    func currentVersionIsRunning() {
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
 //        UserDefaults.standard.set("", forKey: "userOption")
 //        UserDefaults.standard.set("", forKey: "supervisorId")
+        
+        db.openDatabase()
         let login = UserDefaults.standard.integer(forKey: "isLoggedIn")
-        if (login == 1){
+        if (login == 1),let userOption = UserDefaults.standard.object(forKey: "settingDone") as? String , userOption == "yes"{
             let story = UIStoryboard(name: "Main", bundle:nil)
             let vc = story.instantiateViewController(withIdentifier: "DashBoardViewController") as! DashBoardViewController
             let rootVC = UINavigationController(rootViewController: vc)
@@ -116,6 +123,9 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             UIApplication.shared.windows.first?.makeKeyAndVisible()
  
             UIApplication.shared.registerForRemoteNotifications()
+        }
+        else  if (login == 1) {
+           
         }
         else{
             UIApplication.shared.unregisterForRemoteNotifications()
@@ -162,7 +172,6 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     }
     
     
-    
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         UIApplication.shared.open(URL)
         return false
@@ -197,6 +206,8 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             numberView.isHidden = false
             userTxt.text = ""
             phoneTxt.becomeFirstResponder()
+            setSwitchOnColor()
+
         }
         else{
             userIDView.isHidden = false
@@ -204,6 +215,7 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
             userIdDeleteBtn.isHidden = true
             userTxt.becomeFirstResponder()
             phoneTxt.text = ""
+            setSwitchOffColor()
         }
     }
     
@@ -211,25 +223,46 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     @IBAction func actionPassSwitch(_ sender: UISwitch!) {
         passTxt.text = ""
         if (sender.isOn == true){
+            setPassSwitchOnColor()
             passwordView.isHidden = true
         }
         else{
             passwordView.isHidden = false
-            setPassSwitchColor()
+            setPassSwitchOffColor()
         }
     }
     
+    func setSwitchOnColor(){
+        `switch`.tintColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+        `switch`.layer.cornerRadius = passSwitch.frame.height / 2.0
+        `switch`.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+        `switch`.clipsToBounds = true
+    }
+    
+    func setSwitchOffColor(){
+        `switch`.tintColor = .lightGray
+        `switch`.layer.cornerRadius = passSwitch.frame.height / 2.0
+        `switch`.backgroundColor = .lightGray
+        `switch`.clipsToBounds = true
+    }
     
     
-    func setPassSwitchColor(){
+    func setPassSwitchOnColor(){
         passSwitch.tintColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
         passSwitch.layer.cornerRadius = passSwitch.frame.height / 2.0
         passSwitch.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
         passSwitch.clipsToBounds = true
     }
     
+    func setPassSwitchOffColor(){
+        passSwitch.tintColor = .lightGray
+        passSwitch.layer.cornerRadius = passSwitch.frame.height / 2.0
+        passSwitch.backgroundColor = .lightGray
+        passSwitch.clipsToBounds = true
+    }
+    
   
-    //  var code = "+91"
+     // var code = "+91"
       var code = "+1"
     
     func proceedToOTP(isValidLogin: Int, message: String) {
@@ -291,22 +324,47 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     
     func proceedToDashboard(){
         AppManager.login()
+        let ethinicity = AppManager.getLastSavedLoginDetails()?.result?.Ethnicity
+        let gender = AppManager.getLastSavedLoginDetails()?.result?.Gender
+        let isVisible = AppManager.getLastSavedLoginDetails()?.result?.is_visible
+        UserDefaults.standard.set(isVisible, forKey: "isVisible")
+     
+        // if isVisible == 1 && ethinicity?.count == 0 {
+        if  ethinicity?.count == 0 {
+            self.setGenderEthencity()
+        }
+        else {
+            UserDefaults.standard.set(gender, forKey: "gender")
+            UserDefaults.standard.set(ethinicity, forKey: "ethencity")
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "UserSettingsViewController") as! UserSettingsViewController
+            nextViewController.flag = 0
+            let navigationController = UINavigationController(rootViewController: nextViewController)
+            UIApplication.shared.windows.first?.rootViewController = navigationController
+            UIApplication.shared.windows.first?.makeKeyAndVisible()
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+     }
+    
+
+    
+    func setGenderEthencity() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "UserSettingsViewController") as! UserSettingsViewController
-        nextViewController.flag = 0
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GenderEthencityViewController") as! GenderEthencityViewController
         let navigationController = UINavigationController(rootViewController: nextViewController)
         UIApplication.shared.windows.first?.rootViewController = navigationController
         UIApplication.shared.windows.first?.makeKeyAndVisible()
         UIApplication.shared.registerForRemoteNotifications()
-     }
+    }
   
     
-    // MARK: - Button Click
+    // MARK: - Button Click 120 USDT , feture step- buy short (bch,usdt)-180-buyamount -enter 120-confirm
     var isEmail:Bool?
     @IBAction func submitClick(_ sender: UIButton) {
         
         isEmail = false
         loginModel.OTPdelegate = self
+        userTxt.text = userTxt.text?.uppercased()
         let isCorrectId = loginModel.checkId(id: enrollmentTxt.text!)
         let isCorrectUserId = loginModel.checkUserId(id: userTxt.text!)
         var isCorrectPhone = loginModel.checkNumber(number: phoneTxt.text!)
@@ -424,6 +482,8 @@ class EnrollementViewController: UIViewController ,UITextViewDelegate, UITextFie
     }
     
     func sendLoginIdToServer(loginTxt : String){
+        UserDefaults.standard.set("", forKey: "physical_attribute")
+        UserDefaults.standard.set("", forKey: "userOption")
         
         isEmail = false
         loginModel.OTPdelegate = self

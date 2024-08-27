@@ -156,6 +156,7 @@ protocol GetListDelegate: AnyObject {
         //  AppUtility.showProgress(nil, title: "Getting" + method)
         var URL:String?
         print(params)
+       
         URL = AppConstants.Api.otpRequest
         
         ApiManager.getRipaData(params: params, method: method, methodTyPe: .post, url: URL!, completion: { json,successmsg   in
@@ -195,7 +196,6 @@ protocol GetListDelegate: AnyObject {
     func getNewRipa(){
         let param:[String : Any] = ["custid": custId!,"access_token": AppManager.getLastSavedLoginDetails()?.result?.access_token ?? ""]
         let params:[String : Any] =  ["id":id!, "method":"ripaQuestion", "params":param ,"jsonrpc": "2.0"]
-        //let params = EnrollmentUser.newRipaQuestionsData(newenroll:enrolluser)
         print(params)
         getQuestionsData(params: params)
     }
@@ -212,12 +212,8 @@ protocol GetListDelegate: AnyObject {
                 
                 if message == "Success"{
                     let data =  DataManager.shared.newRipaQuestion
-                    let errorMsg = data?.result![0].serviceError
-                    
-                    if data?.result != nil && data?.result![0].serviceError == ""{
+                    if  data?.result?.count ?? 0 > 0 && data?.result != nil && data?.result?[0].serviceError == ""{
                         let questArray:[QuestionResult] = (data?.result)!
-                        
-                      //  print(data?.result)
                         
                         db.deleteAllfrom(table: db.AllQues)
                         db.deleteAllfrom(table: db.AllOptions)
@@ -230,12 +226,19 @@ protocol GetListDelegate: AnyObject {
                             if questions.question_code == "23" {
                                 isVisible = "0"
                             }
+                           
                             let quest = QuestionResult1(id: questions.id, custid: questions.custid, question: questions.question, question_info: questions.question_info,question_key: questions.question_key,question_code:questions.question_code, questionTypeId: questions.questionTypeId, inputTypeId: questions.inputTypeId, is_add_value: questions.is_add_value, internal: questions.`internal`, is_required: questions.is_required, isAddtion: questions.isAddtion, isCascade_Question: questions.isCascade_Question, ripa_group_id: questions.ripa_group_id, isDescription_Required: questions.isDescription_Required, common_question: questions.common_question, editable_question: questions.editable_question, visible_question: isVisible, order_number: questions.order_number, is_active: questions.is_active, CreatedBy: questions.createdBy, CreatedOn: questions.createdOn, UpdatedBy:questions.updatedBy,UpdatedOn:questions.updatedOn, inputTypeCode:questions.inputTypeCode, questionTypeCode:questions.questionTypeCode, groupName:questions.groupName, questionoptions: [])
                             
                             db.insertQuestion(question :quest, tableName:db.AllQues)
                             
+                            
                             for options in questions.questionoptions!{
-                                let opt = Questionoptions1(mainQuestId: questions.id, mainQuestOrder: questions.order_number , option_id: options.option_id, ripa_id: options.ripa_id, custid: options.custid, option_value: options.option_value, cascade_ripa_id: options.cascade_ripa_id,isK_12School: options.isK_12School, isHideQuesText: options.isHideQuesText, order_number: options.order_number, createdBy: options.createdBy, createdOn: options.createdOn, updatedBy: options.updatedBy, updatedOn: options.updatedOn , isSelected:false, isAddtion : options.isAddtion,isDescription_Required : options.isDescription_Required,inputTypeCode : options.inputTypeCode,questionTypeCode : options.questionTypeCode,tag:options.tag, physical_attribute:options.physical_attribute, default_value: options.default_value, optionDescription: options.description, question_code_for_cascading_id: options.question_code_for_cascading_id, isQuestionMandatory: options.isQuestionMandatory, isQuestionDescriptionReq: options.isQuestionDescriptionReq, main_question_id: options.main_question_id, isExpanded: false, questionoptions: [])
+                                var isSelected : Bool = false
+                                if options.isSelected.lowercased() == "true"{
+                                    isSelected = true
+                                }
+                                
+                                let opt = Questionoptions1(mainQuestId: questions.id, mainQuestOrder: questions.order_number , option_id: options.option_id, ripa_id: options.ripa_id, custid: options.custid, option_value: options.option_value, cascade_ripa_id: options.cascade_ripa_id,isK_12School: options.isK_12School, isHideQuesText: options.isHideQuesText, order_number: options.order_number, createdBy: options.createdBy, createdOn: options.createdOn, updatedBy: options.updatedBy, updatedOn: options.updatedOn , isSelected:isSelected, isAddtion : options.isAddtion,isDescription_Required : options.isDescription_Required,inputTypeCode : options.inputTypeCode,questionTypeCode : options.questionTypeCode,tag:options.tag, physical_attribute:options.physical_attribute, default_value: options.default_value, optionDescription: options.description, question_code_for_cascading_id: options.question_code_for_cascading_id, isQuestionMandatory: options.isQuestionMandatory, isQuestionDescriptionReq: options.isQuestionDescriptionReq, main_question_id: options.main_question_id, isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
                                 if opt.default_value == "1" || opt.option_id == "170"{
                                     opt.isSelected = true
                                 }
@@ -245,10 +248,9 @@ protocol GetListDelegate: AnyObject {
                         }
                         getNewRipaFromDB()
                     }
-                    else{
+                    else if let errorMsg = data?.result?[0].serviceError {
                         let code = (data?.result![0].errorStatusCode)!
-                        DashboardViewModel.showAlertWithProperty("Alert", messageString: errorMsg!, code: code)
-                        //AppUtility.showAlertWithProperty("Alert", messageString: "Unauthorised Login")
+                        DashboardViewModel.showAlertWithProperty("Alert", messageString: errorMsg, code: code)
                     }
                 }
             })
@@ -371,6 +373,19 @@ protocol GetListDelegate: AnyObject {
                          print("Features Table Data \(json)")
                         for item in json["result"].arrayValue {
                          // var countyList = [CountyResult]()
+                            if item["feature"].stringValue == "RipaActivedate" {
+                                AppConstants.RipaActivedate = item["value"].stringValue
+                            }
+                            else  if item["feature"].stringValue == "RipaActiveDate" {
+                                AppConstants.RipaActivedate = item["value"].stringValue
+                            }
+                            
+                            if item["feature"].stringValue == "RipaGpsTimeLimit" {
+                                AppConstants.gpsActiveTime = item["value"].stringValue
+                            }
+                            else if item["feature"].stringValue == "RipaGpsTimeLimit" {
+                                AppConstants.gpsActiveTime = item["value"].stringValue
+                            }
                             
                             let feature = FeaturesResult(featureID: item["feature_id"].stringValue, custid: item["custid"].stringValue, feature: item["feature"].stringValue, admin: item["admin"].stringValue, officer: item["officer"].stringValue, value: item["value"].stringValue, isActive: item["is_active"].stringValue, orderNumber: item["order_number"].stringValue, moduleName: item["module_name"].stringValue, module: item["module"].stringValue)
                               
@@ -578,7 +593,6 @@ protocol GetListDelegate: AnyObject {
                         let string = "\"\("Created")\""
                         if  errorMsg == ""{
                         
-                            
                             db.deleteAllfrom(table: "ripaTempMasterTable WHERE status = \(string)")
                             for item in json["result"].arrayValue {
                                 
@@ -604,6 +618,11 @@ protocol GetListDelegate: AnyObject {
                                 
                                 let duration = Date().calculateTime(from_date: convertDateFormater(date: ticketDate), to_date: (convertDateFormater(date: declarationDate)))
                                 
+                                var reasonForStop : String = ""
+                                if item["reason_for_stop"].stringValue.count > 0 {
+                                    print(item["reason_for_stop"].stringValue)
+                                    reasonForStop = item["reason_for_stop"].stringValue
+                                }
                                 
                                 let ripas = RipaTempMaster(key:key,
                                                            skeletonID: item["skeleton_id"].stringValue, activityId: "",
@@ -640,12 +659,11 @@ protocol GetListDelegate: AnyObject {
                                                            stopDate: convertDateFormater(date: ticketDate) ,
                                                            stopTime: getTime(date: ticketDate),
                                                            stopDuration: duration,
-                                                           rejectedURL:"", syncStatus: "",startDate:"",endDate:"",is_K_12_Student:"", lat:"" ,long: "", timeTaken: "0", countyId: "", deviceid: item["device_id"].stringValue,
+                                                           rejectedURL:reasonForStop, syncStatus: "",startDate:"",endDate:"",is_K_12_Student:"", lat:"" ,long: "", timeTaken: "0", countyId: "", deviceid: item["device_id"].stringValue,
                                                            
-                                                           callNumber: item["call_number"].stringValue, callTime: "", onsceneTime: item["onscene_time"].stringValue, clearTimeOfOfficer: item["clear_time_of_the_Offrcer"].stringValue, overallCallClearTime: item["overall_call_clear_time"].stringValue, callType: item["call_type"].stringValue, unitId: item["unitId"].stringValue, zone: item["zone"].stringValue )
+                                                           callNumber: item["call_number"].stringValue, callTime: "", onsceneTime: item["onscene_time"].stringValue, clearTimeOfOfficer: item["clear_time_of_the_Offrcer"].stringValue, overallCallClearTime: item["overall_call_clear_time"].stringValue, callType: item["call_type"].stringValue, unitId: item["unitId"].stringValue, zone: item["zone"].stringValue,reason_for_stop: reasonForStop,Previous_Platform: item["Previous_Platform"].stringValue,Ripa_version: item["Ripa_version"].stringValue,Previous_app_Version: item["Previous_app_Version"].stringValue )
                                 
                                 db.insertRipaTempMaster(ripaResponse: ripas, tableName: db.ripaTempMaster)
-                                
                                
                             }
                              
@@ -698,7 +716,6 @@ protocol GetListDelegate: AnyObject {
     }
     
     
-    //"4031"
     func getallRipaWith_CE_ER_Pram(){
         let param:[String : Any] = ["userid": userId!]
         let params:[String : Any] =  ["id":id!, "method":"allRipaWith_CE_ER", "params":param ,"jsonrpc": "2.0"]
@@ -810,7 +827,7 @@ protocol GetListDelegate: AnyObject {
                                                            stopDuration:  item["stop_duration"].stringValue ,
                                                            rejectedURL:"", syncStatus: "",startDate: "",endDate: "",is_K_12_Student:"",lat: "",long: "", timeTaken: item["timetaken"].stringValue, countyId: item["county_id"].stringValue, deviceid: "0" ,
                                                            
-                                                           callNumber: item["call_number"].stringValue, callTime: "", onsceneTime: item["onscene_time"].stringValue, clearTimeOfOfficer: item["clear_time_of_the_Offrcer"].stringValue, overallCallClearTime: item["overall_call_clear_time"].stringValue, callType: item["call_type"].stringValue, unitId: item["unitId"].stringValue, zone: item["zone"].stringValue)
+                                                           callNumber: item["call_number"].stringValue, callTime: "", onsceneTime: item["onscene_time"].stringValue, clearTimeOfOfficer: item["clear_time_of_the_Offrcer"].stringValue, overallCallClearTime: item["overall_call_clear_time"].stringValue, callType: item["call_type"].stringValue, unitId: item["unitId"].stringValue, zone: item["zone"].stringValue,reason_for_stop: item["reason_for_stop"].stringValue, Previous_Platform: item["Previous_Platform"].stringValue,Ripa_version: item["Ripa_version"].stringValue,Previous_app_Version: item["Previous_app_Version"].stringValue)
                                 
                                 
                                 db.insertRipaTempMaster(ripaResponse: ripas, tableName: db.ripaTempMaster)
@@ -821,7 +838,7 @@ protocol GetListDelegate: AnyObject {
                             
                             
                             for item in json["result"]["pendingApproved"].arrayValue {
-                                
+                                print(item)
                                 let ripas = RipaTempMaster(key:item["devices_unique_no"].stringValue,
                                                            skeletonID: "",
                                                            activityId: item["activity_id"].stringValue,
@@ -860,7 +877,7 @@ protocol GetListDelegate: AnyObject {
                                                            stopDuration:  item["stop_duration"].stringValue ,
                                                            rejectedURL:"", syncStatus: "",startDate: "",endDate: "",is_K_12_Student:"",lat: "",long: "", timeTaken: item["timetaken"].stringValue, countyId: item["county_id"].stringValue, deviceid: "0",
                                                            
-                                                           callNumber: item["call_number"].stringValue, callTime: "", onsceneTime: item["onscene_time"].stringValue, clearTimeOfOfficer: item["clear_time_of_the_Offrcer"].stringValue, overallCallClearTime: item["overall_call_clear_time"].stringValue, callType: item["call_type"].stringValue, unitId: item["unitId"].stringValue, zone: item["zone"].stringValue)
+                                                           callNumber: item["call_number"].stringValue, callTime: "", onsceneTime: item["onscene_time"].stringValue, clearTimeOfOfficer: item["clear_time_of_the_Offrcer"].stringValue, overallCallClearTime: item["overall_call_clear_time"].stringValue, callType: item["call_type"].stringValue, unitId: item["unitId"].stringValue, zone: item["zone"].stringValue,reason_for_stop: item["reason_for_stop"].stringValue, Previous_Platform: item["Previous_Platform"].stringValue,Ripa_version: item["Ripa_version"].stringValue,Previous_app_Version: item["Previous_app_Version"].stringValue)
                                 
                                 if ripas.status == "Pending Review"{
                                     ripas.mainStatus = "10"

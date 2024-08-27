@@ -8,22 +8,6 @@
 import UIKit
 
 extension UITextField {
-    
-func setHeight(_ h:CGFloat, animateTime:TimeInterval?=nil) {
-
-    if let c = self.constraints.first(where: { $0.firstAttribute == .height && $0.relation == .equal }) {
-        c.constant = CGFloat(h)
-
-        if let animateTime = animateTime {
-            UIView.animate(withDuration: animateTime, animations:{
-                self.superview?.layoutIfNeeded()
-            })
-        }
-        else {
-            self.superview?.layoutIfNeeded()
-        }
-    }
-}
 
     func setLeftPaddingPoints(_ amount:CGFloat){
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))

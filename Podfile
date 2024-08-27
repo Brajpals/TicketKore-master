@@ -20,6 +20,7 @@ target 'ticketPRO RIPA' do
    pod 'Firebase/Messaging'
    pod 'Firebase/Core'
    pod 'SwiftLoggly’
+   pod 'Toaster'
    pod 'SwiftCSVExport', :git => 'https://github.com/vigneshuvi/SwiftCSVExport.git', :tag => '2.6.0'
 
 

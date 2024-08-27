@@ -11,7 +11,7 @@ import AVKit
 
 protocol AddDescriptionDelegate: AnyObject {
     func addEnteredDescription(text:String?)
-    
+    func clearDescription()
 }
 
 protocol NoteDelegate: AnyObject {
@@ -28,6 +28,7 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
     @IBOutlet weak var submitBtn: UIButton!
     @IBOutlet weak var placeholderLbl: UILabel!
     @IBOutlet weak var popupLbl: UILabel!
+    @IBOutlet weak var wordCountLbl: UILabel!
     
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var discardBtn: UIButton!
@@ -42,6 +43,7 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
     var placeholder:String?
     var inputType:String?
     var noteType:String?
+    var flag:Int = 0
     
     let speechRecognizer       = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
     var sfDelegate: SFSpeechRecognizerDelegate?
@@ -61,7 +63,7 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+//        enteredText = "I conducted a search of the person and his property initially to determine his identity and consent was given. I also conduct a cursory search of his person for his safety and the safety of the officers on scene. Cedric was placed on a 5150 W and I hold"
         if AppConstants.theme == "1"{
             overrideUserInterfaceStyle = .dark
         }
@@ -109,6 +111,13 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
+        self.wordCountLbl.text = "250 Character Maximum"
+        if flag == 1 {
+            self.wordCountLbl.text = "60 Character Maximum"
+        }
+        else  if flag == 2 {
+            self.wordCountLbl.text = "150 Character Maximum"
+        }
     }
     
     
@@ -166,17 +175,20 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
             return
         }
         
-        if inputType == "Description" && trimmed.count < 5{
+        if flag == 1 && inputType == "Enter Assignment" && trimmed.count < 3{
+            showAlertMessage(titleStr: "Alert", messageStr: "Description must be at least 3 characters.")
+            return
+        }
+        else if inputType == "Description" && trimmed.count < 5 {
             showAlertMessage(titleStr: "Alert", messageStr: "Description must be at least 5 characters.")
             return
         }
-        
         
         dismiss(animated: true, completion: nil)
         if inputType == "Notes"{
             AppConstants.notes = enteredText!
         }
-        if inputType == "Description"{
+        if inputType == "Description" || inputType == "Enter Assignment" {
             if enteredText == placeholder{
                 enteredText = ""
             }
@@ -220,7 +232,7 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
             enteredText = ""
             placeholderLbl.isHidden = false
         }
-        
+        self.addDescriptionDelegate?.clearDescription()
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool{
@@ -254,15 +266,24 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
             return false
         }
         
-        if(newLength < 251){
+        if flag == 1 && newLength < 60 {
+            enteredText = newString
+            return true
+        }
+        else if flag == 2 && newLength < 150 {
+            enteredText = newString
+            return true
+        }
+        else if flag == 2 && newLength > 150 {
+            return false
+        }
+        else if flag != 1 && (newLength < 250){
             enteredText = newString
             return true
         }
         
         return false
     }
-    
-    
     
     
     //    func textViewDidEndEditing(_ textView: UITextView) {
@@ -307,21 +328,6 @@ class EnterDescriptionPopupViewController: UIViewController,UITextViewDelegate {
         NotificationCenter.default.removeObserver(self)
     }
 }
-
-
-
-
-
-
-
-
-// MIC EXTENSION
-
-
-
-
-
-
 
 
 extension EnterDescriptionPopupViewController{
@@ -466,11 +472,27 @@ extension EnterDescriptionPopupViewController{
                     .filter { !listOfSwearWords.contains(($0).lowercased()) } // Filter
                     .joined(separator: " ")
                 
+                let finalStr : String = prevText! + finalString
+                let newLength:Int = finalStr.count
+                let oldLength:Int = textView.text.count
+                if(flag == 1 && newLength < 60 && oldLength < 60){
+                    enteredText = finalStr
+                    textView.text = prevText! + finalString
+                    isFinal = (result?.isFinal)!
+                }
+                else if(flag == 2 && newLength < 150 && oldLength < 150){
+                    enteredText = finalStr
+                    textView.text = prevText! + finalString
+                    isFinal = (result?.isFinal)!
+                }
+                else if(flag != 1 && flag != 2 && newLength < 250 && oldLength < 250){
+                    enteredText = finalStr
+                    textView.text = prevText! + finalString
+                    isFinal = (result?.isFinal)!
+                }
                 
-                
-                textView.text = prevText! + finalString
-                
-                isFinal = (result?.isFinal)!
+                print(newLength)
+                print(enteredText?.count)
                 
             }
             
@@ -563,7 +585,6 @@ extension String {
         let components = self.components(separatedBy: NSCharacterSet.whitespacesAndNewlines)
         return components.filter { !$0.isEmpty }.joined(separator: " ")
     }
-    
     
     func removeSpecialCharacters() -> String {
         let okayChars = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890 .,")

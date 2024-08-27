@@ -9,7 +9,7 @@ import CoreLocation
 import LocalAuthentication
 
 
-class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDelegate{
+class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDelegate,offlineDelegate, SavedListModelDelegate{
     
     @IBOutlet var mainView: UIView!
     @IBOutlet var firstname: UILabel!
@@ -33,6 +33,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     @IBOutlet weak var updateHeightConstrait : NSLayoutConstraint!
     @IBOutlet weak var updateLbl: UILabel!
     @IBOutlet weak var updateView: UIView!
+    var savedListViewModel = SavedListViewModel()
     
     //    @IBOutlet weak var pinTxt: UITextField!
     //    @IBOutlet weak var mainPinView: UIView!
@@ -50,9 +51,9 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     var openUnfinished:Bool?
     
     var isRipaSaved:Bool?
-    var isLastRipaAvailable:Bool?
+    var isLastRipaAvailable:Bool = false
     let db = SqliteDbStore()
-    var isTemplateAvailable:Bool?
+    var isTemplateAvailable:Bool = false
     
     var personArray: [[String: Any]] = []
     
@@ -67,27 +68,29 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     @IBOutlet weak var newRipaWidthConstrait : NSLayoutConstraint!
     
     
-    @objc func appMovedToForeground() {
-      //  loginModel.updateVesionApp()
-    }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        UIApplication.shared.registerForRemoteNotifications()
-      //  self.optionTypeLbl.text = userOption
+        DispatchQueue.background(background: {
+            self.dashboardViewModel.setCityParam()
+            self.dashboardViewModel.getCountyList()
+        }, completion:{
+            // when background job finished, do something in main thread
+            print("background job finished")
+        })
+        
+       // UIApplication.shared.registerForRemoteNotifications()
+        savedListViewModel.savedListModelDelegate = self
         AppConstants.autoNext = true
         newRipaBtn.isExclusiveTouch = true
         saveRipaButton.isExclusiveTouch = true
         lastRipaBtn.isExclusiveTouch = true
+        
         DispatchQueue.main.async {
             self.loginModel.updateVesionApp()
         }
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector:#selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        
-        
+
         biometricView.isHidden = true
         if ((UserDefaults.standard.bool(forKey: "BiometricSet") == true) || (UserDefaults.standard.bool(forKey: "Launched") == false)) && AppConstants.bioLogin == "0"{
             biometricView.isHidden = false
@@ -97,35 +100,39 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         autoNextBtn.setImage(UIImage(named: AppConstants.autoNext == true ? "checked" : "unchecked"), for: .normal)
         self.navigationController?.navigationBar.isHidden = true
         
-        
         dashboardViewModel.questiondelegate = self
         
         let lastName =  AppManager.getLastSavedLoginDetails()!.result!.last_name
         let firstName =  AppManager.getLastSavedLoginDetails()!.result!.first_name
-        firstname.text = "\(lastName) \(firstName)"
+        let userName =  AppManager.getLastSavedLoginDetails()!.result!.username
+        if userName.count > 0 {
+            firstname.text = "\(userName)"
+        }
+        else {
+            firstname.text = "\(lastName) \(firstName)"
+            if lastName.count > 0 && firstName.count > 0 {
+                firstname.text = "\(lastName) , \(firstName)"
+            }
+        }
         
         gpsLocation.delegate = self
+        
         DispatchQueue.main.async {
             self.gpsLocation.getGPSLocation()
         }
-        
         
         if let userId = AppManager.getLastSavedLoginDetails()?.result?.userid,let token = AppManager.getLastSavedLoginDetails()?.result?.access_token{
             print(userId)
             print(token)
         }
     
-        versionLbl.text = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-        
-//       self.saveRipaButton.setWidth(self.view.frame.size.width-20, animateTime: 0.0)
-//        newRipaWidthConstrait.constant = self.view.frame.size.width-20
-//         UIView.animate(withDuration: 0, animations:{
-//             self.saveRipaButton.layoutIfNeeded()
-//         })
-        
-//        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-//        print(paths[0])
-        
+        if let versn = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            versionLbl.text = "V\(versn)"
+        }
+    }
+    
+    @objc func appMovedToForeground() {
+        loginModel.updateVesionApp()
     }
     
     
@@ -140,89 +147,98 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if  let attribute = UserDefaults.standard.object(forKey: "physical_attribute") as? String,attribute == "9999" {
-           UserDefaults.standard.set(true, forKey: "isTraini")
-        }
-        
+        AppConstants.numberOfPerson = 0
+        AppConstants.isAddPerson = false
+        AppConstants.isTrafficData = false
+        AppConstants.violation_type = ""
+        AppConstants.travel_method = ""
+        AppConstants.offenceCodes = ""
+        AppConstants.isTemplate = ""
         DispatchQueue.main.async {
             if Reachability.isConnectedToNetwork(){
-                self.offlinesync.updateActvityOffline()
+                let savedRipaList = self.db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE syncStatus is 0") ?? []
+                if savedRipaList.count > 0 {
+                    self.offlinesync.updateActvityOffline()
+                }
+                self.dashboardViewModel.getCount()
+            }
+         }
+        
+         if  let attribute = UserDefaults.standard.object(forKey: "physical_attribute") as? String,attribute == "9999" {
+             UserDefaults.standard.set(true, forKey: "isTraini")
+         }
+      
+        let ethinicity = AppManager.getLastSavedLoginDetails()?.result?.Ethnicity
+        let gender = AppManager.getLastSavedLoginDetails()?.result?.Gender
+        let isVisible = AppManager.getLastSavedLoginDetails()?.result?.is_visible
+        UserDefaults.standard.set(isVisible, forKey: "isVisible")
+    
+        //if isVisible == 1 && ethinicity?.count == 0 {
+        if ethinicity?.count == 0 {
+            self.setGenderEthencity()
+        }
+        else {
+            
+            
+            print("view will appear")
+            self.view.snapshotView(afterScreenUpdates: true)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
+            let dateInFormat = dateFormatter.string(from: NSDate() as Date)
+            dateLbl.text = dateInFormat
+            AppConstants.autoNext = true
+            
+            db.openDatabase()
+     
+            checkData()
+           
+            if UserdDefault.value(forKey:"theme") as? String != nil{
+                AppConstants.theme = UserdDefault.value(forKey:"theme") as? String ?? ""
+            }
+            
+            if AppConstants.theme == "1"{
+                overrideUserInterfaceStyle = .dark
+            }
+            else{
+                overrideUserInterfaceStyle = .light
+                AppConstants.theme = "0"
+            }
+            
+            if self.traitCollection.userInterfaceStyle == .dark {
+                themeSwitch.isOn = true
+                AppConstants.theme = "1"
+            } else {
+                themeSwitch.isOn = false
+                AppConstants.theme = "0"
+            }
+            
+            if UserDefaults.standard.bool(forKey: "BiometricSet") != true{
+                biometricSwitch.isOn = false
             }
         }
         
-        DispatchQueue.background(background: {
-            self.dashboardViewModel.setCityParam()
-            self.dashboardViewModel.getCountyList()
-        }, completion:{
-            // when background job finished, do something in main thread
-            print("background job finished")
-        })
-        
-//        DispatchQueue.background(background: {
-//            self.offlinesync.updateActvityOffline()
-//        }, completion:{
-//            print("background job finished")
-//        })
-        
-        if  let userOption = UserDefaults.standard.object(forKey: "userOption") as? String {
-            self.optionTypeLbl.text = userOption
-        }
-        
-        if Reachability.isConnectedToNetwork(){
-           dashboardViewModel.getCount()
-        }
-        
-        print("view will appear")
-        self.view.snapshotView(afterScreenUpdates: true)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
-        let dateInFormat = dateFormatter.string(from: NSDate() as Date)
-        dateLbl.text = dateInFormat
-        AppConstants.autoNext = true
-        
-        db.openDatabase()
- 
-        checkData()
-       
-        if UserdDefault.value(forKey:"theme") as? String != nil{
-            AppConstants.theme = UserdDefault.value(forKey:"theme") as? String ?? ""
-        }
-        
-        
-        if AppConstants.theme == "1"{
-            overrideUserInterfaceStyle = .dark
-        }
-        else{
-            overrideUserInterfaceStyle = .light
-            AppConstants.theme = "0"
-        }
-        
-        if self.traitCollection.userInterfaceStyle == .dark {
-            themeSwitch.isOn = true
-            AppConstants.theme = "1"
-        } else {
-            themeSwitch.isOn = false
-            AppConstants.theme = "0"
-        }
-        
-        if UserDefaults.standard.bool(forKey: "BiometricSet") != true{
-            biometricSwitch.isOn = false
-        }
-       // setCount()
     }
     
+    func setGenderEthencity() {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GenderEthencityViewController") as! GenderEthencityViewController
+        let navigationController = UINavigationController(rootViewController: nextViewController)
+        UIApplication.shared.windows.first?.rootViewController = navigationController
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
+        UIApplication.shared.registerForRemoteNotifications()
+    }
+    
+    
     @IBAction func action_RefreshDataButton(_ sender: Any) {
-        self.viewWillAppear(true)
-//        AppUtility.showProgress(nil, title: nil)
-//        self.dashboardViewModel.forListRefresh = true
-//        self.dashboardViewModel.setCityParam()
-//        self.dashboardViewModel.getCountyList()
-//        self.dashboardViewModel.getCount()
-//        self.setCount()
+       // self.viewWillAppear(true)
+        AppUtility.showProgress(nil, title: nil)
+        self.dashboardViewModel.forListRefresh = true
+        self.dashboardViewModel.setCityParam()
+        self.dashboardViewModel.getCountyList()
+        self.dashboardViewModel.getCount()
+        self.setCount()
     }
     
     func sendSettingInfo(data : UserSettingModel){
@@ -342,6 +358,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         }
     }
     
+    
     func openSaveRipa(){
         let fileCheck = AppUtility.readFromDocumentsFile(fileName: "PendingReview")
         print(fileCheck)
@@ -352,51 +369,111 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     }
     
     @IBAction func btnPressed(_ sender: UIButton) {
-        AppManager.removeData()
-         demo(tag:sender.tag)
+         var isStart : Bool = false
+        isStart = self.checkDate(stringDate: AppConstants.RipaActivedate)
+        if AppConstants.RipaActivedate.count == 0 {
+            AppManager.removeData()
+            demo(tag:sender.tag)
+        }
+         else if !isStart && sender.tag != 2{
+               let alert = UIAlertController(title: nil, message: "This application is not available until  \(AppConstants.RipaActivedate).", preferredStyle: UIAlertController.Style.alert)
+               alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
+                    
+                  })
+               )
+               self.present(alert, animated: true, completion: nil)
+           }
+        else {
+            AppManager.removeData()
+            demo(tag:sender.tag)
+        }
+//        AppManager.removeData()
+//        demo(tag:sender.tag)
+        
      }
     
     
     func demo(tag:Int){
          dashboardViewModel.questiondelegate = self
+        AppConstants.numberOfPerson = 0
         if  tag == 1{
             print(tag)
-            AppUtility.writeToDocumentsFile(fileName: "StartNewRipa", value: "Start New Ripa From Dashboard.")
+          //AppUtility.writeToDocumentsFile(fileName: "StartNewRipa", value: "Start New Ripa From Dashboard.")
             nextViewType = "StartNewRipa"
             dashboardViewModel.getNewRipa()
             dashboardViewModel.setKey()
             AppConstants.citation = ""
+            AppConstants.reason_for_stop = ""
             AppConstants.applicationtime = "0"
+            AppConstants.street = ""
+            AppConstants.block = ""
+            AppConstants.firstIntersection = ""
+            AppConstants.secondIntersection = ""
+            AppConstants.highway = ""
+            AppConstants.closestHighway = ""
+            AppConstants.LocTypeDescription = ""
         }
         else if tag == 2{
             print(tag)
             filterFor = ""
-            AppUtility.writeToDocumentsFile(fileName: "MyRipa", value: "My Ripa From Dashboard.")
+         //AppUtility.writeToDocumentsFile(fileName: "MyRipa", value: "My Ripa From Dashboard.")
             openSaveRipa()
         }
         else if tag == 3{
-            if isLastRipaAvailable! {
+            if isLastRipaAvailable {
                 print(tag)
-               // isTemplateAvailable = false
-                
                 nextViewType = "UseLastRipa"
                 AppConstants.status = "LastRipa"
-                AppUtility.writeToDocumentsFile(fileName: "UseLastRipa", value: "User Last Ripa From Dashboard.")
+             // AppUtility.writeToDocumentsFile(fileName: "UseLastRipa", value: "User Last Ripa From Dashboard.")
                 self.performSegue(withIdentifier: "ShowRipaView", sender: self)
                 checkData()
             }
         }
         else if tag == 4{
-            if isTemplateAvailable! {
-               // isLastRipaAvailable = false
-                print(tag)
+            if isTemplateAvailable {
                 nextViewType = "Template"
+                AppConstants.street = ""
+                AppConstants.block = ""
+                AppConstants.firstIntersection = ""
+                AppConstants.secondIntersection = ""
+                AppConstants.highway = ""
+                AppConstants.closestHighway = ""
+                AppConstants.LocTypeDescription = ""
                 AppConstants.status = "Template"
-                AppUtility.writeToDocumentsFile(fileName: "UseTemplate", value: "Use Template From Dashboard.")
-                self.performSegue(withIdentifier: "ShowRipaView", sender: self)
+             
+                if let activityId = UserDefaults.standard.object(forKey: "templateId") as? String{
+                    savedListViewModel.getApprovedOrPendingPram(activityId:activityId)
+                }
+                //"templateId"
+               // self.performSegue(withIdentifier: "ShowRipaView", sender: self)
                 checkData()
             }
         }
+    }
+    
+    func proceedToPreviewScreen(previewPram: [RipaPerson], forTemplate: Bool? , locationOptionArray : [Questionoptions1]) {
+        personArray = savedListViewModel.createPersonDict(personarray:previewPram, locArr: locationOptionArray)
+        AppConstants.numberOfPerson = 0
+         let arr = personArray
+        print(arr)
+        //self.setConstants ()
+           let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "NewRipaViewController") as! NewRipaViewController
+        vc.viewType = "UseSaveRipa"
+        vc.saveRipaStatus = "Saved"
+         vc.screenType = "UseLastRipa"
+         vc.isPendingEdit = true
+        vc.ripaTypeStr = "Edit"
+        AppConstants.isTemplate = "temp"
+        vc.locArray = locationOptionArray
+        vc.isEditRequired = false
+        vc.personArray = personArray
+        AppConstants.numberOfPerson = personArray.count
+            // vc.savedRipaList = savedRipaList
+           self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func proceedToRejectedView(applicationData: RejectedApplication?) {
+        
     }
     
     func  checkAndGetQuest(){
@@ -427,7 +504,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     func proceedToSavedListScreen(){
         self.performSegue(withIdentifier: "ShowSavedList", sender: self)
     }
-    
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
@@ -463,33 +539,34 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         if(segueID! == "ShowSavedList"){
             let vc = segue.destination as! SavedListViewController
             vc.filterFor = self.filterFor
-            
         }
     }
     
     
     func setGradientBackground() {
        
-        self.newRipaBtn.orangeGradientButton()
+       // self.newRipaBtn.orangeGradientButton()
         
         db.openDatabase()
       
-        if isLastRipaAvailable!{
+        if isLastRipaAvailable{
             changeDefaultButtonBackground(Button: saveRipaButton)
-            lastRipaBtn.backgroundColor = #colorLiteral(red: 0.1937961819, green: 0.5636972401, blue: 0.8575945208, alpha: 1)
+            lastRipaBtn.backgroundColor = UIColor(red: 52.0 / 255.0, green: 144.0 / 255.0, blue: 202.0 / 255.0, alpha: 1.0)
             lastRipaBtn.setTitle("Use Last RIPA", for: .normal)
         }
         else{
-            lastRipaBtn.disablebutton()
+           // lastRipaBtn.disablebutton()
+            lastRipaBtn.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         }
         
-        if isTemplateAvailable!{
+        if isTemplateAvailable{
             changeDefaultButtonBackground(Button: templateBtn)
-            templateBtn.backgroundColor = #colorLiteral(red: 0.1937961819, green: 0.5636972401, blue: 0.8575945208, alpha: 1)
+            templateBtn.backgroundColor = UIColor(red: 52.0 / 255.0, green: 144.0 / 255.0, blue: 202.0 / 255.0, alpha: 1.0)
             templateBtn.setTitle("Use Template", for: .normal)
         }
         else{
-            templateBtn.disablebutton()
+           // templateBtn.disablebutton()
+            templateBtn.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         }
     }
     
@@ -555,14 +632,33 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         autoNextBtn.setImage(UIImage(named: AppConstants.autoNext == true ? "checked" : "unchecked"), for: .normal)
      }
     
+    func syncOfflineDataCompleted() {
+        //self.dashboardViewModel.getCount()
+        self.logout()
+    }
     
     @IBAction func logout(_ sender: Any) {
-        logout()
+        db.openDatabase()
+        let savedRipaList = db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE syncStatus is 0") ?? []
+        if savedRipaList.count > 0 {
+            DispatchQueue.main.async {
+                if Reachability.isConnectedToNetwork(){
+                    self.offlinesync.delegate = self
+                    self.offlinesync.updateActvityOffline()
+                }
+                else {
+                    AppUtility.showAlertWithProperty("", messageString: "Internet Connection not Available!")
+                }
+            }
+        }
+        else{
+            self.logout()
+        }
     }
     
     
     func logout(){
-        let alert = UIAlertController(title: nil, message: "Are you sure want to logout?", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: nil, message: "Logging out will require you to login the app next time you restart the app. Continue?", preferredStyle: UIAlertController.Style.alert)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.default, handler: { action in
@@ -674,8 +770,6 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     
     
     
-    
-    
     func showAuthAlert(){
         let alertController = UIAlertController.init(title: "Please Authenticate", message: "Ripa Stop is is protected from unauthorized access. Please unlock Ripa Stop to continue.", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [self] action in
@@ -691,7 +785,8 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
     func goToAuthSettingAlert(type:String, switchOn:Bool){
         let alertController = UIAlertController(title: "\(type) not available", message: "Please go to app settings and turn on \(type).", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler:{ [self] action in
-            let context = LAContext()
+            self.biometricSwitch.isOn = false
+          /*  let context = LAContext()
             let reason:String = "Enter phone passcode to login.";
             context.evaluatePolicy(LAPolicy.deviceOwnerAuthentication,
                                    localizedReason: reason,
@@ -707,7 +802,7 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
                         self.biometricView.isHidden = false
                     }
                 }
-            })
+            }) */
         })
         )
         
@@ -734,7 +829,24 @@ class DashBoardViewController: UIViewController,QuestionsDelegate,userSettingsDe
         self.present(alertController, animated: true, completion: nil)
     }
     
-    
+    func checkDate(stringDate : String) -> Bool {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let date = dateFormatter.date(from: stringDate) {
+            if date.isInThePast {
+                print("Date is past")
+                return true
+            } else if date.isInToday {
+                print("Date is today")
+                return true
+            } else {
+                print("Date is future")
+                return false
+            }
+        }
+        return false
+    }
     
 }
 
@@ -744,9 +856,12 @@ extension DashBoardViewController:GPSLocationDelegate{
     
     func fetchedLocationDetails(location: CLLocation, countryCode: String, city: String, street: String, intersection: String, county: String) {
         print(location,countryCode,city)
-        AppConstants.lati = String(location.coordinate.latitude)
-        AppConstants.longi = String(location.coordinate.longitude)
-        
+        let latflt =  Float(String(location.coordinate.latitude))
+        let longflt =  Float(String(location.coordinate.longitude))
+        AppConstants.lati = String(format: "%.3f", latflt!)
+        AppConstants.longi = String(format: "%.3f", longflt!)
+         UserDefaults.standard.set(String(format: "%.3f", latflt!), forKey: "latitude")
+         UserDefaults.standard.set(String(format: "%.3f", longflt!), forKey: "longitude")
         UserDefaults.standard.set(String(location.coordinate.latitude), forKey: "latitude")
         UserDefaults.standard.set(String(location.coordinate.longitude), forKey: "longitude")
     }
@@ -755,6 +870,12 @@ extension DashBoardViewController:GPSLocationDelegate{
         print(error)
     }
     
-    
-    
+}
+
+extension Date {
+    static var noon: Date { Date().noon }
+    var noon: Date { Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: self)! }
+    var isInToday: Bool { Calendar.current.isDateInToday(self) }
+    var isInThePast: Bool { noon < .noon }
+    var isInTheFuture: Bool { noon > .noon }
 }

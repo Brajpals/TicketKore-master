@@ -22,28 +22,28 @@ class ViolationTypeViewController: UIViewController {
     var listArray:[Questionoptions1]?
     var listType:String?
     var selectionType:String?
+    var basisName : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if basisName.count > 0 {
+            viewLbl.text = basisName
+        }
         tableView.register(UINib(nibName: "ListCell", bundle: nil), forCellReuseIdentifier: "ListCell")
         tableView.delegate = self
         tableView.dataSource = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+  override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    if AppConstants.theme == "1"{
+     if AppConstants.theme == "1"{
         overrideUserInterfaceStyle = .dark
         }
-    else{
+     else{
        overrideUserInterfaceStyle = .light
         AppConstants.theme = "0"
      }
-        }
-    
-
-   
+ }
     
     @IBAction func actionSubmit(_ sender: Any) {
         self.violationTypeDelegate?.refreshViolationLists(list:listArray, listType: listType!)
@@ -51,6 +51,8 @@ class ViolationTypeViewController: UIViewController {
     }
     
     @IBAction func action_back(_ sender: Any) {
+      //  listArray?.forEach({$0.isSelected = false})
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -58,7 +60,6 @@ class ViolationTypeViewController: UIViewController {
 extension ViolationTypeViewController: UITableViewDelegate,UITableViewDataSource{
 
 func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    print(listArray!.count)
     return listArray!.count
 }
 
@@ -69,19 +70,33 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
 func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as! ListCell
     
-    cell.checkImg.isHidden = true
-    
+   // cell.checkImg.isHidden = true
+    let arr = listArray
+    cell.checkImg.image = UIImage(named: "uncheck")
+    cell.label.font = UIFont.systemFont(ofSize: 18.0)
     cell.label.text = listArray![indexPath.row].option_value
       if listArray![indexPath.row].isSelected == true{
         cell.checkImg.isHidden = false
+        cell.label.font = UIFont.boldSystemFont(ofSize: 18.0)
+        cell.checkImg.image = UIImage(named: "Check")
         cell.checkImg.image = #imageLiteral(resourceName: "checked-1")
     }
+    
+    if selectionType == "SC"{
+        cell.checkImg.image = UIImage(named: "Unselect")
+        if listArray![indexPath.row].isSelected == true{
+            cell.checkImg.image = UIImage(named: "Select")
+        }
+    }
+    
+    
     return cell
 }
     
     
 func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     listArray![indexPath.row].isSelected = !listArray![indexPath.row].isSelected
+   // print(selectionType)
      if selectionType == "SC"{
         checkSingleSelection(indexpath:indexPath.row)
       self.violationTypeDelegate?.refreshViolationLists(list:listArray, listType: listType!)
@@ -103,7 +118,5 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
              i += 1
         }
     }
-    
-    
 
 }

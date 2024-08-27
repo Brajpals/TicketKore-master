@@ -23,8 +23,6 @@ class SelectOptionsPopup: UIViewController,UITableViewDelegate,UITableViewDataSo
     weak var selectOptionsPopupDelegate : SelectOptionsPopupDelegate?
     var optionsArray : [Questionoptions1]?
     
-    
-    
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -38,6 +36,7 @@ class SelectOptionsPopup: UIViewController,UITableViewDelegate,UITableViewDataSo
     var question:String?
     var questionFor=""
     var isK12:Bool?
+   
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -72,8 +71,6 @@ class SelectOptionsPopup: UIViewController,UITableViewDelegate,UITableViewDataSo
     }
     
     
-    
-    
     @IBAction func closeAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
         
@@ -81,6 +78,9 @@ class SelectOptionsPopup: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let quet = question , quet == "Location Type" {
+            return 5
+        }
         return optionsArray!.count
     }
     
@@ -89,19 +89,24 @@ class SelectOptionsPopup: UIViewController,UITableViewDelegate,UITableViewDataSo
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath as IndexPath) as! ListCell
         print(indexPath.row)
         cell.label.text = (optionsArray![indexPath.row].option_value)
-        
-        if selectionType == "SC"{
-            cell.checkImg.isHidden = true
+        cell.label.font = .systemFont(ofSize: 17)
+      //  cell.checkImg.isHidden = true
+        if selectionType == "SC" {
+            cell.checkImg.image =  UIImage(named: "Unselect")
+            if optionsArray![indexPath.row].isSelected{
+                cell.checkImg.image =  UIImage(named: "Select")
+                cell.label.font = .boldSystemFont(ofSize: 17)
+            }
         }
         else{
-            cell.checkImg.isHidden = false
-            cell.checkImg.image =  UIImage(named: "checkboxEmpty")
+            cell.checkImg.image =  UIImage(named: "uncheck")
+            if optionsArray![indexPath.row].isSelected{
+                cell.checkImg.image =  UIImage(named: "Check")
+                cell.label.font = .boldSystemFont(ofSize: 17)
+            }
         }
+        
         cell.label.textColor = UIColor(named: "BlackWhite")
-        if optionsArray![indexPath.row].isSelected{
-            cell.checkImg.isHidden = false
-            cell.checkImg.image =  UIImage(named: "checked-1")
-        }
         
         if optionsArray![indexPath.row].isK_12School == "1"{
             cell.label.textColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
@@ -114,10 +119,12 @@ class SelectOptionsPopup: UIViewController,UITableViewDelegate,UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         optionsArray![indexPath.row].isSelected = !optionsArray![indexPath.row].isSelected
+        print(selectionType)
+        print(questionFor)
         if questionFor == "Disability"{
             checkNone(index: indexPath.row)
         }
-        if selectionType == "SC"{
+        if selectionType == "SC" {
             checkOptions(index:indexPath.row)
             self.selectOptionsPopupDelegate?.selectedOptionFromPopup(optionArray:optionsArray!)
             dismiss(animated: true, completion: nil)
@@ -125,7 +132,6 @@ class SelectOptionsPopup: UIViewController,UITableViewDelegate,UITableViewDataSo
         else{
             self.tableView.reloadData()
         }
-        
     }
     
     

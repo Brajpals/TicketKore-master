@@ -37,7 +37,6 @@ func getUserSettings () {
 func getSupervisorRipa(params: [String:Any]){
     AppUtility.showProgress(nil, title: nil)
     var URL:String?
-    
      URL = AppConstants.Api.questions
      print(params)
     if Reachability.isConnectedToNetwork(){
@@ -47,7 +46,7 @@ func getSupervisorRipa(params: [String:Any]){
                 
                 if let json = try? JSON(data: success as! Data),let objectDictionary = json.dictionaryObject,let result = objectDictionary["result"] as? [String : Any],let object = UserSettingModel.formattedData(data: result)  {
                     print(json)
-                    print(objectDictionary)
+                  //  print(objectDictionary)
                     self.userDelegate?.getUserSettingData(settingData: object)
                 }
               }
@@ -106,9 +105,17 @@ func getSupervisorRipa(params: [String:Any]){
                 AppUtility.hideProgress(nil)
                
                 if message.lowercased() == "success"{
-                     if let json = try? JSON(data: success as! Data),let objectDictionary = json.dictionaryObject,let dict = objectDictionary["result"] as? NSDictionary,let msg = dict["message"] as? String{
+                     if let json = try? JSON(data: success as! Data),let objectDictionary = json.dictionaryObject,let dict = objectDictionary["result"] as? NSDictionary{
                         print(objectDictionary)
-                        self.userDelegate?.updateUserSettingData(msg: msg)
+                         let statusCount = dict["status"] as? Int
+                         let msg = dict["message"] as? String
+                         if statusCount == 2 {
+                             let msge = dict["serviceError"] as? String
+                             AppUtility.showAlertWithProperty("Alert", messageString:msge ?? "")
+                         }
+                         else {
+                             self.userDelegate?.updateUserSettingData(msg: msg ?? "")
+                         }
                     }
                   }
                 else{
@@ -151,7 +158,7 @@ func getSupervisorRipa(params: [String:Any]){
     func updateGenderEthnicity(params: [String:Any]){
         AppUtility.showProgress(nil, title: nil)
         var URL:String?
-        
+       
          URL = AppConstants.Api.questions
         
         if Reachability.isConnectedToNetwork(){
@@ -189,4 +196,19 @@ func getSupervisorRipa(params: [String:Any]){
     }
     
 
+}
+
+extension Array {
+    func unique<T:Hashable>(map: ((Element) -> (T)))  -> [Element] {
+        var set = Set<T>() //the unique list kept in a Set for fast retrieval
+        var arrayOrdered = [Element]() //keeping the unique list of elements but ordered
+        for value in self {
+            if !set.contains(map(value)) {
+                set.insert(map(value))
+                arrayOrdered.append(value)
+            }
+        }
+
+        return arrayOrdered
+    }
 }

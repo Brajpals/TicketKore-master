@@ -175,7 +175,30 @@ extension UIView {
 }
 
 
-
-
-
+extension String{
+    func convertTimerForEvent(eventtDate : String, gpsActivateTime : String) -> Bool {
+         print(eventtDate)
+        let gpsTime = Int(gpsActivateTime) ?? 0
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        // print(eventtDate)
+        dateFormatter.dateFormat = "MM/dd/yyyy HH:mm"
+        if let releaseDate = dateFormatter.date(from: eventtDate){
+            let diffDateComponents = calendar.dateComponents([.day, .hour, .minute, .second], from: releaseDate, to: currentDate as Date)
+            
+            if diffDateComponents.day ?? 0 > 0 {
+                return true
+            }
+            else if diffDateComponents.hour ?? 0 > 0 {
+                return true
+            }
+            else if diffDateComponents.minute ?? 0 > gpsTime {
+                return true
+            }
+           }
+        return false
+    }
+    
+}
 

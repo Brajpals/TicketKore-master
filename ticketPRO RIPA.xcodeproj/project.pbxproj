@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		041528B82ACBE8900071B1FE /* RadioTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041528B62ACBE8900071B1FE /* RadioTextCell.swift */; };
+		041528B92ACBE8900071B1FE /* RadioTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 041528B72ACBE8900071B1FE /* RadioTextCell.xib */; };
+		046013A52A8CA215000D7FEB /* GenderEthencityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046013A42A8CA215000D7FEB /* GenderEthencityViewController.swift */; };
 		0470A2E329E9122800ED41EA /* DefaultCityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0470A2E229E9122800ED41EA /* DefaultCityModel.swift */; };
+		0490D6282B70ADDF0034EA81 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0490D6272B70ADDF0034EA81 /* GoogleService-Info.plist */; };
 		3F00191A280FE0EA0073F540 /* LoginPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F001919280FE0EA0073F540 /* LoginPopupViewController.swift */; };
 		3F066F8926413350007B60A6 /* SavedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F066F8826413350007B60A6 /* SavedListViewModel.swift */; };
 		3F0A6FD525A6F9170001BFC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0A6FD425A6F9170001BFC5 /* AppDelegate.swift */; };
@@ -84,7 +88,6 @@
 		3F744F7C26650BCF00390724 /* ViolationPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F744F7B26650BCF00390724 /* ViolationPopup.swift */; };
 		3F7722D825B195B0009C0828 /* roboto in Resources */ = {isa = PBXBuildFile; fileRef = 3F7722D725B195B0009C0828 /* roboto */; };
 		3F7722E025B1978C009C0828 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F7722DF25B1978C009C0828 /* Roboto-Medium.ttf */; };
-		3F85009F264C4D0500DA159C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F85009E264C4D0500DA159C /* GoogleService-Info.plist */; };
 		3F8BCA3E270DA7F900DD178B /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8BCA3D270DA7F900DD178B /* LocationModel.swift */; };
 		3F8CFE3425EA7B720007C156 /* PreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F8CFE3225EA7B720007C156 /* PreviewCell.xib */; };
 		3F8CFE3525EA7B720007C156 /* PreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8CFE3325EA7B720007C156 /* PreviewTableViewCell.swift */; };
@@ -145,7 +148,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		041528B62ACBE8900071B1FE /* RadioTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioTextCell.swift; sourceTree = "<group>"; };
+		041528B72ACBE8900071B1FE /* RadioTextCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RadioTextCell.xib; sourceTree = "<group>"; };
+		046013A42A8CA215000D7FEB /* GenderEthencityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderEthencityViewController.swift; sourceTree = "<group>"; };
 		0470A2E229E9122800ED41EA /* DefaultCityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCityModel.swift; sourceTree = "<group>"; };
+		0490D6272B70ADDF0034EA81 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		33F194A4CF5DA50CCCA56263 /* Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA-ticketPRO RIPAUITests/Pods-ticketPRO RIPA-ticketPRO RIPAUITests.release.xcconfig"; sourceTree = "<group>"; };
 		39ABFE45C4D00AC10E168E46 /* Pods-ticketPRO RIPA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ticketPRO RIPA.release.xcconfig"; path = "Target Support Files/Pods-ticketPRO RIPA/Pods-ticketPRO RIPA.release.xcconfig"; sourceTree = "<group>"; };
 		3F001919280FE0EA0073F540 /* LoginPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPopupViewController.swift; sourceTree = "<group>"; };
@@ -231,7 +238,6 @@
 		3F744F7B26650BCF00390724 /* ViolationPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationPopup.swift; sourceTree = "<group>"; };
 		3F7722D725B195B0009C0828 /* roboto */ = {isa = PBXFileReference; lastKnownFileType = folder; path = roboto; sourceTree = "<group>"; };
 		3F7722DF25B1978C009C0828 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
-		3F85009E264C4D0500DA159C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3F8BCA3D270DA7F900DD178B /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		3F8CFE3225EA7B720007C156 /* PreviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreviewCell.xib; sourceTree = "<group>"; };
 		3F8CFE3325EA7B720007C156 /* PreviewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewTableViewCell.swift; sourceTree = "<group>"; };
@@ -306,6 +312,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04A5F6402BA3125800A2D4D5 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		1DB0A51403529B91470EC223 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -401,6 +414,7 @@
 				3F1A0651266BED4700BDB710 /* RejectedApplication */,
 				3F10243825A8390C009AAA35 /* EnrollementViewController.swift */,
 				3F10248C25A87599009AAA35 /* OTPVerificationViewController.swift */,
+				3F1DF8B92754AEDC00792452 /* UserSettingViewModel.swift */,
 				3F5775CD26787AEC0099A757 /* Dashboard */,
 				3FB78188265FE64E005B0B8A /* SavedListViewController.swift */,
 				3F5BF5C725E91C08003E5361 /* New Ripa */,
@@ -412,6 +426,7 @@
 				3F2154D226947F1700475EF6 /* OfflineSyncViewController.swift */,
 				3F436BCA269DB51400E7FBB0 /* TouchIDViewController.swift */,
 				3FB90BA42750B6E000F86AE9 /* UserSettingsViewController.swift */,
+				046013A42A8CA215000D7FEB /* GenderEthencityViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -428,7 +443,7 @@
 		3F0A700B25A6F9A00001BFC5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3F85009E264C4D0500DA159C /* GoogleService-Info.plist */,
+				0490D6272B70ADDF0034EA81 /* GoogleService-Info.plist */,
 				3F0A6FDD25A6F91A0001BFC5 /* Assets.xcassets */,
 				3F7722DF25B1978C009C0828 /* Roboto-Medium.ttf */,
 				3F7722D725B195B0009C0828 /* roboto */,
@@ -559,6 +574,8 @@
 				3FB90BA72750BBAC00F86AE9 /* UserSettingCell.xib */,
 				3F3F6BB72754DF4700CB075C /* userCell.swift */,
 				3F3F6BB82754DF4700CB075C /* userCell.xib */,
+				041528B62ACBE8900071B1FE /* RadioTextCell.swift */,
+				041528B72ACBE8900071B1FE /* RadioTextCell.xib */,
 			);
 			path = TableView;
 			sourceTree = "<group>";
@@ -575,6 +592,7 @@
 				3F1DF8BD2754CA0C00792452 /* UserSettingOptionController.swift */,
 				3F57962F2755FBE200D6BC32 /* EnterAssignmentController.swift */,
 				3F001919280FE0EA0073F540 /* LoginPopupViewController.swift */,
+				04A5F6402BA3125800A2D4D5 /* New Group */,
 			);
 			path = Popups;
 			sourceTree = "<group>";
@@ -587,7 +605,6 @@
 				3F66805A25DD241F00ECE239 /* NewRipaViewModel.swift */,
 				3F128D822617B4EB006441AA /* PreviewViewModel.swift */,
 				3F066F8826413350007B60A6 /* SavedListViewModel.swift */,
-				3F1DF8B92754AEDC00792452 /* UserSettingViewModel.swift */,
 				3F95490D27C66C1200549C93 /* EditRipaViewModel.swift */,
 			);
 			path = ViewModel;
@@ -723,11 +740,11 @@
 				3F59E50A261C3E3200D5F4A4 /* PersonsTableCell.xib in Resources */,
 				3F72AC7925EF631E000EFDF5 /* CLCell.xib in Resources */,
 				94F621BB264425A20091C0E6 /* NoQuestionTableViewCell.xib in Resources */,
+				0490D6282B70ADDF0034EA81 /* GoogleService-Info.plist in Resources */,
 				3F69E15F26160682003CB920 /* ViolationTextCell.xib in Resources */,
 				3F7722E025B1978C009C0828 /* Roboto-Medium.ttf in Resources */,
 				3F690D8025E6890D0095FC0D /* ticketpro.db in Resources */,
 				3F0DBC5F266A3421008EA2FF /* RejectedApplicationCell.xib in Resources */,
-				3F85009F264C4D0500DA159C /* GoogleService-Info.plist in Resources */,
 				3F5F7C922629AE5F00E0FB6A /* EducationCodeCell.xib in Resources */,
 				3FB78182265D363E005B0B8A /* PerceivedGenderCell.xib in Resources */,
 				3F10240425A837B2009AAA35 /* Main.storyboard in Resources */,
@@ -736,6 +753,7 @@
 				3F5BF5D625E92976003E5361 /* SingleLineCell.xib in Resources */,
 				3FB4504725DE38EC00E1A30C /* QuestionCell.xib in Resources */,
 				3F8CFE3425EA7B720007C156 /* PreviewCell.xib in Resources */,
+				041528B92ACBE8900071B1FE /* RadioTextCell.xib in Resources */,
 				3F0A6FDE25A6F91A0001BFC5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -860,6 +878,7 @@
 				3F436BCB269DB51500E7FBB0 /* TouchIDViewController.swift in Sources */,
 				3F0DBC5E266A3421008EA2FF /* RejectedApplicationCell.swift in Sources */,
 				3F0DBC63266A4F97008EA2FF /* RejectedApplicationModel.swift in Sources */,
+				041528B82ACBE8900071B1FE /* RadioTextCell.swift in Sources */,
 				3F66803725DCDAEA00ECE239 /* UIImage.swift in Sources */,
 				3F66803325DCDAEA00ECE239 /* Array.swift in Sources */,
 				3F10253325AED127009AAA35 /* DashBoardViewController.swift in Sources */,
@@ -929,6 +948,7 @@
 				3FB78185265E2A65005B0B8A /* SelectOptionsPopup.swift in Sources */,
 				3F69E0F1260CB64B003CB920 /* ListViewController.swift in Sources */,
 				3F317F1D25D1501300E986EA /* DataManager.swift in Sources */,
+				046013A52A8CA215000D7FEB /* GenderEthencityViewController.swift in Sources */,
 				3F2154D326947F1800475EF6 /* OfflineSyncViewController.swift in Sources */,
 				3F97BCAD25D9ABAD001F86F7 /* OtherRipaDataModel.swift in Sources */,
 				3F5F7C8B2628C1A000E0FB6A /* EducationCode.swift in Sources */,
@@ -1116,16 +1136,16 @@
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YY8294K333;
 				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 3.3.4;
+				MARKETING_VERSION = 1.1.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1162,10 +1182,10 @@
 					"\"nanopb\"",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop24;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = RipaDev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Ripa_Live;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1183,16 +1203,16 @@
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = "ticketPRO RIPA/ticketPRO RIPA.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YY8294K333;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "$(SRCROOT)/ticketPRO RIPA/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 3.3.4;
+				MARKETING_VERSION = 1.1.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1229,10 +1249,10 @@
 					"\"nanopb\"",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop24;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = RipaDev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Ripa_Live;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1245,8 +1265,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YY8294K333;
 				INFOPLIST_FILE = "ticketPRO RIPATests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -1255,10 +1275,9 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ticketpro.ripa.ticketPRO-RIPATests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = RipaStop_AppStorr;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ticketPRO RIPA.app/ticketPRO RIPA";
@@ -1271,8 +1290,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YY8294K333;
 				INFOPLIST_FILE = "ticketPRO RIPATests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
@@ -1281,10 +1300,9 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ticketpro.ripa.ticketPRO-RIPATests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticketpro.ripastop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = RipaStop_AppStorr;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ticketPRO RIPA.app/ticketPRO RIPA";

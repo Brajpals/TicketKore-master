@@ -30,7 +30,7 @@ class ViolationCell2: UITableViewCell, UITableViewDelegate, UITableViewDataSourc
     @IBOutlet weak var cellHeight: NSLayoutConstraint!
     @IBOutlet weak var ClearBtn: UIButton!
     
-    
+    var isResultStop : Bool = false
     var violationsArr = [Questionoptions1]()
     var section:Int?
     weak var delegate: violDelegate?
@@ -56,15 +56,22 @@ class ViolationCell2: UITableViewCell, UITableViewDelegate, UITableViewDataSourc
         let index = indexPath.row as Int
         
         cell.txtLbl.text = violationsArr[index].option_value
+        if isResultStop == true && violationsArr[index].isNewAdded == true{
+            cell.removeBtn.isHidden = false
+        }
+        else  if isResultStop == true && violationsArr[index].isNewAdded == false{
+            cell.removeBtn.isHidden = true
+        }
+        else {
+            cell.removeBtn.isHidden = false
+        }
+       
         cell.removeBtn.tag = index
         cell.removeBtn.addTarget(self, action: #selector(removeViol(sender:)), for: .touchUpInside)
         cell.layoutIfNeeded()
  
         return cell
     }
-    
-    
- 
     
     
     @objc func removeViol(sender: UIButton){

@@ -2771,7 +2771,9 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         }
        
         if viewType == "UseSaveRipa" ,selectedOptionsArray.count > 8{
-            selectedOptionsArray[4].removeAll(where: {$0.mainQuestId != "14"})
+//            let arobjj = selectedOptionsArray
+//            selectedOptionsArray[4].removeAll(where: {$0.mainQuestId != "14"})
+//            let arobj = selectedOptionsArray
             let personDict = personArray[0]
             let selectArray = personDict["SelectedOption"] as! [[Questionoptions1]]
             if selectArray.count > 8{
@@ -2794,7 +2796,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             }
         }
         
-    //  let arrr = selectedOptionsArray
+      let arrr = selectedOptionsArray
         let reasonForStopObject = newRipaViewModel.createPersonInformation(selectedOptionArray: selectedOptionsArray)
         selectedOptionsArray[2] = reasonForStopObject
         
@@ -2858,7 +2860,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
             }
         }
         
-     //   let arv = selectedOptionsArray
+        let arv = selectedOptionsArray
      //   print(arv)
      
         if (viewType == "StartNewRipa" || viewType == "UseLastRipa" || viewType == "Template"){
@@ -3034,7 +3036,7 @@ class NewRipaViewController: UIViewController,PopupViewControllerDelegate,AddOpt
         }
         
         
-        let arobj = selectedOptionsArray[8]
+        let arobj = selectedOptionsArray
         print(arobj)
         
         personDict = ["PersonType":personType,"SelectedOption":selectedOptionsArray,"QuestionArray":questarr,"CascadeQuestionArray":cascadeQuestArr]
@@ -9300,6 +9302,22 @@ extension NewRipaViewController: UITableViewDelegate,UITableViewDataSource{
                self.optionsArray!.forEach({$0.isExpanded = false})
                self.disableNextButton(View: self.nextView)
                self.tableView.reloadData()
+            
+            let question = newRipaViewModel.getQuestionUsingQuestionCodeUsingString(question_code: "14")
+            let findOption = question.questionoptions?.filter({$0.physical_attribute == physicalAttribute})
+               var personDict = personArray[personcount]
+               var objjArray = personDict["SelectedOption"] as! [[Questionoptions1]]
+            if objjArray.count > 4,findOption?.count ?? 0 > 0 {
+                  objjArray[4].removeAll(where: {$0.optionDescription.count == 0 || $0.optionDescription == ""})
+                  if objjArray[4].count > 0 {
+                      objjArray[4].insert(findOption![0], at: 0)
+                  }
+                  else {
+                      objjArray[4].append(findOption![0])
+                  }
+                  personDict["SelectedOption"] = objjArray
+                  personArray[personcount] = personDict
+              }
            }
        
         if questionArray![questNumber!].is_required != "1" {

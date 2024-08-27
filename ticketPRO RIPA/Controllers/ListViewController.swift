@@ -37,12 +37,15 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
     var locationArray : [LocationResult]?
     var schoolArray : [SchoolResult]?
     var violationArray : [ViolationsResult]?
+
     var countyArray : [CountyResult]?
     var location = Location()
     
+    var isResultStop : Bool = false
     var streetName : String?
     var cityID : String?
     var intersectionName : String?
+   
     
     var educationCodeSectionArray : [EducationCodeSection]?
     var educationCodeSubSectionArray : [EducationCodeSubsection]?
@@ -81,14 +84,13 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
        overrideUserInterfaceStyle = .light
         AppConstants.theme = "0"
      }
-        }
+ }
  
-    
-    
     
     
     func onload(){
         submitBtn.isHidden = true
+       
         if listType == "County"{
             listArray = countyArray
             search.placeholder = "Search County"
@@ -96,18 +98,26 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
             addBtn.isHidden = true
             refreshBtn.isHidden = true
         }
-      else if listType == "City"{
+      else if listType == "City or Unincorporated Area"{
             listArray = cityArray
             search.placeholder = "Search City"
-            viewLbl.text = listType
+            viewLbl.text = "Cities or Unincorporated Area"
             addBtn.isHidden = true
         }
-        else if listType == "Location" || listType == "Intersection"{
+        else if listType == "Location" || listType == "First Intersection" || listType == "Street" || listType == "Second Intersection" {
             listArray = locationArray
-            search.placeholder = "Search Street"
+            search.placeholder = "Search"
             viewLbl.text = "Street"
-            if listType == "Intersection"{
-                viewLbl.text = "Intersection Street"
+            if listType == "First Intersection" || listType ==  "Second Intersection" {
+                viewLbl.text = "Cross street"
+            }
+        }
+        else if listType == "Highway" || listType == "Closest Highway Exit"{
+            listArray = locationArray
+            search.placeholder = "Search Highway"
+            viewLbl.text = "Highway"
+            if listType == "Closest Highway Exit"{
+                viewLbl.text = "Closest Highway Exit"
             }
         }
         else if listType == "Violation"{
@@ -115,17 +125,22 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
             search.placeholder = "Search Violation"
             viewLbl.text = listType
             addBtn.isHidden = true
+            submitBtn.setTitle("ACCEPT", for: .normal)
          }
         else if listType == "EducationCode"{
             listArray = educationCodeSectionArray
             search.placeholder = "Search Education Code"
             viewLbl.text = listType
+           // addBtn.setTitle("BACK", for: .normal)
+            addBtn.isHidden = true
         }
         else if listType == "EducationSubCode"{
             listArray = educationCodeSubSectionArray
             search.placeholder = "Search Education Code Subsection"
             viewLbl.text = listType
             refreshBtn.isHidden = true
+            //addBtn.setTitle("BACK", for: .normal)
+            addBtn.isHidden = true
         }
         else{
             listArray = schoolArray
@@ -136,7 +151,6 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
         
     }
     
- 
     
     override func viewDidAppear(_ animated: Bool) {
         AppUtility.hideProgress(nil)
@@ -144,29 +158,33 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
     
     
     @IBAction func action_add(_ sender: Any) {
-        guard let customAlertVC = enterTextPopup else { return }
-        // customAlertVC.ripaId = questionArray![questNumber!].id
-        customAlertVC.inputType = "AN"
-        customAlertVC.popupType = listType!
-        customAlertVC.cityId = cityID!
-        customAlertVC.addLocationDelegate = self
-        let popupVC = PopupViewController(contentController: customAlertVC, position: .bottom(10), popupWidth: UIScreen.main.bounds.size.width, popupHeight: 220)
-        popupVC.cornerRadius = 5
-        popupVC.delegate = self
-        present(popupVC, animated: true, completion: nil)
+        if listType == "EducationCode" || listType == "EducationSubCode" {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            guard let customAlertVC = enterTextPopup else { return }
+            // customAlertVC.ripaId = questionArray![questNumber!].id
+            customAlertVC.inputType = "AN"
+            customAlertVC.popupType = listType!
+            customAlertVC.cityId = cityID!
+            customAlertVC.addLocationDelegate = self
+            let popupVC = PopupViewController(contentController: customAlertVC, position: .bottom(10), popupWidth: UIScreen.main.bounds.size.width, popupHeight: 220)
+            popupVC.cornerRadius = 5
+            popupVC.delegate = self
+            present(popupVC, animated: true, completion: nil)
+        }
     }
-    
     
     func addEnteredOption(option: Any) {
         if listType == "County"{
             countyArray?.append(option as! CountyResult)
              listArray = countyArray
          }
-       else if listType == "City"{
+       else if listType == "City or Unincorporated Area"{
             cityArray?.append(option as! CityResult)
              listArray = cityArray
          }
-        else if listType == "Location" || listType == "Intersection"{
+        else if listType == "Location" || listType == "First Intersection" || listType == "Second Intersection" || listType == "Street" || listType == "Highway" || listType == "Closest Highway Exit"{
             
             let ast = (option as! LocationResult).location
              let filteredLocation = location.result.filter({($0.city_id).contains(cityID!) && ($0.location).contains(ast) })
@@ -219,20 +237,21 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         print(textField.text!)
-        let text = textField.text!.lowercased()
+        var text = textField.text!.lowercased()
+        text = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if listType == "County"{
             listArray = countyArray!.filter{ $0.countyName.lowercased().contains(text) }
             if text == ""{
                 listArray = countyArray
             }
         }
-       else if listType == "City"{
+       else if listType == "City or Unincorporated Area"{
             listArray = cityArray!.filter{ $0.city_name.lowercased().contains(text) }
             if text == ""{
                 listArray = cityArray
             }
         }
-        else if listType == "Location" || listType == "Intersection"{
+        else if listType == "Location" || listType == "First Intersection" || listType == "Second Intersection" || listType == "Street" || listType == "Highway" || listType == "Closest Highway Exit"{
             listArray = locationArray!.filter{ $0.location.lowercased().contains(text) }
             if text == ""{
                 listArray = locationArray
@@ -274,11 +293,14 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
         dashboardViewModel.getListDelegate = self
         dashboardViewModel.forListRefresh = true
         
-         if listType == "City"{
+         if listType == "City or Unincorporated Area"{
             dashboardViewModel.setCityParam()
         }
-        else if listType == "Location" || listType == "Intersection"{
+        else if listType == "Location" || listType == "First Intersection" || listType == "Second Intersection" || listType == "Street"{
             dashboardViewModel.setLocationParam()
+        }
+        else if listType == "Highway" || listType == "Closest Highway Exit"{
+            newRipaViewModel.getHighways(cityID: cityID ?? "")
         }
         else if listType == "Violation"{
             dashboardViewModel.setViolationsParam()
@@ -293,6 +315,10 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
     
     
     @IBAction func action_back(_ sender: Any) {
+        if listType == "Violation"{
+            //violationArray?.forEach({$0.isSelected = false})
+            listArray = violationArray
+        }
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -311,18 +337,26 @@ class ListViewController: UIViewController,PopupViewControllerDelegate, AddLocat
     func getList(success: String) {
         AppUtility.hideProgress()
         if success == "true"{
-            if listType == "City"{
+            if listType == "City or Unincorporated Area"{
                 cityArray = newRipaViewModel.getCities()
                 listArray = cityArray
             }
-            else if listType == "Location" || listType == "Intersection"{
+            else if listType == "Location" || listType == "First Intersection" || listType == "Second Intersection" || listType == "Street" || listType == "Highway" || listType == "Closest Highway Exit"{
                 let locDetail = newRipaViewModel.getLocation(cityID: cityID!)
                 locationArray = locDetail.0
                 location =  locDetail.1
-                 listArray = locationArray
+                listArray = locationArray
             }
             else if listType == "Violation"{
-                violationArray = newRipaViewModel.getViolations()
+                let newVio = newRipaViewModel.getViolations()
+                if  let selectedVio = violationArray?.filter({$0.isSelected == true}) {
+                    for obj in selectedVio {
+                        if let index = newVio.firstIndex(where: {$0.violationDisplay.capitalized == obj.violationDisplay.capitalized}) {
+                            newVio[index].isSelected = true
+                        }
+                    }
+                }
+                violationArray =  newVio
                 listArray = violationArray
             }
             else if listType == "EducationCode"{
@@ -363,10 +397,17 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as! ListCell
         var text:String?
        //cell.checkImg.image =  UIImage(named: "checkboxEmpty")
-        cell.checkImg.image =  UIImage(named: "checked-1")
-        cell.checkImg.isHidden = true
+        cell.checkImg.image =  UIImage(named: "uncheck")
+      //  cell.checkImg.isHidden = true
+        cell.label.font = UIFont.systemFont(ofSize: 18.0)
         if listType == "EducationCode"{
             text = (listArray![indexPath.row] as! EducationCodeSection).educationCodeDesc
+            cell.checkImg.image =  UIImage(named: "Unselect")
+            if (listArray![indexPath.row] as! EducationCodeSection).isSelected == true{
+                cell.checkImg.isHidden = false
+                cell.checkImg.image =  UIImage(named: "Select")
+                cell.label.font = UIFont.boldSystemFont(ofSize: 18.0)
+            }
         }
         else if listType == "EducationSubCode"{
             text = (listArray![indexPath.row] as! EducationCodeSubsection).educationCodeSubsectionDesc
@@ -374,17 +415,20 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
         else if listType == "Violation"{
             text = (listArray![indexPath.row] as! ViolationsResult).violationDisplay
              if (listArray![indexPath.row] as! ViolationsResult).isSelected == true{
-                cell.checkImg.isHidden = false
+                 cell.checkImg.isHidden = false
+                 cell.checkImg.image =  UIImage(named: "Check")
+                 cell.label.font = UIFont.boldSystemFont(ofSize: 18.0)
              }
         }
         else{
+            cell.checkImg.isHidden = true
             if listType == "County"{
                 text = (listArray![indexPath.row] as! CountyResult).countyName + " COUNTY"
             }
-           else if listType == "City"{
+           else if listType == "City or Unincorporated Area"{
                 text = (listArray![indexPath.row] as! CityResult).city_name
             }
-            else if listType == "Location" || listType == "Intersection"{
+            else if listType == "Location" || listType == "First Intersection" || listType == "Second Intersection" ||  listType == "Street" || listType == "Highway" || listType == "Closest Highway Exit"{
                 text = (listArray![indexPath.row] as! LocationResult).location
             }
             else{
@@ -395,17 +439,31 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
         return cell
     }
     
-    
-    
-    
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if listType == "Violation"{
-           
-            
-            (listArray![indexPath.row] as! ViolationsResult).isSelected = !(listArray![indexPath.row] as! ViolationsResult).isSelected
-            
+            if isResultStop {
+                let violationId = (listArray![indexPath.row] as! ViolationsResult).violationID
+                let check = violationArray?.contains(where: {
+                    $0.violationID == violationId && $0.isSelected == true
+                })
+               
+                if (listArray![indexPath.row] as! ViolationsResult).isNewAdded == false && check == true {
+                }
+                else if (listArray![indexPath.row] as! ViolationsResult).isNewAdded == true {
+                    (listArray![indexPath.row] as! ViolationsResult).isNewAdded = !(listArray![indexPath.row] as! ViolationsResult).isNewAdded
+                    (listArray![indexPath.row] as! ViolationsResult).isSelected = !(listArray![indexPath.row] as! ViolationsResult).isSelected
+                }
+                else if check == false {
+                    (listArray![indexPath.row] as! ViolationsResult).isNewAdded = !(listArray![indexPath.row] as! ViolationsResult).isNewAdded
+                    (listArray![indexPath.row] as! ViolationsResult).isSelected = !(listArray![indexPath.row] as! ViolationsResult).isSelected
+                }
+            }
+            else {
+                (listArray![indexPath.row] as! ViolationsResult).isSelected = !(listArray![indexPath.row] as! ViolationsResult).isSelected
+            }
             submitBtn.isHidden = false
             tableView.reloadData()
         }
@@ -421,29 +479,37 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
                     self.locationdelegate?.countyChanged(resetLoc:false)
                   }
              }
-          else if listType == "City"{
+          else if listType == "City or Unincorporated Area"{
                 (listArray![indexPath.row] as! CityResult).isSelected = !(listArray![indexPath.row] as! CityResult).isSelected
-                
-                let dict = ["City": (listArray![indexPath.row] as! CityResult).city_name, "Id": (listArray![indexPath.row] as! CityResult).city_id]
+               print(listArray)
+               print( (listArray![indexPath.row] as! CityResult).city_id)
+              (listArray![indexPath.row] as! CityResult).isSelected = true
+                let dict = ["City or Unincorporated Area": (listArray![indexPath.row] as! CityResult).city_name, "Id": (listArray![indexPath.row] as! CityResult).city_id]
                 UserDefaults.standard.set(dict, forKey: "DefaultCity")
                 UserDefaults.standard.synchronize()
                 
-                self.locationdelegate?.refreshLocationLists(list:listArray, listType: listType!)
+                self.locationdelegate?.refreshLocationLists(list:listArray, listType: "City or Unincorporated Area")
             }
-            else if listType == "Location" || listType == "Intersection"{
+            else if listType == "Location" || listType == "First Intersection" || listType == "Second Intersection" || listType ==  "Street" || listType == "Highway" || listType == "Closest Highway Exit"{
                 
                 if listType == "Location"{
                     if  (listArray![indexPath.row] as! LocationResult).location == intersectionName{
-                        AppUtility.showAlertWithProperty("Alert", messageString: "Street and intersection cannot be same")
+                        AppUtility.showAlertWithProperty("Alert", messageString: "Cross Street2 Can't be same as Cross Street1.")
                         return
                     }
                  }
-                  if listType == "Intersection"{
-                    if  (listArray![indexPath.row] as! LocationResult).location == streetName{
-                        AppUtility.showAlertWithProperty("Alert", messageString: "Street and intersection cannot be same")
+                  if listType == "Second Intersection"{
+                      if  (listArray![indexPath.row] as! LocationResult).location == AppConstants.firstIntersection{
+                        AppUtility.showAlertWithProperty("Alert", messageString: "Cross Street2 Can't be same as Cross Street1.")
                         return
                     }
                 }
+                if listType == "First Intersection"{
+                    if  (listArray![indexPath.row] as! LocationResult).location == AppConstants.secondIntersection{
+                      AppUtility.showAlertWithProperty("Alert", messageString: "Cross Street1 Can't be same as Cross Street2.")
+                      return
+                  }
+              }
                 if (listArray![indexPath.row] as! LocationResult).location.count < 5 || (listArray![indexPath.row] as! LocationResult).location.count > 250 {
                     AppUtility.showAlertWithProperty("Alert", messageString: "Street should be between 5 to 250 in length.")
                     return
@@ -452,6 +518,9 @@ extension ListViewController: UITableViewDelegate,UITableViewDataSource{
                   self.locationdelegate?.refreshLocationLists(list:listArray, listType: listType!)
             }
             else if listType == "EducationCode"{
+                listArray?.forEach({
+                    ($0 as! EducationCodeSection).isSelected = false
+                })
                 (listArray![indexPath.row] as! EducationCodeSection).isSelected = !(listArray![indexPath.row] as! EducationCodeSection).isSelected
                 self.locationdelegate?.refreshLocationLists(list:listArray, listType: listType!)
              }

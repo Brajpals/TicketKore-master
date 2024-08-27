@@ -7,6 +7,7 @@ import SwiftyJSON
 protocol LoginOTPViewModelDelegate: AnyObject {
     func proceedToOTP(isValidLogin: Int, message:String)
     func showPopupForCustId()
+    func currentVersionIsRunning()
 }
 
 protocol ActivityStoreDelegate: AnyObject {
@@ -150,6 +151,7 @@ extension LoginViewModel {
                 let data =  DataManager.shared.loginDetails
                 let result = data?.result
                 // result?.serviceError != nil
+                
                 if result?.serviceError != "" ,let msgStr = result?.serviceError{
                     if result?.status == "5" || result?.statuss == 5 {
                         self.OTPdelegate?.showPopupForCustId()
@@ -185,7 +187,7 @@ extension LoginViewModel {
         getLoginDetails()
         let param:[String : Any] = ["access_token":AppManager.getLastSavedLoginDetails()?.result?.access_token ?? "", "userid":userId!, "otp":otp]
         let params:[String : Any] = ["id":"82F85DB43CBF6", "method":"ripaEmailOtpVerification", "params": param, "jsonrpc": "2.0"]
-        
+        print(params)
         AppUtility.showProgress(nil, title: "Checking...")
         let URL:String = AppConstants.Api.otpRequest
         
@@ -216,6 +218,7 @@ extension LoginViewModel {
     
     func checkActivityStore(params: [String:Any]){
         let URL = AppConstants.Api.activity_store
+        print(params)
         ApiManager.checkActivityStore(params: params, methodTyPe: .post, url: URL, completion: { [self] (success,message) in
             AppUtility.hideProgress(nil)
             if message == "Success"{
@@ -234,7 +237,6 @@ extension LoginViewModel {
     
     
     
-    
     func updateVesionApp() {
         let param:[String : Any] = ["access_token": ""]
         let params:[String : Any] = ["id": "82F85DB43CBF6", "method":"ripaPlatformVersions", "params":param,"jsonrpc": "2.0"]
@@ -249,13 +251,15 @@ extension LoginViewModel {
         URL = AppConstants.Api.updateVersion
         
         ApiManager.updateIOSVersion(params: params, methodTyPe: .post, url: URL!, completion: {  (success) in
-            // AppUtility.hideProgress(nil)
+             AppUtility.hideProgress(nil)
             if success == true{
                 let data =  DataManager.shared.versionUpdate
                 let result = data?.result
+                var forceInstall : String = ""
+                forceInstall = data?.result?.force_install ?? ""
                 var serverVersionStr : String = "1.0"
                 var appVersionStr : String = "1.0"
-               
+                
                 if let servserVersion = result?.ios_verion {
                     serverVersionStr = servserVersion
                 }
@@ -269,30 +273,64 @@ extension LoginViewModel {
                 let version = Double(serverVersionStr)
                 
                 let versionnew = Double(appVersionStr)
-                if version ?? 1.0 > versionnew ?? 1.0{
-                    let refreshAlert = UIAlertController.init(title: "Update Available", message: "A new version of ticketPRO RIPA STOP is available. If you have access to the App Store, select the Update Now button below. Otherwise, contact your IT Administrator to get the update.", preferredStyle: .alert)
-                    refreshAlert.addAction(UIAlertAction(title: "", style: .default, handler: { (action: UIAlertAction!) in
-                        if let url = NSURL(string:"https://apps.apple.com/in/app/ripa-stop/id1567247543") {
-                            UIApplication.shared.open(url as URL)
+                let message = data?.result?.notes ?? ""
+                
+                if forceInstall.capitalized == "Y" {
+                    let redirectUrl = data?.result?.redirect_url ?? ""
+                    if version ?? 1.0 > versionnew ?? 1.0{
+                       
+                        let alert = UIAlertController(title: "Required Update Available", message: message, preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "UPDATE", style: UIAlertAction.Style.default, handler: { action in
+                            if let url = NSURL(string:"https://apps.apple.com/us/app/ripa-stop-2024/id6463294642") {
+                                UIApplication.shared.open(url as URL)
+                            }
+                           })
+                        )
+                        alert.addAction(UIAlertAction(title: "RIPA WEB", style: UIAlertAction.Style.default, handler: { action in
+                            if let url = NSURL(string:redirectUrl) {
+                                UIApplication.shared.open(url as URL)
+                            }
+                           })
+                        )
+                        DispatchQueue.main.async{
+                            UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
                         }
-                    }))
-                    DispatchQueue.main.async{
-                        UIApplication.topViewController()?.present(refreshAlert, animated: true, completion: nil)
                     }
-                    
-                    let when = DispatchTime.now() + 2
-                    DispatchQueue.main.asyncAfter(deadline: when){
-                      // your code with delay
-                        refreshAlert.dismiss(animated: true, completion: nil)
+                    else {
+                        self.OTPdelegate?.currentVersionIsRunning()
+                    }
+                }
+                else {
+                    if version ?? 1.0 > versionnew ?? 1.0{
+                        let alert = UIAlertController(title: "Update Available", message: message, preferredStyle: UIAlertController.Style.alert)
+                       
+                        alert.addAction(UIAlertAction(title: "CANCEL", style: UIAlertAction.Style.cancel, handler: { action in
+                             self.OTPdelegate?.currentVersionIsRunning()
+                           } )
+                        )
+                        alert.addAction(UIAlertAction(title: "UPDATE", style: UIAlertAction.Style.default, handler: { action in
+                            if let url = NSURL(string:"https://apps.apple.com/us/app/ripa-stop-2024/id6463294642") {
+                                UIApplication.shared.open(url as URL)
+                            }
+                           } )
+                        )
+                        
+                        DispatchQueue.main.async{
+                            UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                    else {
+                        self.OTPdelegate?.currentVersionIsRunning()
                     }
                 }
             }
-            else {// AppUtility.showAlertWithProperty("Alert", messageString: "Something Went Wrong")
+            else {
             }
         })
         
         { (error, code, message) in
             AppUtility.hideProgress(nil)
+            self.OTPdelegate?.currentVersionIsRunning()
             if let errorMessage = message {
                 print(errorMessage)
                 //  AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)

@@ -111,13 +111,18 @@ class Result: Mappable {
     var   other_assignment_value: String = ""
     var   status: String = ""
     var   statuss: Int = 0
- 
-  
+    var   Ethnicity: String = ""
+    var   Gender: String = ""
+    var   message : String = ""
+    var   is_visible : Int = 0
     
     required init?(map: Map){}
     
       func mapping(map: Map)
     {
+        Ethnicity <- map["Ethnicity_id"]
+        Gender <- map["Gender_id"]
+        message <- map["message"]
         serviceError <- map["serviceError"]
         ripa_enrollment_id <- map["ripa_enrollment_id"]
         ripa_enrollment_activity_id <- map["ripa_enrollment_activity_id"]
@@ -171,7 +176,7 @@ class Result: Mappable {
         other_assignment_value <- map["other_assignment_value"]
         status <- map["status"]
         statuss <- map["status"]
-   
+        is_visible <- map["is_visible_officer_info"]
  
     }
 }

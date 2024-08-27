@@ -44,7 +44,7 @@ class EnterTextPopupViewController: UIViewController,UITextFieldDelegate, GPSLoc
     var cityId = ""
     var countyID = AppManager.getLastSavedLoginDetails()?.result?.county_id
     
-    let set = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ ")
+    let set = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ")
     
     static func instantiate() -> EnterTextPopupViewController? {
         return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(EnterTextPopupViewController.self)") as? EnterTextPopupViewController
@@ -95,13 +95,17 @@ class EnterTextPopupViewController: UIViewController,UITextFieldDelegate, GPSLoc
 //                self.addLocationDelegate?.addEnteredOption(option: option)
 //            }
 //            else
-            if popupType == "Location" || popupType == "Intersection"{
+            print(popupType)
+            if popupType == "Location" || popupType == "First Intersection" || popupType == "Street" || popupType == "Second Intersection" || popupType == "Highway"{
                 if let strength = inputField.text, strength.count > 4 && strength.count < 250 {
-                    let option = LocationResult(location_id: "", custid: "", location: text, zone_id: "", order_number: "", is_active: "", county_id: countyID!, city_id: cityId, isSelected: false)
+                    let option = LocationResult(location_id: "", custid: "", location: text, zone_id: "", order_number: "", is_active: "", county_id: countyID!, city_id: cityId, isSelected: false, Highway: "")
+                    if popupType == "Highway" {
+                        option.Highway = "1"
+                    }
                     self.addLocationDelegate?.addEnteredOption(option: option)
                 }
                 else {
-                    AppUtility.showAlertWithProperty("Alert", messageString: "Street should be between 5 to 250 in length.")
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Location should be between 5 to 250 in length.")
                     return
                 }
             }
@@ -149,7 +153,7 @@ class EnterTextPopupViewController: UIViewController,UITextFieldDelegate, GPSLoc
                 }
                 
                 
-                let option = Questionoptions1(mainQuestId: "", mainQuestOrder:"",option_id: "", ripa_id: ripaId ?? "", custid: "", option_value: text, cascade_ripa_id: "", isK_12School: "", isHideQuesText: "", order_number: "", createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: true, isAddtion : "", isDescription_Required : "",inputTypeCode: "", questionTypeCode: "", tag: "", physical_attribute: "", default_value: "", optionDescription: "", question_code_for_cascading_id: "", isQuestionMandatory: "", isQuestionDescriptionReq: "", main_question_id: "", isExpanded: false, questionoptions: [])
+                let option = Questionoptions1(mainQuestId: "", mainQuestOrder:"",option_id: "", ripa_id: ripaId ?? "", custid: "", option_value: text, cascade_ripa_id: "", isK_12School: "", isHideQuesText: "", order_number: "", createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: true, isAddtion : "", isDescription_Required : "",inputTypeCode: "", questionTypeCode: "", tag: "", physical_attribute: "", default_value: "", optionDescription: "", question_code_for_cascading_id: "", isQuestionMandatory: "", isQuestionDescriptionReq: "", main_question_id: "", isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
                 
                 self.delegate?.addEnteredOption(option: option)
             }
@@ -191,46 +195,58 @@ class EnterTextPopupViewController: UIViewController,UITextFieldDelegate, GPSLoc
     }
     
     
-    
+    let ACCEPTABLE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789. "
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
+        var newString = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
        // let newLength:Int = newString.count
-        
+        let cs = CharacterSet(charactersIn: ACCEPTABLE_CHARACTERS).inverted
+        let filtered: String = (string.components(separatedBy: cs) as NSArray).componentsJoined(by: "")
+        if newString == " " {
+            return false
+        }
         if ((question?.contains("Weight")) != nil){
                // let newText = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
                 if newString.isEmpty {
-                    return true
+                    return (string == filtered)
                 }
                 else if let intValue = Int(newString), intValue <= 500 {
-                    return true
+                    return (string == filtered)
                 }
                 return false
             }
-            
-        if ((question?.contains("Height")) != nil){
+      else if ((question?.contains("Height")) != nil){
                 if textField == inputField{
                   //  let newText = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
                     if newString.isEmpty {
-                        return true
+                        return (string == filtered)
                     }
                     else if let intValue = Int(newString), intValue <= 6 && intValue >= 4 {
-                        return true
+                        return (string == filtered)
                     }
                     return false
                 }
                 if textField == inputField2{
                   //  let newText = NSString(string: textField.text!).replacingCharacters(in: range, with: string)
                     if newString.isEmpty {
-                        return true
+                        return (string == filtered)
                     }
                     else if let intValue = Int(newString), intValue <= 11 {
-                        return true
+                        return (string == filtered)
                     }
                     return false
                 }
-                
             }
-            
+       else if popupType == "First Intersection" || popupType == "Street" || popupType == "Second Intersection" {
+           if newString.count > 50{
+                return false
+            }
+        }
+        else if popupType == "Highway" {
+            if newString.count > 75 {
+                return false
+            }
+        }
+        
             if inputType == "A "{
                 do {
                     let regex = try NSRegularExpression(pattern: ".*[^A-Za-z].*", options: [])
@@ -241,9 +257,9 @@ class EnterTextPopupViewController: UIViewController,UITextFieldDelegate, GPSLoc
                 catch {
                     print("ERROR")
                 }
-                return true
+                return (string == filtered)
             }
-            return true
+        return (string == filtered)
        
     }
     

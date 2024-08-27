@@ -36,22 +36,22 @@ struct AppConstants {
     static var autoNext:Bool?
     
     struct BaseURL {
-         static let URL = "https://tpwebservicesdev.ticketproweb.com/public/index.php/service"
+         static let URL = "https://tpwebservices.ticketproweb.com/public/index.php/service"
      }
  
  //Prod//'https://tpwebservices.ticketproweb.com/public/index.php/service'
  //Dev//https://tpwebservicesdev.ticketproweb.com/public/index.php/service
- //Stage//http://tpwebservicestage.ticketproweb.com/public/index.php/service
+ //Stage//https://tpwebservicestage.ticketproweb.com/public/index.php/service
  //https://tpwebservicesdev.ticketproweb.com/public/index.php/service/genericv1
     
     struct Api {
-            static let otpRequest = BaseURL.URL + "/ripav1"
-            static let loginRequest = BaseURL.URL + "/user/verifyotpv1"
-            static let activity_store = BaseURL.URL + "/ripav1"
-            static let violations = BaseURL.URL + "/ripav1"
-            static let questions = BaseURL.URL + "/ripav1"
-            static let updateRipa = BaseURL.URL + "/ripav1"
-            static let updateVersion = BaseURL.URL + "/ripav1"
+            static let otpRequest = BaseURL.URL + "/Ripav24"
+            static let loginRequest = BaseURL.URL + "/user/verifyotpv24"
+            static let activity_store = BaseURL.URL + "/Ripav24"
+            static let violations = BaseURL.URL + "/Ripav24"
+            static let questions = BaseURL.URL + "/Ripav24"
+            static let updateRipa = BaseURL.URL + "/Ripav24"
+            static let updateVersion = BaseURL.URL + "/Ripav24"
      }
     
     static var theme:String=""
@@ -63,8 +63,17 @@ struct AppConstants {
     static var longi:String=""
     static var address:String=""
     static var city:String=""
+    static var geoCity:String=""
     static var isSchoolSelected:String=""
     static var schoolName:String=""
+    static var street:String=""
+    static var block:String=""
+    static var firstIntersection:String=""
+    static var LocTypeDescription:String=""
+    static var LocTypeIndex:Int = 0
+    static var secondIntersection:String=""
+    static var highway:String=""
+    static var closestHighway:String=""
     static var isStudent:String="0"
     static var loginVia:String=""
     static var key:String=""
@@ -76,6 +85,8 @@ struct AppConstants {
     static var citation = ""
     static var deviceid = ""
     static var applicationtime = ""
+    static var RipaActivedate = ""
+    static var gpsActiveTime = ""
     
     static var ripaTimeDuration = ""
     static var ripaCounty = ""
@@ -89,6 +100,15 @@ struct AppConstants {
     static var unitId = ""
     static var zone = ""
     static var activity_id = ""
+    static var numberOfPerson = 0
+    static var isTemplate = ""
+    static var isAddPerson = false
+    static var reason_for_stop = ""
+    static var isTrafficData = false
+    
+    static var violation_type = ""
+    static var travel_method = ""
+    static var offenceCodes = ""
     
     static func getDeviceToken() {
         Messaging.messaging().token { token, error in

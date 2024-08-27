@@ -131,8 +131,12 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     
     @IBAction func closeAction(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-        
+        if popupFor == "Violation"{
+            
+        }
+        else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     
@@ -235,12 +239,18 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
     @IBAction func actionDone(_ sender: Any) {
         if popupFor == "Consent"{
             self.violationPopupDelegate?.selectedOptionFromConsentPopup(consentQuestion:concentQuestion!)
+            dismiss(animated: true, completion: nil)
         }
         else{
-            
+            let obj = violationArray!.filter({$0.isSelected == true})
+            if obj.count > 0 {
+                dismiss(animated: true, completion: nil)
+            }
+            else {
+                AppUtility.showAlertWithProperty("", messageString: "Please select atleast one violation!")
+            }
         }
         
-        dismiss(animated: true, completion: nil)
     }
     
     
@@ -255,6 +265,7 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
         }
         
         self.violationPopupDelegate?.selectedOptionFromViolationPopup(optionArray:optionsArray )
+        
     }
     
     

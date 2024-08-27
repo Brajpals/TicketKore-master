@@ -33,6 +33,7 @@ class UserSettingCell: UITableViewCell {
     }
     
     func setQuestionData(data : Question){
+        self.categoryLbl.text = ""
         self.titleLbl.text = "Type of assignment of Officer"
         if let question =  data.question, question != "Type of Assignment of Officer"{
             self.categoryLbl.text = question

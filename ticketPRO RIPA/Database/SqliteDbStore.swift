@@ -18,8 +18,6 @@ class SqliteDbStore {
     var db: OpaquePointer?
     
     
-    
-    
     func openDatabase(){
         if sqlite3_open(fileURL.path, &db) == SQLITE_OK {
             print("Successfully opened connection to database at \(fileURL.path)")
@@ -37,6 +35,7 @@ class SqliteDbStore {
     let  AllSaveOptions = "useSaveRipaOptionsTable";
     let  city = "cityTable";
     let  location = "locationTable";
+    let  locationType = "locationType";
     let  violation = "violationTable";
     let  school = "schoolTable";
     let  educationCode = "educationCodeTable";
@@ -71,7 +70,7 @@ class SqliteDbStore {
     
     
     
-    var  createRipaTempMasterTable = "create table if not exists ripaTempMasterTable(key TEXT, skeletonID TEXT,activityId TEXT, custid TEXT, userid TEXT, username TEXT, rmsid TEXT, phoneNumber TEXT, location TEXT, city TEXT, street TEXT, block TEXT, intersectionStreet TEXT, note TEXT, activity_notes TEXT, CreatedBy TEXT, ticketDate TEXT, declarationDate TEXT, violation TEXT, violationCode TEXT, violationType TEXT, violationID TEXT, offenceCode TEXT, email TEXT, createdOn TEXT, updatedBy TEXT, updatedOn TEXT, citationNumber TEXT, status TEXT, statusChnageDate TEXT, ripaTempId TEXT, tempType TEXT, stopDate TEXT, stopTime TEXT , stopDuration TEXT,rejectedURL TEXT,mainStatus TEXT, syncStatus TEXT, startDate TEXT , endDate TEXT, is_K_12_Student TEXT, lat TEXT,Long TEXT, timeTaken TEXT, countyId TEXT, deviceid TEXT,  callNumber TEXT, callTime TEXT , onsceneTime TEXT, clearTimeOfOfficer TEXT, overallCallClearTime TEXT, callType TEXT, unitId TEXT, zone TEXT)"
+    var  createRipaTempMasterTable = "create table if not exists ripaTempMasterTable(key TEXT, skeletonID TEXT,activityId TEXT, custid TEXT, userid TEXT, username TEXT, rmsid TEXT, phoneNumber TEXT, location TEXT, city TEXT, street TEXT, block TEXT, intersectionStreet TEXT, note TEXT, activity_notes TEXT, CreatedBy TEXT, ticketDate TEXT, declarationDate TEXT, violation TEXT, violationCode TEXT, violationType TEXT, violationID TEXT, offenceCode TEXT, email TEXT, createdOn TEXT, updatedBy TEXT, updatedOn TEXT, citationNumber TEXT, status TEXT, statusChnageDate TEXT, ripaTempId TEXT, tempType TEXT, stopDate TEXT, stopTime TEXT , stopDuration TEXT,rejectedURL TEXT,mainStatus TEXT, syncStatus TEXT, startDate TEXT , endDate TEXT, is_K_12_Student TEXT, lat TEXT,Long TEXT, timeTaken TEXT, countyId TEXT, deviceid TEXT,  callNumber TEXT, callTime TEXT , onsceneTime TEXT, clearTimeOfOfficer TEXT, overallCallClearTime TEXT, callType TEXT, unitId TEXT, zone TEXT, reason_for_stop TEXT)"
     
     
     var  createCountyTable = "create table if not exists countyTable(countyID TEXT, countyName TEXT, courtHolidays TEXT, webAddress TEXT)"
@@ -81,6 +80,8 @@ class SqliteDbStore {
     var  createCityTable = "create table if not exists cityTable(JsonString TEXT);"
     
     var  createLocationTable = "create table if not exists locationTable(JsonString TEXT);"
+    
+    var  createLocationType = "create table if not exists locationType(JsonString TEXT);"
     
     var  createViolationTable = "create table if not exists violationTable(JsonString TEXT);"
     
@@ -269,7 +270,7 @@ class SqliteDbStore {
         if sqlite3_prepare_v2(db, insertQuestionString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (ripaRes.question_id as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 2, (ripaRes.response as NSString).utf8String , -1, nil)
-            sqlite3_bind_text(insertStatement, 3, (ripaRes.internall as NSString).utf8String , -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (ripaRes.`internal` as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 4, (ripaRes.userid as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 5, (ripaRes.question as NSString).utf8String , -1, nil)
             sqlite3_bind_text(insertStatement, 6, (ripaRes.CreatedBy as NSString).utf8String , -1, nil)
@@ -307,7 +308,7 @@ class SqliteDbStore {
         
         let os = ProcessInfo().operatingSystemVersion
         
-        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "0", order_number: "", option_id: "", cascade_option_id: "0", main_question_id: "", supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(),is_trainee : traini)
+        var ripaList = RipaResponse(question_id: "", response: "", internal: "", userid: "", question: "", CreatedBy: "", physical_attribute: "", key: "", personId: "", description: "", question_code: "", cascade_ques_id: "0", order_number: "", option_id: "", cascade_option_id: "0", main_question_id: "", supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(),is_trainee : traini, isSelected: "")
         var stmt:OpaquePointer?
         
         if sqlite3_prepare(db, queryString, -1, &stmt, nil) != SQLITE_OK{
@@ -337,7 +338,7 @@ class SqliteDbStore {
             if option_id.count == 0 {
                 option_id = "0"
             }
-            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini)
+            ripaList = RipaResponse(question_id: question_id, response: response, internal: internall, userid: userid, question: question, CreatedBy: CreatedBy, physical_attribute: physical_attribute, key: key, personId: personId, description: description, question_code: question_code, cascade_ques_id: cascade_ques_id, order_number: order_number, option_id: option_id, cascade_option_id: cascade_option_id, main_question_id: main_question_id, supervisorId: "", other_assignment_value: "", activity_id: AppConstants.activity_id, ripa_activity: AppConstants.activityID,os_version: os.getFullVersion(),is_trainee: traini, isSelected: "")
           //  ripaList.append(rips)
         }
         return ripaList
@@ -405,7 +406,7 @@ class SqliteDbStore {
     
     
     func insertData(jsonString : String, tableName:String) {
-        
+       
         var insertStatement: OpaquePointer?
         
         let insertString = "insert into \(tableName) (JsonString) VALUES (?);"
@@ -425,8 +426,8 @@ class SqliteDbStore {
         // 5
         sqlite3_finalize(insertStatement)
     }
-  
     
+  
     func getCity(tableName:String)-> String? {
         
         let queryString = "SELECT * FROM \(tableName)"
@@ -536,8 +537,8 @@ class SqliteDbStore {
             }
         }
        
-        print(street)
-        print(intersectionStreet)
+    //    print(street)
+      //  print(intersectionStreet)
         
         if sqlite3_prepare_v2(db, insertQuestionString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1,  (ripaResponse.key as NSString).utf8String , -1, nil)
@@ -595,6 +596,10 @@ class SqliteDbStore {
             sqlite3_bind_text(insertStatement, 52, (ripaResponse.callType as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 53, (ripaResponse.unitId as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 54, (ripaResponse.zone as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 55, (ripaResponse.reason_for_stop as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 56, (ripaResponse.Previous_Platform as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 57, (ripaResponse.Ripa_version as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 58, (ripaResponse.Previous_app_Version as NSString).utf8String, -1, nil)
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
             } else {
@@ -678,7 +683,40 @@ class SqliteDbStore {
             let unitId = String(cString: sqlite3_column_text(stmt, 52))
             let zone = String(cString: sqlite3_column_text(stmt, 53))
             
-            let ripaList = RipaTempMaster(key: key, skeletonID: skeletonID,activityId: activityId, custid: custid, userid: userid, username: username, rmsid: rmsid, phoneNumber: phoneNumber, location: location, city: city, street: street, block: block, intersectionStreet: intersectionStreet, note: note, activity_notes: activity_notes, CreatedBy: CreatedBy, ticketDate: ticketDate, declarationDate: declarationDate, violation: violation, violationCode: violationCode, violationType: violationType, violationID: violationID, offenceCode: offenceCode, email: email, createdOn: createdOn, updatedBy: updatedBy, updatedOn: updatedOn, citationNumber: citationNumber, status: status, mainStatus: mainStatus, statusChnageDate: statusChnageDate, ripaTempId: ripaTempId, tempType: tempType, stopDate: stopDate, stopTime: stopTime, stopDuration: stopDuration, rejectedURL: rejectedURL, syncStatus: syncStatus,startDate:startDate,endDate: endDate,is_K_12_Student: is_K_12_Student,lat: lat,long: long, timeTaken: timeTaken, countyId: countyId, deviceid: deviceid, callNumber: callNumber, callTime: callTime, onsceneTime: onsceneTime, clearTimeOfOfficer: clearTimeOfOfficer, overallCallClearTime: overallCallClearTime, callType: callType, unitId: unitId, zone: zone)
+            var reasonForStop : String = ""
+            let reson =  sqlite3_column_text(stmt, 54)
+           // print("sfvdg fg dfh hfg  hfghgf hgfh=== %@",sqlite3_column_text(stmt, 54) ?? "")
+            if let opss = reson {
+                print(opss)
+                reasonForStop = String(describing: String(cString: sqlite3_column_text(stmt, 54)))
+            }
+
+
+            var Previous_Platform : String = ""
+            let platfom =  sqlite3_column_text(stmt, 55)
+            if let opss = platfom {
+                print(opss)
+                Previous_Platform = String(describing: String(cString: sqlite3_column_text(stmt, 55)))
+            }
+            
+            var Ripa_version : String = ""
+            
+            let versn =  sqlite3_column_text(stmt, 56)
+            if let opss = versn {
+                print(opss)
+                Ripa_version = String(describing: String(cString: sqlite3_column_text(stmt, 56)))
+            }
+            
+            
+            
+            var Previous_app_Version : String = ""
+            let pversn =  sqlite3_column_text(stmt, 57)
+            if let opss = pversn {
+                print(opss)
+                Previous_app_Version = String(describing: String(cString: sqlite3_column_text(stmt, 57)))
+            }
+            
+            let ripaList = RipaTempMaster(key: key, skeletonID: skeletonID,activityId: activityId, custid: custid, userid: userid, username: username, rmsid: rmsid, phoneNumber: phoneNumber, location: location, city: city, street: street, block: block, intersectionStreet: intersectionStreet, note: note, activity_notes: activity_notes, CreatedBy: CreatedBy, ticketDate: ticketDate, declarationDate: declarationDate, violation: violation, violationCode: violationCode, violationType: violationType, violationID: violationID, offenceCode: offenceCode, email: email, createdOn: createdOn, updatedBy: updatedBy, updatedOn: updatedOn, citationNumber: citationNumber, status: status, mainStatus: mainStatus, statusChnageDate: statusChnageDate, ripaTempId: ripaTempId, tempType: tempType, stopDate: stopDate, stopTime: stopTime, stopDuration: stopDuration, rejectedURL: rejectedURL, syncStatus: syncStatus,startDate:startDate,endDate: endDate,is_K_12_Student: is_K_12_Student,lat: lat,long: long, timeTaken: timeTaken, countyId: countyId, deviceid: deviceid, callNumber: callNumber, callTime: callTime, onsceneTime: onsceneTime, clearTimeOfOfficer: clearTimeOfOfficer, overallCallClearTime: overallCallClearTime, callType: callType, unitId: unitId, zone: zone,reason_for_stop: reasonForStop,Previous_Platform: Previous_Platform,Ripa_version: Ripa_version,Previous_app_Version: Previous_app_Version)
             
             ripaTemp.append(ripaList)
             
@@ -686,10 +724,8 @@ class SqliteDbStore {
         return ripaTemp
     }
     
-    
-    
-    
-    
+ 
+  
     // Insert Questions Data
     
     func insertQuestion(question : QuestionResult1, tableName:String) {
@@ -872,7 +908,6 @@ class SqliteDbStore {
     }
     
     
-    
     //   Get Options And Merge With Questions
     
     var optionList = [Questionoptions1]()
@@ -882,6 +917,7 @@ class SqliteDbStore {
         for question in questionList {
             optionList.removeAll()
             let  quesId =  question.id
+            
             var queryString = ""
             if optionFor == ""{
                 queryString = "SELECT * FROM  \(tableName)  WHERE  ripa_id = \(quesId)"
@@ -889,10 +925,13 @@ class SqliteDbStore {
             else{
                 queryString = "SELECT * FROM  \(tableName)  WHERE  ripa_id = \(quesId) AND person_name = \(person_name) AND key = \(key)"
             }
-            
+            if quesId == "31" {
+                
+            }
             optionList = getOptions(queryString: queryString)!
-            
+          //  let optib = optionList
             question.questionoptions = optionList
+            
             if optionList.count > 0{
                 if question.isCascade_Question == "1"{
                     print(optionList[0].mainQuestOrder)
@@ -958,14 +997,22 @@ class SqliteDbStore {
             let isQuestionMandatory = String(cString: sqlite3_column_text(stmt, 26))
             let isQuestionDescriptionReq = String(cString: sqlite3_column_text(stmt, 27))
             let main_question_id = String(cString: sqlite3_column_text(stmt, 28))
-            
+           
             var selected:Bool?
             if isSelected == "false"{selected=false}else{selected=true}
             
-            
+            if mainQuestId == "35" && mainQuestOrder == "11" && option_value == "No" {
+                selected = false
+            }
+            else if mainQuestId == "35" && mainQuestOrder == "11" && option_value == "Yes" {
+                selected = true
+            }
+            else if mainQuestId == "35" && mainQuestOrder == "11"{
+                selected = true
+            }
             
             //adding values to list
-            options = Questionoptions1(mainQuestId: mainQuestId, mainQuestOrder: mainQuestOrder, option_id: option_id, ripa_id: ripa_id, custid: custid, option_value: option_value, cascade_ripa_id: cascade_ripa_id, isK_12School: isK_12School, isHideQuesText: isHideQuesText, order_number: order_number, createdBy: createdBy, createdOn: createdOn, updatedBy: updatedBy, updatedOn: updatedOn, isSelected: selected! ,isAddtion: isAddtion, isDescription_Required: isDescription_Required, inputTypeCode: inputTypeCode, questionTypeCode: questionTypeCode,tag:tag,  physical_attribute:physical_attribute, default_value: default_value, optionDescription: description, question_code_for_cascading_id: question_code_for_cascading_id, isQuestionMandatory: isQuestionMandatory, isQuestionDescriptionReq: isQuestionDescriptionReq, main_question_id: main_question_id , isExpanded: false, questionoptions: [])
+            options = Questionoptions1(mainQuestId: mainQuestId, mainQuestOrder: mainQuestOrder, option_id: option_id, ripa_id: ripa_id, custid: custid, option_value: option_value, cascade_ripa_id: cascade_ripa_id, isK_12School: isK_12School, isHideQuesText: isHideQuesText, order_number: order_number, createdBy: createdBy, createdOn: createdOn, updatedBy: updatedBy, updatedOn: updatedOn, isSelected: selected! ,isAddtion: isAddtion, isDescription_Required: isDescription_Required, inputTypeCode: inputTypeCode, questionTypeCode: questionTypeCode,tag:tag,  physical_attribute:physical_attribute, default_value: default_value, optionDescription: description, question_code_for_cascading_id: question_code_for_cascading_id, isQuestionMandatory: isQuestionMandatory, isQuestionDescriptionReq: isQuestionDescriptionReq, main_question_id: main_question_id , isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
             
             optionList.append(options!)
         }

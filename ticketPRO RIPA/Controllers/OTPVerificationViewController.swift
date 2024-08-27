@@ -174,13 +174,18 @@ class OTPVerificationViewController: UIViewController,ActivityStoreDelegate {
     
     func submitOTP(){
         AppUtility.showProgress(title: nil)
-        
+        print(enteredOTP)
          let verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
+        if enteredOTP?.count == 0 || (enteredOTP == nil){
+            AppUtility.showAlertWithProperty("Alert", messageString: "Please enter correct OTP")
+            AppUtility.hideProgress()
+            return
+         }
         if enteredOTP?.count != 6{
             AppUtility.showAlertWithProperty("Alert", messageString: "Incorrect OTP")
             AppUtility.hideProgress()
             return
-        }
+         }
         
         if emailLogin == false{
         let credential = PhoneAuthProvider.provider().credential(
@@ -233,15 +238,68 @@ class OTPVerificationViewController: UIViewController,ActivityStoreDelegate {
     
     func proceedToDashboard() {
         AppManager.login()
-        UIApplication.shared.registerForRemoteNotifications()
+        let ethinicity = AppManager.getLastSavedLoginDetails()?.result?.Ethnicity
+        let gender = AppManager.getLastSavedLoginDetails()?.result?.Gender
+        let isVisible = AppManager.getLastSavedLoginDetails()?.result?.is_visible
+        UserDefaults.standard.set(isVisible, forKey: "isVisible")
+     
+        //if isVisible == 1 && (ethinicity?.count == 0 || gender?.count == 0) {
+        if ethinicity?.count == 0 {
+            self.setGenderEthencity()
+        }
+        else {
+            let id = AppManager.getLastSavedLoginDetails()?.id
+            let custId = AppManager.getLastSavedLoginDetails()?.result?.custid
+            let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+            let userId = AppManager.getLastSavedLoginDetails()?.result?.userid
+            let countyId = AppManager.getLastSavedLoginDetails()?.result?.county_id
+            let enrollment_id = AppManager.getLastSavedLoginDetails()?.result?.enrollment_id
+            let ripa_enrollment_id = AppManager.getLastSavedLoginDetails()?.result?.ripa_enrollment_id
+            let ripa_enrollment_activity_id = AppManager.getLastSavedLoginDetails()?.result?.ripa_enrollment_activity_id
+           // print(userId)
+            let param:[String : Any] = ["userId": userId ?? "", "appversion": appVersion ?? "" ,"plateform":"ios", "county_id":countyId ?? "" ,"access_token": AppManager.getLastSavedLoginDetails()?.result?.access_token ?? "","ripa_enrollment_id":ripa_enrollment_id ?? "", "enrollment_id":enrollment_id ?? "", "custid":custId ?? "", "ripa_enrollment_activity_id": ripa_enrollment_activity_id ?? "" , "loginvia": AppConstants.loginVia]
+            let params:[String : Any] = ["id":id ?? "", "method":"ripaActivityStore", "params":param,"jsonrpc": "2.0"]
+            checkActivityStore(params: params)
+
+        }
+    }
+    
+    func checkActivityStore(params: [String:Any]){
+       
+        let URL = AppConstants.Api.activity_store
+        print(params)
+        ApiManager.checkActivityStore(params: params, methodTyPe: .post, url: URL, completion: { [self] (success,message) in
+            AppUtility.hideProgress(nil)
+            if message == "Success"{
+                            UIApplication.shared.registerForRemoteNotifications()
+                            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+                            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "UserSettingsViewController") as! UserSettingsViewController
+                            nextViewController.flag = 0
+                            let navigationController = UINavigationController(rootViewController: nextViewController)
+                            UIApplication.shared.windows.first?.rootViewController = navigationController
+                            UIApplication.shared.windows.first?.makeKeyAndVisible()
+            }
+            if message == "Fail"{
+                AppUtility.showAlertWithProperty("Alert", messageString: success)
+            }
+        })
+        { (error, code, message) in
+            if let errorMessage = message {
+                AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)
+            }
+        }
+    }
+    
+    
+    func setGenderEthencity() {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "UserSettingsViewController") as! UserSettingsViewController
-        nextViewController.flag = 0
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GenderEthencityViewController") as! GenderEthencityViewController
         let navigationController = UINavigationController(rootViewController: nextViewController)
         UIApplication.shared.windows.first?.rootViewController = navigationController
         UIApplication.shared.windows.first?.makeKeyAndVisible()
-  
+        UIApplication.shared.registerForRemoteNotifications()
     }
+    
  }
 
 

@@ -270,12 +270,14 @@ class Questionoptions1 : NSObject, NSCopying  {
     var isQuestionMandatory : String
     var isQuestionDescriptionReq : String
     var main_question_id : String = ""
+    var isNewAdded : Bool = false
+    var mainId : String = ""
     
     var questionoptions:[Questionoptions1]?
     
     
     init(mainQuestId:String , mainQuestOrder:String, option_id:String, ripa_id : String,custid : String, option_value : String,cascade_ripa_id : String,isK_12School : String,isHideQuesText : String,order_number : String, createdBy : String,createdOn : String,updatedBy : String,updatedOn : String,isSelected : Bool,isAddtion : String,isDescription_Required : String,inputTypeCode : String,questionTypeCode : String ,tag : String,physical_attribute : String, default_value: String, optionDescription : String, question_code_for_cascading_id:String, isQuestionMandatory : String , isQuestionDescriptionReq:String,  main_question_id : String,
-         isExpanded : Bool, questionoptions :[Questionoptions1]?) {
+         isExpanded : Bool,isNewAdded : Bool,mainId : String, questionoptions :[Questionoptions1]?) {
         
         self.mainQuestId =  mainQuestId
         self.mainQuestOrder =  mainQuestOrder
@@ -306,10 +308,12 @@ class Questionoptions1 : NSObject, NSCopying  {
         self.isQuestionMandatory = isQuestionMandatory
         self.isQuestionDescriptionReq = isQuestionDescriptionReq
         self.main_question_id = main_question_id
+        self.isNewAdded = isNewAdded
+        self.mainId = mainId
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        let copy = Questionoptions1(mainQuestId: mainQuestId, mainQuestOrder: mainQuestOrder, option_id: option_id, ripa_id: ripa_id, custid: custid, option_value: option_value, cascade_ripa_id: cascade_ripa_id, isK_12School: isK_12School, isHideQuesText: isHideQuesText, order_number: order_number, createdBy: createdBy, createdOn: createdOn, updatedBy: updatedBy, updatedOn: updatedOn, isSelected: isSelected, isAddtion: isAddtion, isDescription_Required: isDescription_Required, inputTypeCode: inputTypeCode, questionTypeCode: questionTypeCode, tag: tag, physical_attribute: physical_attribute, default_value: default_value, optionDescription: optionDescription, question_code_for_cascading_id: question_code_for_cascading_id, isQuestionMandatory: isQuestionMandatory, isQuestionDescriptionReq: isQuestionDescriptionReq, main_question_id: main_question_id, isExpanded: isExpanded, questionoptions: questionoptions)
+        let copy = Questionoptions1(mainQuestId: mainQuestId, mainQuestOrder: mainQuestOrder, option_id: option_id, ripa_id: ripa_id, custid: custid, option_value: option_value, cascade_ripa_id: cascade_ripa_id, isK_12School: isK_12School, isHideQuesText: isHideQuesText, order_number: order_number, createdBy: createdBy, createdOn: createdOn, updatedBy: updatedBy, updatedOn: updatedOn, isSelected: isSelected, isAddtion: isAddtion, isDescription_Required: isDescription_Required, inputTypeCode: inputTypeCode, questionTypeCode: questionTypeCode, tag: tag, physical_attribute: physical_attribute, default_value: default_value, optionDescription: optionDescription, question_code_for_cascading_id: question_code_for_cascading_id, isQuestionMandatory: isQuestionMandatory, isQuestionDescriptionReq: isQuestionDescriptionReq, main_question_id: main_question_id, isExpanded: isExpanded, isNewAdded: false, mainId: mainId, questionoptions: questionoptions)
         return copy
     }
 }

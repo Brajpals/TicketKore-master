@@ -74,6 +74,9 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
         
     }
     
+    @IBAction func actionBackPush(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -150,9 +153,14 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
     
     @IBAction func action_submit(_ sender: Any) {
         trackApplicationTime()
+        let checkReasonStop = consensualEncounterAtSubmitting()
+         if checkReasonStop == false{
+            AppUtility.showAlertWithProperty("Alert", messageString: "Consensual encounter resulting in search was selected as a Reason for stop. Either Search of property was conducted or Search of Person was conducted must be selected for this question.")
+            return
+         }
         
         if checkRequiredFilled().1 == false{
-            AppUtility.showAlertWithProperty("Alert", messageString: "Fill all required questions or their description for \(checkRequiredFilled().0)")
+            AppUtility.showAlertWithProperty("Alert", messageString: "Fill all required questions or description for \(checkRequiredFilled().0)")
             return
         }
         previewViewModel.previewModelDelegate = self
@@ -220,7 +228,52 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
            // print(updateRipa)
             previewViewModel.submitParam(params: updateRipa, toSave: false, showAlertForSave: false)
         }
-        
+    }
+    
+    func consensualEncounterAtSubmitting()->Bool{
+        var conducted = true
+        for optionArr in selectedOptionsArray{
+            for questions in questionsArray!{
+                if questions.question_code == "16"{
+                    let question = self.getQuestionUsingQuestionCode(question_code: 14)
+                    for option in question.questionoptions!{
+                        if option.physical_attribute == "6" && option.isSelected == true{
+                            conducted = false
+                            for option in optionArr{
+                                if (option.physical_attribute == "18" || option.physical_attribute == "20") && option.isSelected{
+                                    conducted = true
+                                    return conducted
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return conducted
+    }
+    
+    func getQuestionUsingQuestionCode(question_code:Int)->QuestionResult1{
+        var quest:QuestionResult1?
+         for question in questionsArray!{
+             if Int(question.question_code) == question_code{
+                quest = question
+            }
+        }
+        if quest == nil{
+            quest = getCascadeQuestionUsingQuestionCode(questionCode: String(question_code))
+        }
+         return quest!
+    }
+    
+    func getCascadeQuestionUsingQuestionCode(questionCode:String) -> QuestionResult1{
+        var quest:QuestionResult1?
+        for question in cascadeQuestionsArray!{
+            if question.question_code == questionCode{
+                quest = question
+            }
+        }
+        return quest!
     }
     
     func createRipaResponseData(data:UserSettingModel) -> RipaResponse {
@@ -300,7 +353,7 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
         
         let os = ProcessInfo().operatingSystemVersion
         
-        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(), is_trainee: traini)
+        let ripaRes = RipaResponse(question_id: questionId, response: rep, internal: inter, userid: idUser, question: questn, CreatedBy: cDate, physical_attribute: attri, key: keyS, personId: pId, description: "", question_code: qCode, cascade_ques_id: "0", order_number: orderN, option_id: opId, cascade_option_id: "0", main_question_id: mId, supervisorId: supId, other_assignment_value: "", activity_id: AppConstants.activityID, ripa_activity: AppConstants.activityID,os_version : os.getFullVersion(), is_trainee: traini, isSelected: "")
         
         return ripaRes
     }
@@ -354,7 +407,7 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
     @IBAction func actionAdd(_ sender: Any){
         trackApplicationTime()
         if checkRequiredFilled().1 == false{
-            AppUtility.showAlertWithProperty("Alert", messageString: "Fill all required questions or their description for \(checkRequiredFilled().0)")
+            AppUtility.showAlertWithProperty("Alert", messageString: "Fill all required questions or description for \(checkRequiredFilled().0)")
             return
         }
         
@@ -411,7 +464,7 @@ class PersonViewController: UIViewController,UITableViewDataSource,UITableViewDe
     @objc func deleteUser(sender: UIButton) {
         if personArray.count > 0{
             
-            showAlertWithProperty("Alert", messageString: "You are about to delete the application. Continue?", index: sender.tag )
+            showAlertWithProperty("Alert", messageString: "You are about to delete the Person. Continue?", index: sender.tag )
             
         }
         

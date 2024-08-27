@@ -157,11 +157,6 @@ class TouchIDViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    
-    
-    
-    
-    
     func isValidpin(testStr:String) -> Bool {
 
       

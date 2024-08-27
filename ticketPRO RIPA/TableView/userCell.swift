@@ -8,7 +8,10 @@
 import UIKit
 
 class userCell: UITableViewCell {
-
+    
+    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var radioImage: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

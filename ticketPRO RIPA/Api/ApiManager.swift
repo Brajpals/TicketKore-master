@@ -60,12 +60,12 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         let manager = Alamofire.SessionManager.default
-        manager.session.configuration.timeoutIntervalForRequest = 120
+        manager.session.configuration.timeoutIntervalForRequest = 60
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
-                if let responseValue = response.result.value {
+                 if let responseValue = response.result.value {
                     let json = JSON(responseValue)
                     if let objectDictionary = json.dictionaryObject,
                        let object = Mapper<LoginDetailsOTP>().map(JSON: objectDictionary) {
@@ -83,11 +83,13 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                
-                if error.localizedDescription.contains("JSON"){
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else if error.localizedDescription.contains("JSON"){
                     AppUtility.showAlertWithProperty("Alert", messageString: "Server Error. Please try again later")
                 }
-                
+                print(error.localizedDescription)
                 AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
                 AppUtility.hideProgress()
             }
@@ -100,8 +102,9 @@ public struct ApiManager{
     static func checkActivityStore(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: String, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -128,7 +131,10 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                if error.localizedDescription.contains("JSON"){
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else if error.localizedDescription.contains("JSON"){
                     AppUtility.showAlertWithProperty("Alert", messageString: "Server Error. Please try again later")
                 }
                 else{
@@ -144,10 +150,11 @@ public struct ApiManager{
     
     
     static func verifyEmailOtp(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
-        
+//        print(params)
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -162,7 +169,9 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-               // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
             }
@@ -173,15 +182,16 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         let manager = Alamofire.SessionManager.default
-        manager.session.configuration.timeoutIntervalForRequest = 120
+        manager.session.configuration.timeoutIntervalForRequest = 60
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 if let responseValue = response.result.value {
                     let json = JSON(responseValue)
                     if let objectDictionary = json.dictionaryObject,
                        let object = Mapper<versionUpdate>().map(JSON: objectDictionary) {
+                        print(objectDictionary)
                         DataManager.shared.versionUpdate = object
                         AppManager.saveVersionDetail()
                         completion(true)
@@ -195,12 +205,48 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                
-                if error.localizedDescription.contains("JSON"){
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else if error.localizedDescription.contains("JSON"){
                     AppUtility.showAlertWithProperty("Alert", messageString: "Server Error. Please try again later")
                 }
-                
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                else {
+                   // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
+                AppUtility.hideProgress()
+            }
+        }
+    }
+    
+    /*
+     ["jsonrpc": 2.0, "id": 82F85DB43CBF6, "result": ["created_on": 2023-12-29 00:00:00.000, "apk_url": <null>, "db_changes": <null>, "notes": <null>, "force_install": Y, "android_version": <null>, "web_version": <null>, "id": 1, "updated_on": <null>, "ios_verion": 1.0.9, "local_path": <null>]]
+     */
+    
+    static func updateLocationStatus(params: [String:Any], methodTyPe:HTTPMethod,url:String, completion: @escaping(_ success: Bool) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
+        
+        let headers = ["Content-Type" : "application/json"] as [String : String]
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+            switch response.result {
+            case .success:
+                if let responseValue = response.result.value {
+                    let json = JSON(responseValue)
+                    if let objectDictionary = json.dictionaryObject{
+                        print(objectDictionary)
+                        completion(true)
+                    }
+                    else {
+                         completion(false)
+                    }
+                } else {
+                    completion(false)
+                }
+                break
+            case .failure(let error):
+                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
                 AppUtility.hideProgress()
             }
         }
@@ -209,12 +255,12 @@ public struct ApiManager{
     
     
     
-    
     static func getCount(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -234,8 +280,14 @@ public struct ApiManager{
                 }
                 break
             case .failure(let error):
-                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
             }
@@ -248,15 +300,17 @@ public struct ApiManager{
     static func getFeaturesList( methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         let param:[String : Any] =  ["custid" : AppManager.getLastSavedLoginDetails()?.result?.custid ?? "1"]
         let params:[String : Any] =  ["id":"82F85DB43CBF6", "method": "ripaFeatures", "params": param,"jsonrpc": "2.0"]
-        let url = AppConstants.BaseURL.URL + "/ripa"
+        let url = AppConstants.BaseURL.URL
    
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
                 if let responseValue = response.result.value {
+                    print(responseValue)
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
                     _ = JSON(responseValue)
                     completion(response.data!, "Success")
@@ -265,8 +319,11 @@ public struct ApiManager{
                     completion("", "Fail")
                 }
                 break
-            case .failure(let error):
+             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
                // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
                 AppUtility.hideProgress()
                 completion("", "Fail")
@@ -275,16 +332,15 @@ public struct ApiManager{
     }
     
     
-    
-    
     // TO GET COUNTY LIST
     static func getCountyList( methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
         let params:[String : Any] =  ["id":"82F85DB43CBF6", "method": "getCounties","jsonrpc": "2.0"]
         let url = AppConstants.BaseURL.URL
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -299,7 +355,12 @@ public struct ApiManager{
                 }
                 break
             case .failure(let error):
-                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                if response.response?.statusCode == 404 {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }else {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                }
                // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
                 AppUtility.hideProgress()
                 completion("", "Fail")
@@ -314,7 +375,9 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -329,6 +392,42 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+               // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                AppUtility.hideProgress()
+                completion("", "Fail")
+            }
+        }
+    }
+    
+   
+    // TO GET RIPA VIOLATION LIST
+    static func getRipaViolation(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
+        
+        let headers = ["Content-Type" : "application/json"] as [String : String]
+        
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+            switch response.result {
+            case .success:
+                
+                if let responseValue = response.result.value {
+                    //  let jsonString = String(data: response.data!, encoding: .utf8)!
+                    _ = JSON(responseValue)
+                    completion(response.data!, "Success")
+                   
+                } else {
+                    completion("", "Fail")
+                }
+                break
+            case .failure(let error):
+                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
                // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
                 AppUtility.hideProgress()
                 completion("", "Fail")
@@ -337,14 +436,12 @@ public struct ApiManager{
     }
     
     
-    
-    
     static func getRipaQuestions(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: String, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
         let manager = Alamofire.SessionManager.default
-        manager.session.configuration.timeoutIntervalForRequest = 1
+        manager.session.configuration.timeoutIntervalForRequest = 60
         manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
@@ -366,7 +463,12 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
             }
@@ -383,29 +485,33 @@ public struct ApiManager{
         let headers = ["Content-Type" : "application/json"] as [String : String]
         print(url)
         print(params)
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 let jsonString = String(data: response.data!, encoding: .utf8)!
                 
                 if method == "Cities"{
-                    print(jsonString)
+                  //  print(jsonString)
                     AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "cityTable")
                 }
                 
                 else if method == "Location"{
+                  //  print(jsonString)
                     AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "locationTable")
                 }
                 
                 else if method == "Violations"{
+                   // print(jsonString)
                     AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "violationTable")
                 }
                 
                 else if method == "School"{
-                    print(jsonString)
+                 //   print(jsonString)
                     AppUtility.hideProgress(nil)
                     db.insertData(jsonString: jsonString, tableName: "schoolTable")
                 }
@@ -422,8 +528,14 @@ public struct ApiManager{
                 }
                 break
             case .failure(let error):
-                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "false")
             }
@@ -432,12 +544,13 @@ public struct ApiManager{
     
     
     
-    
     static func updateRipa(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         print(params)
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -457,10 +570,16 @@ public struct ApiManager{
                 }
                 break
             case .failure(let error):
-                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-              //  AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                    completion("", "Fail")
+                }
                 AppUtility.hideProgress()
-                completion("", "Fail")
                 AppUtility.hideProgress(nil)
             }
         }
@@ -473,7 +592,9 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -496,7 +617,12 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
             }
@@ -510,7 +636,9 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -529,7 +657,12 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
             }
@@ -540,7 +673,9 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -559,7 +694,12 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
             }
@@ -571,7 +711,9 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -591,6 +733,49 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                
+                // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                AppUtility.hideProgress()
+            // completion("", "Fail")
+            }
+        }
+    }
+   
+    static func saveGenderEthnicityToServer(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
+        
+        let headers = ["Content-Type" : "application/json"] as [String : String]
+        print(url)
+        print(params)
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+            switch response.result {
+            case .success:
+                
+                if let responseValue = response.result.value {
+                    
+                    let json = JSON(responseValue)
+                    print(json)
+                    if let serviceError = json["result"][0]["serviceError"].string {
+                        completion(serviceError, "Fail")
+                    }
+                    else{
+                        completion(response.data!, "Success")
+                    }
+                } else {
+                    completion("", "Fail")
+                }
+                break
+            case .failure(let error):
+                failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                
                 // AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
                 AppUtility.hideProgress()
             // completion("", "Fail")
@@ -599,12 +784,13 @@ public struct ApiManager{
     }
     
     
-    
     static func getScrubWords(params: [String:Any] , methodTyPe:HTTPMethod,url:String, completion: @escaping(_ object: Any, _ message: String) -> Void, failure: @escaping (_ error: Error?,_ errorCode: Int?, _ message: String?) -> Void) {
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
-        
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+       
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -623,7 +809,12 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
             }
@@ -637,7 +828,9 @@ public struct ApiManager{
         
         let headers = ["Content-Type" : "application/json"] as [String : String]
         
-        Alamofire.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: methodTyPe, parameters: params, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                 
@@ -662,7 +855,12 @@ public struct ApiManager{
                 break
             case .failure(let error):
                 failure(error,response.response?.statusCode,getErrorMessage(response: response, false))
-                AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                if response.response?.statusCode == 404 {
+                    AppUtility.showAlertWithProperty("Alert", messageString: "Unable to get response.Please try after a while.")
+                }
+                else {
+                    AppUtility.showAlertWithProperty("Alert", messageString: error.localizedDescription)
+                }
                 AppUtility.hideProgress()
                 completion("", "Fail")
                 

@@ -67,9 +67,13 @@ class RipaTempMaster {
     var callType : String
     var unitId : String
     var zone : String
+    var Previous_Platform : String
+    var Ripa_version : String
+    var Previous_app_Version : String
+    var reason_for_stop : String
     
 
-    init(key: String, skeletonID: String,activityId:String, custid: String, userid: String, username: String, rmsid: String, phoneNumber: String, location: String , city: String, street: String, block: String, intersectionStreet: String, note: String, activity_notes: String, CreatedBy: String, ticketDate: String, declarationDate: String, violation: String, violationCode: String, violationType: String , violationID: String, offenceCode: String, email: String, createdOn: String, updatedBy: String, updatedOn: String, citationNumber: String, status: String, mainStatus: String, statusChnageDate: String, ripaTempId:String, tempType:String ,stopDate:String , stopTime:String, stopDuration:String, rejectedURL:String , syncStatus:String, startDate:String ,endDate:String , is_K_12_Student:String, lat:String, long:String,timeTaken : String, countyId : String , deviceid : String, callNumber : String, callTime : String, onsceneTime : String, clearTimeOfOfficer : String, overallCallClearTime : String, callType : String, unitId : String, zone : String) {
+    init(key: String, skeletonID: String,activityId:String, custid: String, userid: String, username: String, rmsid: String, phoneNumber: String, location: String , city: String, street: String, block: String, intersectionStreet: String, note: String, activity_notes: String, CreatedBy: String, ticketDate: String, declarationDate: String, violation: String, violationCode: String, violationType: String , violationID: String, offenceCode: String, email: String, createdOn: String, updatedBy: String, updatedOn: String, citationNumber: String, status: String, mainStatus: String, statusChnageDate: String, ripaTempId:String, tempType:String ,stopDate:String , stopTime:String, stopDuration:String, rejectedURL:String , syncStatus:String, startDate:String ,endDate:String , is_K_12_Student:String, lat:String, long:String,timeTaken : String, countyId : String , deviceid : String, callNumber : String, callTime : String, onsceneTime : String, clearTimeOfOfficer : String, overallCallClearTime : String, callType : String, unitId : String, zone : String,reason_for_stop : String,Previous_Platform : String,Ripa_version : String,Previous_app_Version : String) {
         
         self.key = key
         self.skeletonID = skeletonID
@@ -126,6 +130,10 @@ class RipaTempMaster {
         self.callType = callType
         self.unitId = unitId
         self.zone = zone
+        self.reason_for_stop = reason_for_stop
+        self.Previous_Platform = Previous_Platform
+        self.Ripa_version = Ripa_version
+        self.Previous_app_Version = Previous_app_Version
      }
 }
 

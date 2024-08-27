@@ -3,11 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>APS Environment</key>
-	<string>production</string>
+	<string>unknown</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>RIPA STOP</string>
+	<string>RIPA STOP 2024
+</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,10 +27,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.ticketpro.ripastop</string>
+			<string>com.ticketpro.ripastop24</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.790854017052-uaqrc20mf9hoccf34pqu5bthiiqvrcpf</string>
+				<string>com.googleusercontent.apps.396046008952-cgcl8h02juikblvtkekb16d3si0s9ije</string>
 			</array>
 		</dict>
 	</array>
@@ -102,5 +103,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSPrivacyAccessedAPITypes</key>
+      <array>
+          <dict>
+              <key>NSPrivacyAccessedAPITypeReasons</key>
+              <array>
+                  <string>CA92.1</string>
+              </array>
+              <key>NSPrivacyAccessedAPIType</key>
+              <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+          </dict>
+      </array>
 </dict>
 </plist>

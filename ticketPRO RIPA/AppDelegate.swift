@@ -8,6 +8,7 @@
 import UIKit
 import IQKeyboardManagerSwift
 import Firebase
+import FirebaseAuth
 import UserNotifications
 import FirebaseInstanceID
 import FirebaseMessaging
@@ -76,14 +77,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-//        let login = UserDefaults.standard.integer(forKey: "isLoggedIn")
-//        if (login == 1){
-//
-//        }
-//      }
-    
-    
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void)
     {
                 print(response)
@@ -150,15 +143,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let login = UserDefaults.standard.integer(forKey: "isLoggedIn")
         if (login == 1){
             print("awdawdawd")
-           // UIApplication.shared.applicationIconBadgeNumber = 5
         }
+         if Auth.auth().canHandleNotification(userInfo) {
+               completionHandler(.noData)
+               return
+           }
     }
     
- 
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
       //  Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.prod)
         Messaging.messaging().apnsToken = deviceToken
+
+        Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.unknown)
+        //   firebaseAuth.setAPNSToken(deviceToken, type: AuthAPNSTokenType.unknown)
     }
     
     

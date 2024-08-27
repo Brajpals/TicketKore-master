@@ -29,8 +29,10 @@ import ObjectMapper
      var violationGroup: String = ""
      var offense_code: String = ""
      var isSelected : Bool
+     var isNewAdded : Bool = false
+     var mainId: String = ""
      
-    init(violationID:String,custid : String,violation : String,code:String,orderNumber : String,violationDisplay : String,isActive:String,violationType : String, violationGroup : String,  offense_code : String, isSelected : Bool) {
+     init(violationID:String,custid : String,violation : String,code:String,orderNumber : String,violationDisplay : String,isActive:String,violationType : String, violationGroup : String,  offense_code : String, isSelected : Bool , isNewAdded :  Bool ,  mainId :  String) {
         self.violationID = violationID
         self.custid = custid
         self.violation = violation
@@ -42,11 +44,13 @@ import ObjectMapper
         self.violationGroup = violationGroup
         self.offense_code = offense_code
         self.isSelected = isSelected
+        self.isNewAdded = isNewAdded
+        self.mainId = mainId
   }
     
     
     func copy(with zone: NSZone? = nil) -> Any {
-        let copy = ViolationsResult(violationID: violationID, custid: custid, violation: violation, code: code, orderNumber: orderNumber, violationDisplay: violationDisplay, isActive: isActive, violationType: violationType, violationGroup: violationGroup, offense_code: offense_code, isSelected: isSelected)
+        let copy = ViolationsResult(violationID: violationID, custid: custid, violation: violation, code: code, orderNumber: orderNumber, violationDisplay: violationDisplay, isActive: isActive, violationType: violationType, violationGroup: violationGroup, offense_code: offense_code, isSelected: isSelected, isNewAdded: isNewAdded,mainId : mainId)
          return copy
      }
 }
@@ -151,10 +155,11 @@ class Location:Encodable{
     var is_active: String = ""
     var county_id: String = ""
     var city_id: String = ""
+    var Highway: String = ""
     var isSelected : Bool
     
  
-    init(location_id:String,custid : String,location : String,zone_id:String,order_number : String,is_active : String,county_id:String,city_id : String, isSelected : Bool) {
+     init(location_id:String,custid : String,location : String,zone_id:String,order_number : String,is_active : String,county_id:String,city_id : String, isSelected : Bool, Highway : String) {
         self.location_id = location_id
         self.custid = custid
         self.location = location
@@ -164,6 +169,7 @@ class Location:Encodable{
         self.county_id = county_id
         self.city_id = city_id
         self.isSelected = isSelected
+        self.Highway = Highway
     }
     
  }

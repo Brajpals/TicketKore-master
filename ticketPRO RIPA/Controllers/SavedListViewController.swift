@@ -16,6 +16,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     var dashboardViewModel = DashboardViewModel()
     var questionsArray : [QuestionResult1]?
     var cascadeQuestionsArray : [QuestionResult1]?
+    var  selectedOptionsArray=[[Questionoptions1]]()
     let db = SqliteDbStore()
     var ripaIndex:Int?
     var savedListViewModel = SavedListViewModel()
@@ -45,7 +46,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         
- 
+        AppConstants.isTrafficData = false
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UINib(nibName: "SavedListTableViewCell", bundle: nil), forCellReuseIdentifier: "SavedListTableViewCell")
@@ -75,6 +76,10 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             overrideUserInterfaceStyle = .light
             AppConstants.theme = "0"
         }
+        
+        AppConstants.violation_type = ""
+        AppConstants.travel_method = ""
+        AppConstants.offenceCodes = ""
         
         AppManager.removeData()
         db.openDatabase()
@@ -151,6 +156,13 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
                 self.savedRipaList = self.db.getRipaTempMaster(tableName: "SELECT * FROM ripaTempMasterTable WHERE mainStatus is NOT 1 \(userId) order by stopDate DESC") ?? []
         }
         
+
+        if self.savedRipaList.count == 0 {
+            let alertController = UIAlertController(title:"Alert",message:"No data Found",preferredStyle:.alert)
+            self.present(alertController,animated:true,completion:{Timer.scheduledTimer(withTimeInterval: 4, repeats:false, block: {_ in
+                self.dismiss(animated: true, completion: nil)
+            })})
+        }
  
         tableView.reloadData()
      //   filterFor = ""
@@ -301,14 +313,6 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             cell.note.textColor = #colorLiteral(red: 0.7705615163, green: 0.4350548387, blue: 0.6462814808, alpha: 1)
             cell.callTypeTxt.attributedText = setAttributedTextForCallType(index: indexPath.row)
         }
-//        else if status == "Resume" {
-//
-//            cell.view.backgroundColor = #colorLiteral(red: 0.9064636827, green: 0.9215990305, blue: 0.9337291121, alpha: 1)
-//            cell.textView.backgroundColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
-//            cell.leftstyleview.backgroundColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
-//            cell.note.textColor = #colorLiteral(red: 0.3620900214, green: 0.5682560802, blue: 0.7757706046, alpha: 1)
-//            cell.callTypeTxt.attributedText = setAttributedTextForCallType(index: indexPath.row)
-//        }
         else if (status == "Pending Review") || (status == "Pending Review" || status == "Resume"){
             cell.statusLbl.text = "Pending Review"
             cell.view.backgroundColor = #colorLiteral(red: 0.9806935191, green: 0.8983079195, blue: 0.7415288091, alpha: 1)
@@ -372,19 +376,45 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         let note = savedRipaList[indexPath.row].note
         var date = savedRipaList[indexPath.row].stopDate
         let timeStr = savedRipaList[indexPath.row].stopTime
+        
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "MM/dd/yyyy"
+        
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MM/dd/yyyy HH:mm"
+        
+        var pendingEnable = false
+        
+        if let datde = dateFormatterGet.date(from: date) {
+            date = dateFormatterPrint.string(from: datde) + " " + timeStr
+            let arr = self.checkEditTimeForRipa(eventtDate: date)
+            let dayStr = arr[0] as? String
+            let hourStr = arr[1] as? String
+            var dayInt = Int(dayStr!)
+            var hourInt = Int(hourStr!)
+            if dayInt! < 0 {
+                dayInt = -(dayInt!)
+            }
+            if hourInt! < 0 {
+                hourInt = -(hourInt!)
+            }
+            if (dayInt! < 1 && hourInt! < 24) {
+                pendingEnable = true
+            }
+        }
+        
+        
         let status = savedRipaList[indexPath.row].status
         if status == "Edit Required"{
             self.isEditRequired = true
         }
-        if status == "Saved"{
+        else if status == "Saved"{
             self.isCreatedSaved = true
         }
-        
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "MM/dd/yyyy HH:mm"
+        else if status == "Pending Review" && pendingEnable{
+            AppConstants.status = "Edit Pending Review"
+        }
 
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "MM/dd/yyyy"
         isEnable = false
 
         if let datde = dateFormatterGet.date(from: date) {
@@ -444,6 +474,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             savedListViewModel.forTemplate = true
             if !self.savedRipaList.isEmpty {
                 savedListViewModel.getApprovedOrPendingPram(activityId:self.savedRipaList[index].activityId)
+                UserDefaults.standard.set(self.savedRipaList[index].activityId, forKey: "templateId")
             }
             
         }         )
@@ -470,13 +501,25 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     func selectFunc(indexPath:Int){
         
         saveRipaStatus = savedRipaList[indexPath].status
-        AppConstants.status = saveRipaStatus!
+        if AppConstants.status != "Edit Pending Review" {
+            AppConstants.status = saveRipaStatus!
+        }
+        
         AppConstants.citation = savedRipaList[indexPath].citationNumber
         AppConstants.applicationtime = "0"
         AppConstants.deviceid = "0"
+        AppConstants.street = ""
+        AppConstants.block = ""
+        AppConstants.highway = ""
+        AppConstants.closestHighway = ""
+        AppConstants.firstIntersection = ""
+        AppConstants.secondIntersection = ""
         AppConstants.citation = ""
+        AppConstants.reason_for_stop = savedRipaList[indexPath].rejectedURL
+        AppConstants.isTrafficData = false
         AppConstants.activityID = savedRipaList[indexPath].activityId
         print(AppConstants.activityID)
+        AppConstants.numberOfPerson = 0
         
         setDispatchConstant(indexPath:indexPath)
         
@@ -497,12 +540,13 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
         if saveRipaStatus == "Template"{
             AppConstants.status = "Template"
             checkData()
+            AppConstants.numberOfPerson = 0
             AppUtility.writeToDocumentsFile(fileName: "UseTemplate", value: "Use Template From Dashboard.")
             self.performSegue(withIdentifier: "ShowRipaView", sender: self)
         }
         else if saveRipaStatus == "Approved" || saveRipaStatus == "Pending Review" || saveRipaStatus == "Saved" || saveRipaStatus == "Edit Required"{
             let activity_id = savedRipaList[indexPath].activityId
- 
+ //AppConstants.status
             setConstant(indexPath: indexPath)
             if savedRipaList[indexPath].location != ""{
                 let locString = savedRipaList[indexPath].location
@@ -577,26 +621,97 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
                     AppConstants.date = savedRipaList[indexPath].stopDate
                     convertDateFormater(date: savedRipaList[indexPath].stopDate)
                     AppConstants.address = savedRipaList[indexPath].location
-                    
+                    AppConstants.street = savedRipaList[indexPath].location
+                  
+                    if AppConstants.street.contains("/"){
+                        AppConstants.LocTypeIndex = 2
+                        self.breakIntersectionAndIntersection(mainString:AppConstants.street)
+                    }
+                    else {
+                        AppConstants.LocTypeIndex = 1
+                        self.breakStreetAndBlock(mainString: savedRipaList[indexPath].location)
+                    }
                     AppConstants.deviceid = savedRipaList[indexPath].deviceid
                     AppConstants.citation = savedRipaList[indexPath].citationNumber
+                    AppConstants.reason_for_stop = savedRipaList[indexPath].rejectedURL
+                    AppConstants.isTrafficData = true
+                    // status == "Created"
                 }
                 
                 if saveRipaStatus == "Template"{
                      newRipaViewModel.questionsArray = personArray[0]["QuestionArray"] as? [QuestionResult1]
                     newRipaViewModel.cascadeQuestionArray = personArray[0]["CascadeQuestionArray"] as? [QuestionResult1]
-                    personArray[0]["SelectedOption"] = newRipaViewModel.makeSelectedOptionList()
+                    personArray[0]["SelectedOption"] = newRipaViewModel.makeSelectedOptionList(isSaved: false)
                      self.performSegue(withIdentifier: "ShowPreview", sender: self)
                 }
                 else{
                     self.isListRipaEditable = false
-                self.performSegue(withIdentifier: "ShowRipaView", sender: self)
+                    self.performSegue(withIdentifier: "ShowRipaView", sender: self)
                 }
             }
         }
     }
     
+    func breakIntersectionAndIntersection(mainString : String) {
+        var array = mainString.components(separatedBy: "/")
+        if array.count > 1 {
+            AppConstants.firstIntersection = array[0]
+            AppConstants.secondIntersection = array[1]
+        }
+    }
     
+    func breakStreetAndBlock(mainString : String) {
+        var baseStr = mainString
+        var array = baseStr.components(separatedBy: " ")
+        array = array.uniqued()
+        baseStr = array.joined(separator:" ")
+        baseStr = self.removeUnit(str: baseStr)
+        baseStr = baseStr.replacingOccurrences(of: "&", with: "")
+        if baseStr.count > 2 {
+            let components = baseStr.components(separatedBy: "BLOCK")
+            if components.count > 1 {
+                let stretArr = components[1].components(separatedBy: "/")
+                if stretArr.count>1 {
+                    AppConstants.block = stretArr[0]
+                    AppConstants.street = stretArr[1]
+                }
+                else {
+                    AppConstants.block = components[0]
+                    AppConstants.street = components[1]
+                }
+            }
+            else{
+                let components = baseStr.components(separatedBy: "BLK")
+                var stretArr = NSArray()
+                if components.count > 1 {
+                    AppConstants.block = components[0]
+                    stretArr = components[1].components(separatedBy: "/") as NSArray
+                }
+                else {
+                    stretArr = baseStr.components(separatedBy: "/") as NSArray
+                }
+                 
+                if stretArr.count>1 {
+                    AppConstants.block = stretArr[0] as! String
+                    AppConstants.street = stretArr[1] as! String
+                }
+                else {
+                   // AppConstants.block = components[0]
+                    AppConstants.street = stretArr[0] as! String
+                }
+            }
+        }
+    }
+    
+    func removeUnit(str : String) -> String {
+        var subStr = str.uppercased()
+        if subStr.contains("UNIT") {
+            subStr = subStr.replacingOccurrences(of: "UNIT", with: "")
+            return subStr
+        }
+        return str
+    }
+ 
     func checkData(){
         
         let userId =  "AND userid is " + (AppManager.getLastSavedLoginDetails()?.result?.userid)!
@@ -650,9 +765,10 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
   
     var previewPersonArray = [RipaPerson]()
     
-    func proceedToPreviewScreen(previewPram: [RipaPerson], forTemplate: Bool?) {
+    func proceedToPreviewScreen(previewPram: [RipaPerson], forTemplate: Bool? , locationOptionArray : [Questionoptions1]) {
         previewPersonArray = previewPram
-        personArray = savedListViewModel.createPersonDict(personarray:previewPersonArray)
+        personArray = savedListViewModel.createPersonDict(personarray:previewPersonArray, locArr: locationOptionArray)
+        AppConstants.numberOfPerson = personArray.count
          if forTemplate == true{
             saveTemplateDetail(templatePersonArray: previewPram)
             return
@@ -717,6 +833,7 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?){
         let segueID = segue.identifier
+        AppConstants.numberOfPerson = 0
         if segueID! == "ShowRipaView" && saveRipaStatus == "Template" && isTemplateAvailable == true{
            let vc = segue.destination as! NewRipaViewController
            setLastRipaData(forData: "Template")
@@ -745,6 +862,9 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
                    vc.screenType = "EditPending"
                    vc.isPendingEdit = true
               }
+             if saveRipaStatus == "Created" {
+                 vc.locArray = self.createOptionArray()
+             }
             vc.isEditRequired = self.isEditRequired
             vc.viewType = "UseSaveRipa"
             vc.saveRipaStatus = "Created"
@@ -761,6 +881,41 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
             //   vc.previewPersonArray = self.previewPersonArray
             vc.personIndex = 0
         }
+    }
+    
+    func createOptionArray() -> [Questionoptions1] {
+        var questOption = [Questionoptions1]()
+        let geographicObj = Questionoptions1(mainQuestId: "118", mainQuestOrder: "1", option_id: "1408", ripa_id: "118", custid: "1", option_value: "Geographic Coordinate", cascade_ripa_id: "119", isK_12School: "", isHideQuesText: "", order_number: "1", createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: false, isAddtion: "", isDescription_Required: "No", inputTypeCode: "AN", questionTypeCode: "SC", tag: "", physical_attribute: "1", default_value: "", optionDescription: "", question_code_for_cascading_id: "C53", isQuestionMandatory: "Yes", isQuestionDescriptionReq: "No", main_question_id: "21", isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
+        if AppConstants.LocTypeIndex == 6 {
+            geographicObj.isSelected = true
+        }
+        questOption.append(geographicObj)
+        
+        let blockObj = Questionoptions1(mainQuestId: "118", mainQuestOrder: "1", option_id: "1409", ripa_id: "118", custid: "1", option_value: "Block Number and Street Name", cascade_ripa_id: "120", isK_12School: "", isHideQuesText: "", order_number: "1", createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: true, isAddtion: "", isDescription_Required: "No", inputTypeCode: "A", questionTypeCode: "MC", tag: "", physical_attribute: "2", default_value: "", optionDescription: "", question_code_for_cascading_id: "C54", isQuestionMandatory: "Yes", isQuestionDescriptionReq: "No", main_question_id: "21", isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
+        if AppConstants.LocTypeIndex == 1 {
+            blockObj.isSelected = true
+        }
+        questOption.append(blockObj)
+        
+        let IntObj = Questionoptions1(mainQuestId: "118", mainQuestOrder: "1", option_id: "1410", ripa_id: "118", custid: "1", option_value: "Closest Intersection", cascade_ripa_id: "121", isK_12School: "", isHideQuesText: "", order_number: "1", createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: false, isAddtion: "", isDescription_Required: "No", inputTypeCode: "A", questionTypeCode: "MC", tag: "", physical_attribute: "3", default_value: "", optionDescription: "", question_code_for_cascading_id: "C55", isQuestionMandatory: "Yes", isQuestionDescriptionReq: "No", main_question_id: "21", isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
+        if AppConstants.LocTypeIndex == 2 {
+            IntObj.isSelected = true
+        }
+        questOption.append(IntObj)
+        
+        let highObj = Questionoptions1(mainQuestId: "118", mainQuestOrder: "1", option_id: "1411", ripa_id: "118", custid: "1", option_value: "Highway and Closest Highway Exit", cascade_ripa_id: "122", isK_12School: "", isHideQuesText: "", order_number: "1", createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: false, isAddtion: "", isDescription_Required: "No", inputTypeCode: "A", questionTypeCode: "MC", tag: "", physical_attribute: "4", default_value: "", optionDescription: "", question_code_for_cascading_id: "C56", isQuestionMandatory: "Yes", isQuestionDescriptionReq: "No", main_question_id: "21", isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
+        if AppConstants.LocTypeIndex == 3 {
+            highObj.isSelected = true
+        }
+        questOption.append(highObj)
+        
+        let otherObj = Questionoptions1(mainQuestId: "118", mainQuestOrder: "1", option_id: "1412", ripa_id: "118", custid: "1", option_value: "Other", cascade_ripa_id: "123", isK_12School: "", isHideQuesText: "", order_number: "1", createdBy: "", createdOn: "", updatedBy: "", updatedOn: "", isSelected: false, isAddtion: "", isDescription_Required: "No", inputTypeCode: "AN", questionTypeCode: "ML", tag: "", physical_attribute: "5", default_value: "", optionDescription: "", question_code_for_cascading_id: "C57", isQuestionMandatory: "Yes", isQuestionDescriptionReq: "No", main_question_id: "21", isExpanded: false, isNewAdded: false, mainId: "", questionoptions: [])
+        if AppConstants.LocTypeIndex == 4 {
+            otherObj.isSelected = true
+        }
+        questOption.append(otherObj)
+        
+        return questOption
     }
     
     func setLastRipaData(forData:String){
@@ -882,3 +1037,4 @@ class SavedListViewController: UIViewController,PopupViewControllerDelegate, UIT
     
     
 }
+

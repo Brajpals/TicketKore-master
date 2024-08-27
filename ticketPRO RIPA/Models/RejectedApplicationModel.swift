@@ -31,7 +31,7 @@ struct Ativity {
 
 // MARK: - Location
 struct RejectedApplicationLocation {
-    var block, street, intersection: String
+    var block, street, intersection, locationType ,location , firstIntersection, secondIntersection, closestHighwayExit, others, Highway, geographicCoordinates: String
 }
 
 

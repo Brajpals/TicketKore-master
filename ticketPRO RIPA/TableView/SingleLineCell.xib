@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -50,12 +50,8 @@
                                         <rect key="frame" x="33" y="0.0" width="325" height="45"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Time" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mxc-3v-ben">
-                                                <rect key="frame" x="8" y="0.0" width="328" height="45"/>
+                                                <rect key="frame" x="5" y="0.0" width="292" height="45"/>
                                                 <color key="tintColor" red="0.88532343599999996" green="0.70204890580000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="328" id="6dd-gb-hzi"/>
-                                                    <constraint firstAttribute="height" constant="45" id="Zrp-3Q-Ky8"/>
-                                                </constraints>
                                                 <color key="textColor" name="BlackWhite"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" textContentType="name"/>
@@ -75,15 +71,15 @@
                                         </subviews>
                                         <color key="backgroundColor" name="BGYellowBlack"/>
                                         <constraints>
-                                            <constraint firstItem="mxc-3v-ben" firstAttribute="top" secondItem="DlW-A7-5L7" secondAttribute="top" id="02E-CN-pMc"/>
-                                            <constraint firstAttribute="trailing" secondItem="mxc-3v-ben" secondAttribute="trailing" constant="-11" id="1hT-lh-vm8"/>
                                             <constraint firstAttribute="height" constant="45" id="3fo-ms-BQ2"/>
+                                            <constraint firstAttribute="bottom" secondItem="mxc-3v-ben" secondAttribute="bottom" id="3sV-KS-F9f"/>
                                             <constraint firstAttribute="width" constant="325" id="642-zv-p0G"/>
+                                            <constraint firstItem="mxc-3v-ben" firstAttribute="top" secondItem="DlW-A7-5L7" secondAttribute="top" id="94z-zw-5Vf"/>
                                             <constraint firstItem="RaY-ev-zGm" firstAttribute="top" secondItem="DlW-A7-5L7" secondAttribute="top" id="DCk-Cl-FiQ"/>
-                                            <constraint firstItem="mxc-3v-ben" firstAttribute="leading" secondItem="DlW-A7-5L7" secondAttribute="leading" constant="8" id="Gks-av-ThF"/>
                                             <constraint firstAttribute="bottom" secondItem="RaY-ev-zGm" secondAttribute="bottom" id="MQE-gs-K11"/>
-                                            <constraint firstAttribute="bottom" secondItem="mxc-3v-ben" secondAttribute="bottom" id="SQX-oP-Eq7"/>
                                             <constraint firstAttribute="trailing" secondItem="RaY-ev-zGm" secondAttribute="trailing" constant="-3" id="gJL-RA-Gaj"/>
+                                            <constraint firstItem="mxc-3v-ben" firstAttribute="leading" secondItem="DlW-A7-5L7" secondAttribute="leading" constant="5" id="ohD-Bb-KHY"/>
+                                            <constraint firstAttribute="trailing" secondItem="mxc-3v-ben" secondAttribute="trailing" constant="28" id="toa-yt-QML"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
@@ -130,7 +126,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="multiply.circle" catalog="system" width="128" height="121"/>
+        <image name="multiply.circle" catalog="system" width="128" height="123"/>
         <image name="required_icon" width="56" height="56"/>
         <namedColor name="BGYellowBlack">
             <color red="0.99800002574920654" green="0.96100002527236938" blue="0.80000001192092896" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -77,20 +77,27 @@ class GPSLocation: UIViewController,CLLocationManagerDelegate {
         } else {
             authorizationStatus = CLLocationManager.authorizationStatus()
         }
+        
 
+        self.checkLocationManagerAuthorization()
         
         if (authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse || authorizationStatus == CLAuthorizationStatus.authorizedAlways) {
             
             currentLocation = locManager.location
             if currentLocation != nil{
+                
+                let latflt =  Float(String(currentLocation.coordinate.latitude))
+                let longflt =  Float(String(currentLocation.coordinate.longitude))
+                AppConstants.lati = String(format: "%.3f", latflt!)
+                AppConstants.longi = String(format: "%.3f", longflt!)
+                 UserDefaults.standard.set(String(format: "%.3f", latflt!), forKey: "latitude")
+                 UserDefaults.standard.set(String(format: "%.3f", longflt!), forKey: "longitude")
+               
+                
                 let latitude = String(format: "%.7f", currentLocation.coordinate.latitude)
                 let longitude = String(format: "%.7f", currentLocation.coordinate.longitude)
                 let location = CLLocation(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
                 
-//                fetchCountryAndCity(location: location, completion: { [self] countryCode, city, street ,blk, county  in
-//                    delegate?.fetchedLocationDetails(location: location, countryCode: countryCode, city: city, street: street, blk: blk, county: county)
-//                }) { [self] in delegate?.failedFetchingLocationDetails(error: $0)
-//                }
                 
                 let url = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&featureTypes=StreetInt&locationType=street&token=AAPK52f779365f014640aebc9782ca67ecf90HcqmuUuKRRGi02MVHTgfoZQpIoJKZovMq4J_yov7-bHM8KArWw3dOMuoFgQB15B&location=\(longitude),\(latitude)"
                 
@@ -123,14 +130,75 @@ class GPSLocation: UIViewController,CLLocationManagerDelegate {
             } else {
                 authorizationStatus = CLLocationManager.authorizationStatus()
             }
-
-
             
-            if  (authorizationStatus == CLAuthorizationStatus.denied){
+             if  (authorizationStatus == CLAuthorizationStatus.denied){
                 GPSLocation.showLocationEnableAlert()
+                self.updateLocationStatus(status: "false")
              }
-            
          }
+    }
+    
+    private func checkLocationManagerAuthorization() {
+          let authorizationStatus: CLAuthorizationStatus
+          authorizationStatus = locManager.authorizationStatus
+          switch authorizationStatus{
+              case .notDetermined:
+                  print("::: -> Location: notDetermined")
+                 
+              case .authorizedAlways, .authorizedWhenInUse:
+                  print("::: -> Location: authorizedWhenInUse")
+                 self.updateLocationStatus(status: "true")
+                 
+              case .denied, .restricted:
+                  print("::: -> Location: denied")
+              default:
+                  break
+          }
+      }
+  
+    func updateLocationStatus(status : String) {
+        var userId : String = ""
+        if let uId = AppManager.getLastSavedLoginDetails()?.result?.userid{
+            userId = uId
+        }
+        var custId : String = ""
+        if let idUser = AppManager.getLastSavedLoginDetails()?.result?.custid{
+            custId = idUser
+        }
+        
+        if AppConstants.deviceToken.count == 0 {
+            AppConstants.deviceToken = "ios"
+        }
+       
+        let param:[String : Any] = ["custId": custId,"userId":userId, "deviceId" : AppConstants.deviceToken ,"platform" : "ios", "locStatus" : status]
+        let params:[String : Any] = ["id": "82F85DB43CBF6", "method":"ripaLocationTrack", "params":param,"jsonrpc": "2.0"]
+        updateLocationStatusType(params: params)
+    }
+    
+    
+    func updateLocationStatusType(params: [String:Any]) {
+        var URL:String?
+        print(params)
+        URL = AppConstants.Api.updateVersion
+        
+        ApiManager.updateLocationStatus(params: params, methodTyPe: .post, url: URL!, completion: {  (success) in
+            // AppUtility.hideProgress(nil)
+            if success == true{
+               
+              print("Update Location Status Successfully.")
+            }
+            else {
+                print("Update Location Status Failed.")
+            }
+        })
+        
+        { (error, code, message) in
+            AppUtility.hideProgress(nil)
+            if let errorMessage = message {
+                print(errorMessage)
+                //  AppUtility.showAlertWithProperty("Alert", messageString: errorMessage)
+            }
+        }
     }
     
     
@@ -167,17 +235,37 @@ class GPSLocation: UIViewController,CLLocationManagerDelegate {
         AppUtility.showProgress(nil, title: nil)
        // let headers = ["Content-Type" : "application/json"] as [String : String]
         
-        Alamofire.request(url, method: .get , encoding: JSONEncoding.default).validate().responseJSON { (response) in
+        let manager = Alamofire.SessionManager.default
+        manager.session.configuration.timeoutIntervalForRequest = 60
+        manager.request(url, method: .get , encoding: JSONEncoding.default).validate().responseJSON { (response) in
             switch response.result {
             case .success:
                  if let responseValue = response.result.value {
                     //  let jsonString = String(data: response.data!, encoding: .utf8)!
                     
                     let json = JSON(responseValue)
-                    
+                    print(json)
                     // let result = json["address"]["Match_addr"].stringValue
                      
-                     let address = Address(matchAddr: json["address"]["Match_addr"].stringValue, longLabel: json["address"]["LongLabel"].stringValue, shortLabel: json["address"]["ShortLabel"].stringValue, addrType: json["address"]["Addr_type"].stringValue, type: json["address"]["Type"].stringValue, placeName: json["address"]["PlaceName"].stringValue, addNum: json["address"]["AddNum"].stringValue, address: json["address"]["Address"].stringValue, block: json["address"]["Block"].stringValue, sector: json["address"]["Sector"].stringValue, neighborhood: json["address"]["Neighborhood"].stringValue, district: json["address"]["District"].stringValue, city: json["address"]["City"].stringValue, metroArea: json["address"]["MetroArea"].stringValue, subregion: json["address"]["Subregion"].stringValue, region: json["address"]["Region"].stringValue, territory: json["address"]["Territory"].stringValue, postal: json["address"]["Postal"].stringValue, postalEXT: json["address"]["PostalExt"].stringValue, countryCode: json["address"]["CountryCode"].stringValue)
+                     let address = Address(matchAddr: json["address"]["Match_addr"].stringValue, longLabel: json["address"]["LongLabel"].stringValue, shortLabel: json["address"]["ShortLabel"].stringValue, addrType: json["address"]["Addr_type"].stringValue, type: json["address"]["Type"].stringValue, placeName: json["address"]["PlaceName"].stringValue, addNum: json["address"]["AddNum"].stringValue, address: json["address"]["Address"].stringValue, block: json["address"]["Block"].stringValue, sector: json["address"]["Sector"].stringValue, neighborhood: json["address"]["Neighborhood"].stringValue, district: json["address"]["District"].stringValue, city: json["address"]["City"].stringValue, metroArea: json["address"]["MetroArea"].stringValue, subregion: json["address"]["Subregion"].stringValue, region: json["address"]["Region"].stringValue, territory: json["address"]["Territory"].stringValue, postal: json["address"]["Postal"].stringValue, postalEXT: json["address"]["PostalExt"].stringValue, countryCode: json["address"]["CountryCode"].stringValue,latitude: json["location"]["y"].stringValue,longitude: json["location"]["x"].stringValue)
+                     
+                     var latt = address.latitude
+                     var longg = address.longitude
+                     if latt.count > 11 {
+                         latt = String(latt.prefix(11))
+                     }
+                     if longg.count > 11 {
+                         longg = String(longg.prefix(11))
+                     }
+                     
+                     let latflt =  Float(latt )
+                     let longflt =  Float(longg)
+                      UserDefaults.standard.set(String(format: "%.3f", latflt!), forKey: "latitude")
+                      UserDefaults.standard.set(String(format: "%.3f", longflt!), forKey: "longitude")
+                     
+                     
+                     AppConstants.lati = String(format: "%.3f", latflt!)
+                     AppConstants.longi = String(format: "%.3f", longflt!)
                      
                   
                      let fullName = address.address

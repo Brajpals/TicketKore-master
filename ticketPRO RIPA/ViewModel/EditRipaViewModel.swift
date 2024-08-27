@@ -17,7 +17,7 @@ class EditRipaViewModel {
     func getRipaDataForEdit(params: [String:Any]){
         AppUtility.showProgress(nil, title: nil)
         var URL:String?
-        
+       
          URL = AppConstants.Api.questions
         // print(params)
         if Reachability.isConnectedToNetwork(){
