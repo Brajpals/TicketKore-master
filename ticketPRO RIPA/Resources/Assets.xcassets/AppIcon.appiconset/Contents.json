@@ -1,73 +1,73 @@
 {
   "images" : [
     {
-      "filename" : "icon-40.png",
+      "filename" : "Ripa-app.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "icon-60.png",
+      "filename" : "Ripa-app 7.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "icon-small.png",
+      "filename" : "Ripa-app 3.png",
       "idiom" : "iphone",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
-      "filename" : "icon-small@2x.png",
+      "filename" : "Ripa-app 2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "icon-small@3x.png",
+      "filename" : "Ripa-app 1.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "icon-40@2x.png",
+      "filename" : "Ripa-app 6.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "icon-40@3x.png",
+      "filename" : "Ripa-app 4.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "icon.png",
+      "filename" : "Ripa-app 9.png",
       "idiom" : "iphone",
       "scale" : "1x",
       "size" : "57x57"
     },
     {
-      "filename" : "icon@2x.png",
+      "filename" : "Ripa-app 8.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "57x57"
     },
     {
-      "filename" : "icon-60@2x.png",
+      "filename" : "Ripa-app 5.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "icon-60@3x.png",
+      "filename" : "Ripa-app 10.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
-      "filename" : "icon-1025.png",
+      "filename" : "Ripa-app-icon-updated-1 (1) copy.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

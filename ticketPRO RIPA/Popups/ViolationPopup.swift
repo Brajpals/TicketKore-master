@@ -91,9 +91,9 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
         
  
         for consentOption in concentQuestion!.questionoptions!{
-           
-                if consentOption.physical_attribute == "17" || consentOption.physical_attribute == "18"{
-                    if consentOption.physical_attribute == "18"{
+              print(consentOption.physical_attribute)
+                if consentOption.physical_attribute == "2" || consentOption.physical_attribute == "14"{
+                    if consentOption.physical_attribute == "14"{
                         personArray.insert(consentOption, at: 0)
                      }
                     else{
@@ -101,9 +101,9 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
                     }
                 }
                 
-                if consentOption.physical_attribute == "19" || consentOption.physical_attribute == "20"{
+                if consentOption.physical_attribute == "3" || consentOption.physical_attribute == "15"{
                     
-                    if consentOption.physical_attribute == "20"{
+                    if consentOption.physical_attribute == "15"{
                         propertyArray.insert(consentOption, at: 0)
                      }
                     else{
@@ -112,9 +112,9 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
                 }
          }
         
-        let personConsentObj = newRipaViewModel.createObj(mainQuestId: concentQuestion!.id, ripaID: "", optionValue: "Consent Given?", physical_attribute: "100", description: "", isSelected: false, mainQuestOrder: "")
+        let personConsentObj = newRipaViewModel.createObj(mainQuestId: concentQuestion!.id, ripaID: "", optionValue: "Consent Given?", physical_attribute: "100", description: "", isSelected: false, mainQuestOrder: "", isNewAdded: false, mainId: "")
         
-        let propertyConsentObj = newRipaViewModel.createObj(mainQuestId: concentQuestion!.id, ripaID: "", optionValue: "Consent Given?", physical_attribute: "100", description: "", isSelected: false, mainQuestOrder: "")
+        let propertyConsentObj = newRipaViewModel.createObj(mainQuestId: concentQuestion!.id, ripaID: "", optionValue: "Consent Given?", physical_attribute: "100", description: "", isSelected: false, mainQuestOrder: "", isNewAdded: false, mainId: "")
         
         
         consentArray.append(contentsOf: personArray)
@@ -200,11 +200,11 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
         else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath as IndexPath) as! ListCell
             print(indexPath.row)
-            cell.checkImg.image =  UIImage(named: "checkboxEmpty")
+            cell.checkImg.image =  UIImage(named: "uncheck")
             cell.label.text = violationArray![indexPath.row].violationDisplay
             
             if violationArray![indexPath.row].isSelected{
-                cell.checkImg.image =  UIImage(named: "checked-1")
+                cell.checkImg.image =  UIImage(named: "Check")
             }
             
             return cell
@@ -249,7 +249,7 @@ class ViolationPopup: UIViewController,UITableViewDelegate,UITableViewDataSource
         var optionsArray = [Questionoptions1]()
         for options in violationArray!{
             if options.isSelected{
-                let option = newRipaViewModel.createObj(mainQuestId: "", ripaID: "", optionValue: options.violationDisplay, physical_attribute:"", description: options.code, isSelected: true, mainQuestOrder: "")
+                let option = newRipaViewModel.createObj(mainQuestId: "", ripaID: "", optionValue: options.violationDisplay, physical_attribute:"", description: options.code, isSelected: true, mainQuestOrder: "", isNewAdded: false, mainId: "")
                 optionsArray.append(option)
             }
         }

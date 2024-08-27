@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>790854017052-uaqrc20mf9hoccf34pqu5bthiiqvrcpf.apps.googleusercontent.com</string>
+	<string>396046008952-cgcl8h02juikblvtkekb16d3si0s9ije.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.790854017052-uaqrc20mf9hoccf34pqu5bthiiqvrcpf</string>
+	<string>com.googleusercontent.apps.396046008952-cgcl8h02juikblvtkekb16d3si0s9ije</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>790854017052-0nufqse2vou8g3s7os87e7djg2ofclm8.apps.googleusercontent.com</string>
+	<string>396046008952-9a27t1cl69ku80rea5afjbtfpvaq6u00.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyByHMM69L-SM_C2M-DbDWkuVa0Q4XJkhw8</string>
+	<string>AIzaSyA1Q_AdKxNfKzTtsR1A07ZkIFZUTs0kal4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>790854017052</string>
+	<string>396046008952</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ticketpro.ripastop</string>
+	<string>com.ticketpro.ripastop24</string>
 	<key>PROJECT_ID</key>
-	<string>ripa-a6790</string>
+	<string>ripa24-8f93d</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ripa-a6790.appspot.com</string>
+	<string>ripa24-8f93d.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:790854017052:ios:bd5b2dd0c0a7d54a1c7fd9</string>
+	<string>1:396046008952:ios:b0184a4a24c32345c7638d</string>
 </dict>
 </plist>
